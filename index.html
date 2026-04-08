@@ -1163,22 +1163,16 @@ body::before {
     width: 100%;
     max-width: 100%;
   }
-  .cmf-slide-layout {
+  .cmf-hero-row {
     grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 16px;
+    gap: 14px;
   }
-  .cmf-detail-grid {
+  .cmf-stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .cmf-details-row {
     grid-template-columns: 1fr;
-  }
-  .product-shot-square {
-    width: min(72vw, 280px);
-    padding: 10px;
-  }
-  .cmf-three-view-frame {
-    width: min(72vw, 280px);
-    padding: 10px;
-    aspect-ratio: 1;
   }
   .scene-hero-img-wrap {
     width: 100%;
@@ -1186,9 +1180,9 @@ body::before {
   }
   .scene-hero-img-wrap img {
     width: 100%;
-    height: auto;
+    height: 100%;
     max-height: 240px;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
   }
   .cover-hero-wrap {
@@ -1211,20 +1205,14 @@ body::before {
 
 /* iPad / Tablet: 768px–1024px */
 @media (min-width: 768px) and (max-width: 1100px) {
-  .cmf-slide-layout {
+  .cmf-hero-row {
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 14px;
   }
-  .cmf-slide-layout .cmf-slide-main {
-    grid-column: 1 / -1;
+  .cmf-stats-row {
+    grid-template-columns: repeat(4, 1fr);
   }
-  .cmf-three-view-frame,
-  .product-shot-square {
-    width: 100%;
-    max-width: 260px;
-    height: auto;
-  }
-  .cmf-detail-grid {
+  .cmf-details-row {
     grid-template-columns: 1fr 1fr;
   }
   .scene-hero-img-wrap {
@@ -1234,7 +1222,7 @@ body::before {
   .scene-hero-img-wrap img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
   }
 }
@@ -1360,97 +1348,109 @@ body::before {
 .scene-card-body p { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
 
 /* ========== PRODUCT & SCENE PHOTOS ========== */
-/* CMF 页：三视图 + 白底产品图 + 右侧参数与说明 */
-.cmf-slide-layout {
+/* CMF 页 — 重新设计：上下两段式布局 */
+.cmf-hero-row {
   display: grid;
-  grid-template-columns: auto auto 1fr;
-  gap: 20px;
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 20px;
   width: 100%;
 }
-.cmf-slide-main {
-  min-width: 0;
-}
-.cmf-detail-grid {
-  grid-template-columns: 1fr 1fr;
-}
-.product-shot-square {
-  margin: 0;
-  flex-shrink: 0;
-  border-radius: 22px;
+.cmf-img-frame {
+  border-radius: 18px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(36, 29, 61, 0.7));
-  padding: 0;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(36, 29, 61, 0.8));
+  padding: 10px;
   box-sizing: border-box;
-  width: min(320px, 100%);
-  height: auto;
-  max-width: 100%;
-  aspect-ratio: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-  transition: all 0.4s ease;
-}
-.product-shot-square:hover {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  border-color: rgba(139, 92, 246, 0.15);
-}
-.product-shot-square img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-/* CMF 页：产品三视图（1:1 素材，与左侧 product-shot-square 同尺，居中勿拉满宽） */
-.cmf-three-view {
-  margin: 22px 0 0;
-  width: 100%;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.cmf-three-view-frame {
-  margin: 0;
-  flex-shrink: 0;
-  border-radius: 22px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(36, 29, 61, 0.7));
-  padding: 0;
-  box-sizing: border-box;
-  width: min(320px, 100%);
-  height: auto;
-  max-width: 100%;
-  aspect-ratio: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
   transition: all 0.4s ease;
+  position: relative;
 }
-.cmf-three-view-frame:hover {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  border-color: rgba(139, 92, 246, 0.15);
+.cmf-img-frame:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  border-color: rgba(139, 92, 246, 0.18);
+  transform: translateY(-4px);
 }
-.cmf-three-view-frame img {
+.cmf-img-frame img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center;
   display: block;
+  border-radius: 10px;
 }
-.cmf-three-view-caption {
-  margin-top: 10px;
+.cmf-img-frame .cmf-img-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 10px 14px;
   font-size: 12px;
+  font-weight: 600;
   color: var(--text-dim);
   text-align: center;
-  letter-spacing: 0.5px;
-  line-height: 1.5;
+  letter-spacing: 1px;
+  background: linear-gradient(180deg, transparent, rgba(10, 8, 22, 0.85));
+  border-radius: 0 0 18px 18px;
+}
+.cmf-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+  width: 100%;
+}
+.cmf-stat {
+  background: var(--dark-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 16px;
+  padding: 18px 14px;
+  border: 1px solid var(--glass-border);
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+.cmf-stat::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.015) 0%, transparent 60%);
+  pointer-events: none;
+}
+.cmf-stat:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+  border-color: rgba(139, 92, 246, 0.15);
+}
+.cmf-stat .stat-icon {
+  font-size: 22px;
+  margin-bottom: 6px;
+  display: block;
+}
+.cmf-stat .stat-value {
+  font-family: 'Inter', 'Zen Maru Gothic', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.cmf-stat .stat-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.cmf-details-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
 }
 .scene-hero {
   margin-bottom: 20px;
@@ -1468,14 +1468,14 @@ body::before {
   position: relative;
   line-height: 0;
   width: 100%;
-  max-height: 296px;
+  height: 296px;
   overflow: hidden;
 }
 .scene-hero-img-wrap img {
   width: 100%;
-  height: auto;
+  height: 100%;
   max-height: 296px;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
 }
@@ -1517,9 +1517,9 @@ body::before {
 .slide-inner--scene-render .scene-hero-img-wrap img {
   width: 100%;
   max-width: 800px;
-  height: auto;
+  height: 100%;
   max-height: 296px;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
 }
@@ -1912,49 +1912,62 @@ body::before {
     <div class="slide-inner">
       <div class="section-label anim-item">SOLUTION DISPLAY</div>
       <div class="slide-title anim-item">外观设计 · <span class="highlight">CMF & 尺寸</span></div>
-      <div class="cmf-slide-layout">
-        <div class="cmf-three-view-frame">
+
+      <div class="cmf-hero-row anim-item">
+        <div class="cmf-img-frame">
           <img src="images/effect_picture_3_view.png" alt="AnimeDoll 产品三视图：正视、侧视、背视" decoding="async" />
+          <span class="cmf-img-label">三视图 · 正视 / 侧视 / 背视</span>
         </div>
-        <figure class="product-shot-square anim-item">
-          <img src="images/effect_picture_white_bg.png" alt="AnimeDoll 白底产品效果图（1:1）" decoding="async" onerror="this.onerror=null;this.src='effect_picture_white_bg.png'">
-        </figure>
-        <div class="cmf-slide-main">
-          <div class="cmf-specs anim-item">
-            <div class="cmf-item">
-              <div class="big-num" style="color:var(--pink-deep);">10<span style="font-size:16px">cm</span></div>
-              <div class="label">极限尺寸</div>
-            </div>
-            <div class="cmf-item">
-              <div class="big-num" style="color:var(--lavender);">&lt;50<span style="font-size:16px">g</span></div>
-              <div class="label">轻盈重量</div>
-            </div>
-          </div>
-          <div class="content-grid cmf-detail-grid" style="margin-top:16px;">
-            <div class="card anim-item">
-              <div class="card-icon green">🧶</div>
-              <h3>材质选择</h3>
-              <ul>
-                <li style="font-size:12px;">头部：亲肤短毛绒（增加治愈感）</li>
-                <li>身体骨架：轻质ABS塑料（包裹电子元件）</li>
-              </ul>
-            </div>
-            <div class="card anim-item">
-              <div class="card-icon gold">🔍</div>
-              <h3>巧妙隐藏设计</h3>
-              <p style="margin-bottom:16px;font-size:12px;">微型摄像头隐藏在公仔的"纽扣"、"墨镜"或"蝴蝶结"中心，避免突兀感和路人的隐私抵触感。</p>
-              <div style="display:flex;gap:12px;flex-wrap:wrap;">
-                <span style="padding:6px 14px;border-radius:20px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);font-size:12px;color:var(--gold);">🔘 纽扣造型</span>
-                <span style="padding:6px 14px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:12px;color:var(--lavender);">🕶️ 墨镜造型</span>
-                <span style="padding:6px 14px;border-radius:20px;background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);font-size:12px;color:var(--pink-soft);">🎀 蝴蝶结造型</span>
-              </div>
-            </div>
+        <div class="cmf-img-frame">
+          <img src="images/effect_picture_white_bg.png" alt="AnimeDoll 白底产品效果图" decoding="async" onerror="this.onerror=null;this.src='effect_picture_white_bg.png'">
+          <span class="cmf-img-label">白底产品效果图</span>
+        </div>
+      </div>
+
+      <div class="cmf-stats-row anim-item">
+        <div class="cmf-stat">
+          <span class="stat-icon">📏</span>
+          <div class="stat-value" style="color:var(--pink-deep);">10<span style="font-size:12px">cm</span></div>
+          <div class="stat-label">极限尺寸</div>
+        </div>
+        <div class="cmf-stat">
+          <span class="stat-icon">⚖️</span>
+          <div class="stat-value" style="color:var(--lavender);">&lt;50<span style="font-size:12px">g</span></div>
+          <div class="stat-label">轻盈重量</div>
+        </div>
+        <div class="cmf-stat">
+          <span class="stat-icon">🧶</span>
+          <div class="stat-value" style="color:var(--mint);">毛绒</div>
+          <div class="stat-label">亲肤材质</div>
+        </div>
+        <div class="cmf-stat">
+          <span class="stat-icon">🔩</span>
+          <div class="stat-value" style="color:var(--cyber-blue);">ABS</div>
+          <div class="stat-label">轻质骨架</div>
+        </div>
+      </div>
+
+      <div class="cmf-details-row">
+        <div class="card anim-item">
+          <div class="card-icon green">🧶</div>
+          <h3>材质选择</h3>
+          <ul>
+            <li>头部：亲肤短毛绒，增加治愈触感</li>
+            <li>身体骨架：轻质ABS塑料，包裹电子元件</li>
+            <li>表面：抗污涂层，耐日常使用</li>
+          </ul>
+        </div>
+        <div class="card anim-item">
+          <div class="card-icon gold">🔍</div>
+          <h3>隐藏摄像头设计</h3>
+          <p style="margin-bottom:12px;">微型摄像头巧妙融入公仔装饰，避免突兀感与隐私抵触。</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <span style="padding:5px 14px;border-radius:20px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);font-size:12px;color:var(--gold);">🔘 纽扣造型</span>
+            <span style="padding:5px 14px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:12px;color:var(--lavender);">🕶️ 墨镜造型</span>
+            <span style="padding:5px 14px;border-radius:20px;background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);font-size:12px;color:var(--pink-soft);">🎀 蝴蝶结造型</span>
           </div>
         </div>
       </div>
-      <figure class="cmf-three-view anim-item">
-        <figcaption class="cmf-three-view-caption">三视图 · 正视 / 侧视 / 背视</figcaption>
-      </figure>
     </div>
   </div>
 
