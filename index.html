@@ -1133,6 +1133,72 @@ body::before {
   opacity: 0.6;
 }
 
+/* ========== CMF SLIDE COMPACT LAYOUT (Slide 12) ========== */
+.slide[data-index="11"] {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+.slide-inner--cmf {
+  max-height: calc(100vh - 80px);
+  overflow: hidden;
+}
+.slide-inner--cmf .section-label {
+  margin-bottom: 8px;
+}
+.slide-inner--cmf .slide-title {
+  margin-bottom: 14px;
+}
+.slide-inner--cmf .cmf-hero-row {
+  margin-bottom: 12px;
+  gap: 14px;
+  max-height: 28vh;
+}
+.slide-inner--cmf .cmf-img-frame {
+  max-height: 28vh;
+  padding: 6px;
+}
+.slide-inner--cmf .cmf-img-frame img {
+  max-height: calc(28vh - 36px);
+}
+.slide-inner--cmf .cmf-stats-row {
+  margin-bottom: 12px;
+  gap: 10px;
+}
+.slide-inner--cmf .cmf-stat {
+  padding: 12px 10px;
+}
+.slide-inner--cmf .cmf-stat .stat-icon {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+.slide-inner--cmf .cmf-stat .stat-value {
+  font-size: 18px;
+}
+.slide-inner--cmf .cmf-stat .stat-label {
+  font-size: 9px;
+  margin-top: 1px;
+}
+.slide-inner--cmf .cmf-details-row {
+  gap: 12px;
+}
+.slide-inner--cmf .cmf-details-row .card {
+  padding: 18px 20px;
+}
+.slide-inner--cmf .cmf-details-row .card-icon {
+  width: 34px; height: 34px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.slide-inner--cmf .cmf-details-row .card h3 {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.slide-inner--cmf .cmf-details-row .card p,
+.slide-inner--cmf .cmf-details-row .card li {
+  font-size: 12px;
+  line-height: 1.7;
+}
+
 /* ========== SLIDE ENTRY ANIMATIONS ========== */
 .slide.active .anim-item {
   animation: slideItemIn 0.55s cubic-bezier(0.23, 1, 0.32, 1) both;
@@ -1909,7 +1975,7 @@ body::before {
   <!-- ==================== SLIDE 12: CMF设计 ==================== -->
   <div class="slide" data-index="11">
     <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;right:-60px;"></div>
-    <div class="slide-inner">
+    <div class="slide-inner slide-inner--cmf">
       <div class="section-label anim-item">SOLUTION DISPLAY</div>
       <div class="slide-title anim-item">外观设计 · <span class="highlight">CMF & 尺寸</span></div>
 
