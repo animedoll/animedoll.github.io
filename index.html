@@ -1342,10 +1342,12 @@ body::before {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(36, 29, 61, 0.7));
   padding: 0;
   box-sizing: border-box;
-  width: min(34vw, 38vh, 360px);
+  width: 320px;
+  height: 320px;
   max-width: 100%;
   aspect-ratio: 1;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
@@ -1379,10 +1381,12 @@ body::before {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(36, 29, 61, 0.7));
   padding: 0;
   box-sizing: border-box;
-  width: min(34vw, 38vh, 360px);
+  width: 320px;
+  height: 320px;
   max-width: 100%;
   aspect-ratio: 1;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
@@ -1423,11 +1427,13 @@ body::before {
   position: relative;
   line-height: 0;
   width: 100%;
-  overflow: hidden;
+  height: 296px;
+  overflow: visible;
 }
 .scene-hero-img-wrap img {
-  width: 100%;
-  height: auto;
+  width: fit-content;
+  height: fit-content;
+  max-width: 100%;
   display: block;
 }
 .scene-hero-label {
@@ -1462,17 +1468,14 @@ body::before {
   box-sizing: border-box;
 }
 .slide-inner--scene-render .scene-visual {
-  height: 145px;
+  height: 125px;
   aspect-ratio: auto;
 }
 .slide-inner--scene-render .scene-hero-img-wrap img {
-  width: 100%;
+  width: fit-content;
   max-width: 800px;
   height: fit-content;
-  display: flex;
-  flex-wrap: wrap;
-  text-align: center;
-  overflow: visible;
+  display: block;
 }
 
 /* breathing light effect */
@@ -1860,9 +1863,9 @@ body::before {
   <!-- ==================== SLIDE 12: CMF设计 ==================== -->
   <div class="slide" data-index="11" style="height:1061px;">
     <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;right:-60px;"></div>
-    <div class="slide-inner" style="width:100%;display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;">
+    <div class="slide-inner" style="width:100%;height:fit-content;display:flex;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;align-items:flex-start;">
       <div class="section-label anim-item">SOLUTION DISPLAY</div>
-      <div class="slide-title anim-item">外观设计 · <span class="highlight">CMF & 尺寸</span></div>
+      <div class="slide-title anim-item" style="width:100%;">外观设计 · <span class="highlight">CMF & 尺寸</span></div>
       <div class="cmf-slide-layout" style="height:359px;">
         <div class="cmf-three-view-frame">
           <img src="images/effect_picture_3_view.png" alt="AnimeDoll 产品三视图：正视、侧视、背视" decoding="async" />
