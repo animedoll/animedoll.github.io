@@ -2,9 +2,9 @@
     "folders": [
 		{
 			"path": ".."
-		},
-		{
-			"path": "../../arknights-ui"
 		}
-	]
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "animedoll.github.io"
+	}
 }

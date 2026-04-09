@@ -375,17 +375,55 @@ body::after {
 }
 
 .ak-sidebar {
+  --ak-sidebar-rot: 6deg;
+  --ak-sidebar-tilt-x: 0deg;
+  --ak-sidebar-tilt-y: 0deg;
+  --ak-sidebar-shift-x: 0px;
+  --ak-sidebar-shift-y: 0px;
+  --ak-label-shift-x: 0px;
+  --ak-label-shift-y: 0px;
+  --ak-voice-shift-x: 0px;
+  --ak-voice-shift-y: 0px;
+  --ak-pill-shift-x: 0px;
+  --ak-pill-shift-y: 0px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transform: rotateY(6deg);
+  transform: translate3d(var(--ak-sidebar-shift-x), var(--ak-sidebar-shift-y), 0)
+    rotateX(var(--ak-sidebar-tilt-x))
+    rotateY(calc(var(--ak-sidebar-rot) + var(--ak-sidebar-tilt-y)));
   transform-origin: right center;
-  transition: transform 0.4s ease;
+  transition: transform 0.35s ease, filter 0.35s ease;
+  will-change: transform;
 }
 @media (min-width: 821px) and (orientation: landscape) {
   .slide-frame .ak-sidebar {
-    transform: rotateY(9deg);
+    --ak-sidebar-rot: 9deg;
   }
+}
+.slide.active .ak-sidebar {
+  animation: akSidebarBreath 3.6s ease-in-out infinite;
+}
+.ak-sidebar-label,
+.voice-strip,
+.chapter-pill {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  will-change: transform;
+}
+.slide.active .ak-sidebar-label {
+  animation: akSidebarLabelDrift 3.4s ease-in-out infinite;
+  transform: translate3d(var(--ak-label-shift-x), var(--ak-label-shift-y), 0);
+}
+.slide.active .voice-strip {
+  animation: akSidebarVoiceDrift 3.9s ease-in-out infinite;
+  transform: translate3d(var(--ak-voice-shift-x), var(--ak-voice-shift-y), 0);
+}
+.slide.active .chapter-pill {
+  animation: akSidebarPillDrift 3.6s ease-in-out infinite;
+  transform: translate3d(var(--ak-pill-shift-x), var(--ak-pill-shift-y), 0);
+}
+.slide.active .ak-sidebar.is-interacting .voice-strip {
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.28), 0 0 14px rgba(5, 167, 220, 0.18);
 }
 .ak-sidebar-label {
   font-size: 10px;
@@ -427,8 +465,40 @@ body::after {
   border-left: 3px solid var(--ak-orange);
 }
 
+@keyframes akSidebarBreath {
+  0%, 100% {
+    transform: translate3d(var(--ak-sidebar-shift-x), calc(var(--ak-sidebar-shift-y) + 0px), 0)
+      rotateX(var(--ak-sidebar-tilt-x))
+      rotateY(calc(var(--ak-sidebar-rot) + var(--ak-sidebar-tilt-y)));
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.16));
+  }
+  50% {
+    transform: translate3d(var(--ak-sidebar-shift-x), calc(var(--ak-sidebar-shift-y) - 11px), 0)
+      rotateX(var(--ak-sidebar-tilt-x))
+      rotateY(calc(var(--ak-sidebar-rot) + var(--ak-sidebar-tilt-y)));
+    filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.28));
+  }
+}
+
+@keyframes akSidebarLabelDrift {
+  0%, 100% { transform: translate3d(var(--ak-label-shift-x), calc(var(--ak-label-shift-y) + 0px), 0); }
+  50% { transform: translate3d(var(--ak-label-shift-x), calc(var(--ak-label-shift-y) - 2px), 0); }
+}
+
+@keyframes akSidebarVoiceDrift {
+  0%, 100% { transform: translate3d(var(--ak-voice-shift-x), calc(var(--ak-voice-shift-y) + 0px), 0); }
+  50% { transform: translate3d(var(--ak-voice-shift-x), calc(var(--ak-voice-shift-y) - 3px), 0); }
+}
+
+@keyframes akSidebarPillDrift {
+  0%, 100% { transform: translate3d(var(--ak-pill-shift-x), calc(var(--ak-pill-shift-y) + 0px), 0); }
+  50% { transform: translate3d(var(--ak-pill-shift-x), calc(var(--ak-pill-shift-y) - 1.5px), 0); }
+}
+
 .ak-main {
   min-width: 0;
+  position: relative;
+  z-index: 2;
 }
 
 /* ========== 卡片组件 ========== */
@@ -438,7 +508,36 @@ body::after {
   border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
   position: relative;
-  overflow: hidden;
+  /* 与 arknights-ui 侧栏面板一致：整块面板 3D 悬浮，需可见溢出以免被滚动父级裁切 */
+  overflow: visible;
+  transform-style: preserve-3d;
+  transform: perspective(800px) rotateX(0deg) rotateY(0deg) translateZ(0) scale(1);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.ak-card.tilt-active {
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.38),
+    0 0 40px rgba(5, 167, 220, 0.12);
+}
+.ak-card.tilt-active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at var(--tilt-x, 50%) var(--tilt-y, 50%),
+    rgba(5, 167, 220, 0.06) 0%,
+    transparent 70%
+  );
+  transition: opacity 0.4s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ak-card { transition: none; will-change: auto; }
+  .ak-card.tilt-active::after { display: none; }
 }
 .ak-card::before {
   content: '';
@@ -447,6 +546,7 @@ body::after {
   left: 0;
   right: 0;
   height: 5px;
+  z-index: 1;
   background: var(--ak-orange);
   opacity: 0.95;
 }
@@ -505,6 +605,9 @@ body::after {
 }
 .ak-card-inner {
   padding: 24px 28px 28px;
+  position: relative;
+  z-index: 2;
+  transform: translateZ(0);
 }
 
 .ak-title {
@@ -616,7 +719,7 @@ body::after {
   padding: 18px 16px 18px 20px;
   position: relative;
   text-align: left;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .toc-item::before {
   content: '';
@@ -628,11 +731,11 @@ body::after {
   background: var(--ak-cyan);
 }
 .toc-item:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(5, 167, 220, 0.22);
 }
 @media (prefers-reduced-motion: reduce) {
-  .toc-item:hover { transform: none; }
+  .toc-item:hover { border-color: rgba(0, 0, 0, 0.06); }
 }
 .toc-item .num {
   font-family: 'IBM Plex Mono', monospace;
@@ -756,6 +859,7 @@ body::after {
   .ak-sidebar {
     order: 2;
     transform: none;
+    animation: none;
   }
   .ak-main { order: 1; }
 }
@@ -767,10 +871,16 @@ body::after {
   }
 }
 
+/* 主区仅做布局，滚动交给子级 .ak-card，避免 overflow 祖先把 3D transform 展平导致大卡片无悬浮感 */
 .ak-main--scroll {
+  overflow: visible;
+  padding: 14px 10px 18px 6px;
+}
+.ak-main--scroll > .ak-card {
   max-height: calc(100vh - 120px);
   max-height: calc(100dvh - 120px);
   max-height: calc(100svh - 120px);
+  overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable;
@@ -778,26 +888,26 @@ body::after {
   scrollbar-color: var(--ak-cyan) rgba(10, 36, 48, 0.75);
 }
 /* 明日方舟风：细轨道 + 青主色滑条，悬停时橙色强调（WebKit / Chromium / Safari） */
-.ak-main--scroll::-webkit-scrollbar {
+.ak-main--scroll > .ak-card::-webkit-scrollbar {
   width: 7px;
 }
-.ak-main--scroll::-webkit-scrollbar-track {
+.ak-main--scroll > .ak-card::-webkit-scrollbar-track {
   background: linear-gradient(180deg, rgba(6, 18, 24, 0.55), rgba(10, 36, 48, 0.85));
   border-radius: 2px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
-.ak-main--scroll::-webkit-scrollbar-thumb {
+.ak-main--scroll > .ak-card::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--ak-cyan) 0%, var(--ak-cyan-dim) 100%);
   border-radius: 2px;
   box-shadow: 0 0 10px var(--ak-cyan-glow), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-.ak-main--scroll::-webkit-scrollbar-thumb:hover {
+.ak-main--scroll > .ak-card::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, var(--ak-orange) 0%, #cc4a12 100%);
   box-shadow: 0 0 14px rgba(255, 94, 25, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 94, 25, 0.35);
 }
-.cover-slide-inner { max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.cover-slide-inner { max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; position: relative; overflow: hidden; }
 .cover-hero-wrap {
   width: min(34vmin, 280px);
   aspect-ratio: 1;
@@ -1158,7 +1268,7 @@ body::after {
     font-size: 10px;
     padding: 6px 10px;
   }
-  .ak-main--scroll {
+  .ak-main--scroll > .ak-card {
     max-height: calc(100vh - var(--safe-top) - var(--safe-bottom) - 200px);
     max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 200px);
     max-height: calc(100svh - var(--safe-top) - var(--safe-bottom) - 200px);
@@ -1186,9 +1296,337 @@ body::after {
     max-height: min(300px, 42dvh);
   }
 }
+/* ========== Canvas 粒子层 ========== */
+#canvas-dust {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* ========== 数据条宽度动画 ========== */
+.data-bar-fill {
+  width: 0 !important;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.data-bar-fill.bar-animated {
+  width: calc(var(--w, 0.5) * 100%) !important;
+}
+.data-bar-row:nth-child(2) .data-bar-fill { transition-delay: 0.1s; }
+.data-bar-row:nth-child(3) .data-bar-fill { transition-delay: 0.2s; }
+.data-bar-row:nth-child(4) .data-bar-fill { transition-delay: 0.3s; }
+
+/* ========== SVG sparkline 描边动画 ========== */
+.cagr-sparkline path[stroke] {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cagr-sparkline path[fill]:not([fill="none"]) {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.6s;
+}
+.cagr-sparkline circle {
+  opacity: 0;
+  transform-origin: center;
+  transform: scale(0);
+  transition: opacity 0.4s ease 1s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 1s;
+}
+.sparkline-drawn path[stroke] {
+  stroke-dashoffset: 0;
+}
+.sparkline-drawn path[fill]:not([fill="none"]) {
+  opacity: 1;
+}
+.sparkline-drawn circle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ========== 封面增强入场 ========== */
+.cover-slide .cover-hero-wrap {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.8s ease 0.1s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s, box-shadow 1.2s ease 0.6s;
+}
+.cover-slide.active .cover-hero-wrap {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 0 60px rgba(5, 167, 220, 0.2);
+}
+.cover-slide .cover-title-ak {
+  opacity: 0;
+  letter-spacing: 0.15em;
+  transition: opacity 0.7s ease 0.35s, letter-spacing 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s, transform 0.7s ease 0.35s;
+  transform: translateY(16px);
+}
+.cover-slide.active .cover-title-ak {
+  opacity: 1;
+  letter-spacing: normal;
+  transform: translateY(0);
+}
+.cover-slide .cover-subtitle {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease 0.55s, transform 0.6s ease 0.55s;
+}
+.cover-slide.active .cover-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+.cover-slide .cover-tagline {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease 0.7s, transform 0.5s ease 0.7s;
+}
+.cover-slide.active .cover-tagline {
+  opacity: 1;
+  transform: translateY(0);
+}
+.cover-slide .cover-deco {
+  opacity: 0;
+  transition: opacity 0.6s ease 0.85s;
+}
+.cover-slide.active .cover-deco {
+  opacity: 1;
+}
+.cover-slide-inner::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(5, 167, 220, 0.15), transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: width 1.2s ease, height 1.2s ease, opacity 1.5s ease 0.8s;
+  opacity: 0;
+}
+.cover-slide.active .cover-slide-inner::before {
+  width: 120vmax;
+  height: 120vmax;
+  opacity: 0;
+  animation: coverBurst 1.5s ease-out forwards;
+}
+@keyframes coverBurst {
+  0% { width: 0; height: 0; opacity: 0.6; }
+  60% { opacity: 0.25; }
+  100% { width: 120vmax; height: 120vmax; opacity: 0; }
+}
+
+/* ========== 矩阵点弹入 ========== */
+.matrix-point {
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.slide.active .matrix-point:nth-child(3) { transition-delay: 0.2s; }
+.slide.active .matrix-point:nth-child(4) { transition-delay: 0.35s; }
+.slide.active .matrix-point:nth-child(5) { transition-delay: 0.5s; }
+.slide.active .matrix-point:nth-child(6) { transition-delay: 0.65s; }
+.slide.active .matrix-point.pop-in {
+  opacity: 1;
+  transform: scale(1);
+}
+.matrix-point.highlight.pop-in {
+  animation: matrixPulse 2s ease-in-out 0.9s infinite;
+}
+@keyframes matrixPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 94, 25, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 94, 25, 0); }
+}
+
+/* ========== 架构流顺序点亮 ========== */
+.arch-node {
+  opacity: 0.2;
+  transition: opacity 0.5s ease, box-shadow 0.5s ease;
+}
+.arch-node.node-lit {
+  opacity: 1;
+}
+.arch-node.device.node-lit { box-shadow: 0 4px 20px rgba(255, 94, 25, 0.15); }
+.arch-node.app.node-lit { box-shadow: 0 4px 20px rgba(5, 167, 220, 0.15); }
+.arch-node.cloud.node-lit { box-shadow: 0 4px 20px rgba(1, 109, 141, 0.2); }
+.arch-arrow {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.arch-arrow.arrow-lit {
+  opacity: 0.5;
+  animation: arrowTravel 1.5s ease-in-out infinite;
+}
+@keyframes arrowTravel {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+}
+@media (max-width: 900px) {
+  @keyframes arrowTravel {
+    0%, 100% { transform: rotate(90deg) translateX(0); }
+    50% { transform: rotate(90deg) translateX(6px); }
+  }
+}
+
+/* ========== 时间线渐进展开 ========== */
+.story-timeline::before {
+  height: 0 !important;
+  bottom: auto !important;
+  transition: height 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.story-timeline.timeline-active::before {
+  height: 100% !important;
+}
+.story-item {
+  opacity: 0;
+  transform: translateX(-16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.story-item.story-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.story-item::before {
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.story-item.story-visible::before {
+  transform: scale(1);
+  animation: dotPing 0.6s ease forwards;
+}
+@keyframes dotPing {
+  0% { box-shadow: 0 0 0 0 rgba(255, 94, 25, 0.5); }
+  100% { box-shadow: 0 0 12px rgba(255, 94, 25, 0.35); }
+}
+
+/* ========== 飞轮旋转暗示 ========== */
+.flywheel-arrow {
+  animation: none;
+}
+.slide.active .flywheel-arrow {
+  animation: flywheelPulse 2s ease-in-out infinite;
+}
+@keyframes flywheelPulse {
+  0%, 100% { opacity: 0.6; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(4px); }
+}
+@media (max-width: 700px) {
+  @keyframes flywheelPulse {
+    0%, 100% { opacity: 0.6; transform: rotate(90deg) translateX(0); }
+    50% { opacity: 1; transform: rotate(90deg) translateX(4px); }
+  }
+}
+.flywheel-node {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.slide.active .flywheel-node {
+  animation: flywheelNodeIn 0.6s ease both;
+}
+.slide.active .flywheel-flow .flywheel-node:nth-child(1) { animation-delay: 0s; }
+.slide.active .flywheel-flow .flywheel-node:nth-child(3) { animation-delay: 0.15s; }
+.slide.active .flywheel-flow .flywheel-node:nth-child(5) { animation-delay: 0.3s; }
+@keyframes flywheelNodeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ========== 卡片悬停微交互 ========== */
+.wh-item,
+.swot-cell,
+.competitor-card,
+.persona-card,
+.bmc-cell,
+.hw-part,
+.app-screen,
+.scene-card,
+.ad-card-dark,
+.quote-block {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.wh-item:hover,
+.swot-cell:hover,
+.competitor-card:hover,
+.persona-card:hover,
+.bmc-cell:hover,
+.hw-part:hover,
+.app-screen:hover,
+.scene-card:hover,
+.ad-card-dark:hover,
+.quote-block:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(5, 167, 220, 0.18);
+}
+.feature-card {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.feature-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(5, 167, 220, 0.18);
+}
+.feature-card:hover .feature-emoji {
+  display: inline-block;
+  animation: emojiPop 0.35s ease;
+}
+@keyframes emojiPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* ========== 导航点弹性动画 ========== */
+.nav-dot.active {
+  animation: dotElastic 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes dotElastic {
+  0% { transform: scaleY(1); }
+  40% { transform: scaleY(1.6); }
+  100% { transform: scaleY(1); }
+}
+@media (max-width: 640px), (max-width: 900px) and (orientation: portrait) {
+  .nav-dot.active {
+    animation: dotElasticH 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes dotElasticH {
+    0% { transform: scaleX(1); }
+    40% { transform: scaleX(1.3); }
+    100% { transform: scaleX(1); }
+  }
+}
+
+/* ========== 全局 prefers-reduced-motion 覆盖 ========== */
+@media (prefers-reduced-motion: reduce) {
+  #canvas-dust { display: none; }
+  .data-bar-fill { width: calc(var(--w, 0.5) * 100%) !important; transition: none; }
+  .cagr-sparkline path[stroke] { stroke-dasharray: none; stroke-dashoffset: 0; transition: none; }
+  .cagr-sparkline path[fill]:not([fill="none"]) { opacity: 1; transition: none; }
+  .cagr-sparkline circle { opacity: 1; transform: scale(1); transition: none; }
+  .cover-slide .cover-hero-wrap,
+  .cover-slide .cover-title-ak,
+  .cover-slide .cover-subtitle,
+  .cover-slide .cover-tagline,
+  .cover-slide .cover-deco { opacity: 1; transform: none; transition: none; letter-spacing: normal; }
+  .cover-slide-inner::before { display: none; }
+  .matrix-point { opacity: 1; transform: scale(1); transition: none; animation: none; }
+  .arch-node { opacity: 1; transition: none; }
+  .arch-arrow { opacity: 0.5; animation: none; }
+  .story-timeline::before { height: 100% !important; transition: none; }
+  .story-item { opacity: 1; transform: none; transition: none; }
+  .story-item::before { transform: scale(1); animation: none; }
+  .flywheel-arrow { animation: none; }
+  .flywheel-node { animation: none; opacity: 1; }
+  .wh-item:hover, .swot-cell:hover, .competitor-card:hover, .persona-card:hover,
+  .bmc-cell:hover, .hw-part:hover, .app-screen:hover, .scene-card:hover,
+  .ad-card-dark:hover, .quote-block:hover, .feature-card:hover { transform: none; }
+  .feature-card:hover .feature-emoji { animation: none; }
+  .nav-dot.active { animation: none; }
+}
 </style>
 </head>
 <body>
+
+<canvas id="canvas-dust" aria-hidden="true"></canvas>
 
 <div class="ak-topbar" aria-hidden="true">
   <span class="line-left"></span>
@@ -1222,13 +1660,13 @@ body::after {
   <div class="slide cover-slide active" data-index="0">
     <div class="slide-inner cover-slide-inner">
       <div class="cover-badge anim-item">PRODUCT PROPOSAL 2026</div>
-      <div class="cover-hero-wrap anim-item">
+      <div class="cover-hero-wrap">
         <img src="images/effect_image_heroshot.jpg" alt="AnimeDoll 产品主视觉" width="600" height="600" loading="eager" decoding="async" />
       </div>
-      <h1 class="cover-title-ak anim-item">AnimeDoll</h1>
-      <p class="cover-subtitle anim-item">你的跨次元 AI 专属陪伴</p>
-      <p class="cover-tagline anim-item">嵌入式智能二次元公仔挂件产品策划案</p>
-      <div class="cover-deco anim-item">
+      <h1 class="cover-title-ak">AnimeDoll</h1>
+      <p class="cover-subtitle">你的跨次元 AI 专属陪伴</p>
+      <p class="cover-tagline">嵌入式智能二次元公仔挂件产品策划案</p>
+      <div class="cover-deco">
         <span class="bar"></span>
         <span>方向键 / 空格翻页</span>
         <span class="bar"></span>
@@ -1671,22 +2109,22 @@ body::after {
           <div class="ak-card-inner">
             <h2 class="ak-title anim-item">体验流程 · <span class="sub">Storyboard</span></h2>
             <div class="story-timeline">
-              <div class="story-item anim-item">
+              <div class="story-item">
                 <div class="story-time">🌅 清晨 · 出门</div>
                 <h4>唤醒仪式</h4>
                 <p>小A把 AnimeDoll 挂在包上出门，捏了一下公仔的爪子（唤醒）。公仔发声：<strong style="color:var(--ak-orange)">“今天也要元气满满哦，主人！”</strong></p>
               </div>
-              <div class="story-item anim-item">
+              <div class="story-item">
                 <div class="story-time">🎪 下午 · 漫展现场</div>
                 <h4>主动识别互动</h4>
                 <p>公仔胸前的隐藏摄像头拍到了一位高质量Coser，公仔主动提示：<strong style="color:var(--ak-cyan-dim)">“哇，11点钟方向捕捉到一只野生初音未来！”</strong></p>
               </div>
-              <div class="story-item anim-item">
+              <div class="story-item">
                 <div class="story-time">🌙 晚上 · 回家</div>
                 <h4>记忆手帐生成</h4>
                 <p>打开App，发现公仔自动生成了《漫展漫游手帐》，里面有公仔视角的抓拍和配文，小A一键分享到社交平台。</p>
               </div>
-              <div class="story-item anim-item">
+              <div class="story-item">
                 <div class="story-time">🤝 周末 · 同好偶遇</div>
                 <h4>双端识别破冰</h4>
                 <p>在咖啡店偶遇另一位 AnimeDoll 用户，两只公仔识别彼此后主动打招呼，帮助主人快速建立连接。</p>
@@ -2027,6 +2465,7 @@ body::after {
       nextEl.classList.add('active');
       currentIndex = index;
       updateUI();
+      onSlideActivate(nextEl);
 
       var transitionFinished = false;
       var fallbackTimer;
@@ -2127,7 +2566,264 @@ body::after {
   });
   wrapper.addEventListener('mouseleave', function () { mouseDown = false; });
 
+  function onSlideActivate(slideEl) {
+    // Data bar animation
+    var bars = slideEl.querySelectorAll('.data-bar-fill');
+    if (bars.length) {
+      bars.forEach(function (b) { b.classList.remove('bar-animated'); });
+      requestAnimationFrame(function () {
+        bars.forEach(function (b) { b.classList.add('bar-animated'); });
+      });
+    }
+
+    // SVG sparkline draw-in
+    var sparklines = slideEl.querySelectorAll('.cagr-sparkline');
+    sparklines.forEach(function (sp) {
+      sp.classList.remove('sparkline-drawn');
+      void sp.offsetWidth;
+      sp.classList.add('sparkline-drawn');
+    });
+
+    // Matrix point pop-in
+    var points = slideEl.querySelectorAll('.matrix-point');
+    if (points.length) {
+      points.forEach(function (p) { p.classList.remove('pop-in'); });
+      requestAnimationFrame(function () {
+        points.forEach(function (p) { p.classList.add('pop-in'); });
+      });
+    }
+
+    // Architecture flow sequential reveal
+    var archNodes = slideEl.querySelectorAll('.arch-node');
+    var archArrows = slideEl.querySelectorAll('.arch-arrow');
+    if (archNodes.length) {
+      archNodes.forEach(function (n) { n.classList.remove('node-lit'); });
+      archArrows.forEach(function (a) { a.classList.remove('arrow-lit'); });
+      archNodes.forEach(function (n, i) {
+        setTimeout(function () {
+          n.classList.add('node-lit');
+          if (i > 0 && archArrows[i - 1]) {
+            archArrows[i - 1].classList.add('arrow-lit');
+          }
+        }, i * 400);
+      });
+    }
+
+    // Story timeline progressive reveal
+    var timeline = slideEl.querySelector('.story-timeline');
+    if (timeline) {
+      timeline.classList.remove('timeline-active');
+      var items = timeline.querySelectorAll('.story-item');
+      items.forEach(function (it) { it.classList.remove('story-visible'); });
+      requestAnimationFrame(function () {
+        timeline.classList.add('timeline-active');
+        items.forEach(function (it, i) {
+          setTimeout(function () { it.classList.add('story-visible'); }, 200 + i * 250);
+        });
+      });
+    }
+  }
+
+  // Canvas dust particle system
+  (function initDust() {
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    var canvas = document.getElementById('canvas-dust');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    var particles = [];
+    var w = 0, h = 0;
+
+    function resize() {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var count = Math.min(Math.floor((w + h) / 35), 60);
+    for (var i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: Math.random() * 1.8 + 0.4,
+        vy: Math.random() * 0.8 + 0.1,
+        rx: Math.random() * 2.5 + 0.5,
+        ry: Math.random() * 2.5 + 0.5,
+        rot: Math.PI * Math.floor(Math.random() * 2),
+        blur: Math.random() * 4 + 1,
+        hue: Math.random() > 0.7 ? 20 : 195
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x -= p.vx;
+        p.y -= p.vy;
+        if (p.x < -10 || p.y < -10) {
+          p.x = w + Math.random() * 20;
+          p.y = Math.random() * h;
+        }
+        ctx.save();
+        ctx.globalAlpha = 0.6;
+        ctx.shadowBlur = p.blur;
+        ctx.shadowColor = p.hue === 20
+          ? 'rgba(255, 140, 60, 0.5)'
+          : 'rgba(5, 167, 220, 0.5)';
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y, p.rx, p.ry, p.rot, 0, Math.PI * 2);
+        ctx.fillStyle = p.hue === 20
+          ? 'rgba(255, 160, 80, 0.7)'
+          : 'rgba(120, 210, 240, 0.6)';
+        ctx.fill();
+        ctx.restore();
+      }
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+
+  // 主区大卡片 3D 悬浮：滚动必须在 .ak-card 自身，不能包在外层 overflow 里，否则 3D 会被展平（浏览器限制）
+  (function initCardTilt() {
+    var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function params() {
+      if (mqReduce.matches) {
+        return { MAX_TILT: 2, BASE_ROTATE_Y: -3, LIFT_PX: 6, HOVER_SCALE: 1.004 };
+      }
+      return { MAX_TILT: 5, BASE_ROTATE_Y: -7, LIFT_PX: 16, HOVER_SCALE: 1.014 };
+    }
+
+    var cards = document.querySelectorAll('.ak-card');
+    cards.forEach(function (card) {
+      var raf = null;
+      var pending = null;
+
+      function applyFromEvent(e) {
+        var p = params();
+        var rect = card.getBoundingClientRect();
+        if (rect.width < 2 || rect.height < 2) return;
+        var cx = (e.clientX - rect.left) / rect.width;
+        var cy = (e.clientY - rect.top) / rect.height;
+        cx = Math.max(0, Math.min(1, cx));
+        cy = Math.max(0, Math.min(1, cy));
+        var tiltX = (0.5 - cy) * p.MAX_TILT * 2;
+        var tiltY = (cx - 0.5) * p.MAX_TILT * 2;
+        var ry = p.BASE_ROTATE_Y + tiltY;
+        card.style.transform =
+          'perspective(800px) rotateX(' + tiltX + 'deg) rotateY(' + ry + 'deg) translateZ(' + p.LIFT_PX + 'px) scale(' + p.HOVER_SCALE + ')';
+        card.style.setProperty('--tilt-x', (cx * 100) + '%');
+        card.style.setProperty('--tilt-y', (cy * 100) + '%');
+      }
+
+      function scheduleApply(e) {
+        pending = e;
+        if (raf != null) return;
+        raf = requestAnimationFrame(function () {
+          raf = null;
+          if (pending) applyFromEvent(pending);
+        });
+      }
+
+      card.addEventListener('pointerenter', function (e) {
+        card.classList.add('tilt-active');
+        card.style.transition = 'transform 0.12s ease-out, box-shadow 0.35s ease-out';
+        applyFromEvent(e);
+      });
+
+      card.addEventListener('pointermove', scheduleApply);
+
+      card.addEventListener('pointerleave', function () {
+        if (raf != null) { cancelAnimationFrame(raf); raf = null; }
+        pending = null;
+        card.classList.remove('tilt-active');
+        card.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
+        card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateZ(0) scale(1)';
+        card.style.removeProperty('--tilt-x');
+        card.style.removeProperty('--tilt-y');
+      });
+    });
+  })();
+
+  (function initSidebarInteraction() {
+    var mqFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!mqFinePointer.matches) return;
+
+    var sidebars = document.querySelectorAll('.ak-sidebar');
+    sidebars.forEach(function (sidebar) {
+      var raf = null;
+      var pending = null;
+
+      function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v));
+      }
+
+      function applyFromEvent(e) {
+        var rect = sidebar.getBoundingClientRect();
+        if (rect.width < 2 || rect.height < 2) return;
+        var nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        var ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+        nx = clamp(nx, -1, 1);
+        ny = clamp(ny, -1, 1);
+
+        sidebar.style.setProperty('--ak-sidebar-tilt-x', (-ny * 2.3).toFixed(2) + 'deg');
+        sidebar.style.setProperty('--ak-sidebar-tilt-y', (nx * 3.1).toFixed(2) + 'deg');
+        sidebar.style.setProperty('--ak-sidebar-shift-x', (nx * 4.5).toFixed(2) + 'px');
+        sidebar.style.setProperty('--ak-sidebar-shift-y', (ny * 3.5).toFixed(2) + 'px');
+        sidebar.style.setProperty('--ak-label-shift-x', (nx * 3.2).toFixed(2) + 'px');
+        sidebar.style.setProperty('--ak-label-shift-y', (ny * 2.4).toFixed(2) + 'px');
+        sidebar.style.setProperty('--ak-voice-shift-x', (nx * 5.1).toFixed(2) + 'px');
+        sidebar.style.setProperty('--ak-voice-shift-y', (ny * 3.6).toFixed(2) + 'px');
+        sidebar.style.setProperty('--ak-pill-shift-x', (nx * 4.0).toFixed(2) + 'px');
+        sidebar.style.setProperty('--ak-pill-shift-y', (ny * 2.8).toFixed(2) + 'px');
+      }
+
+      function scheduleApply(e) {
+        pending = e;
+        if (raf != null) return;
+        raf = requestAnimationFrame(function () {
+          raf = null;
+          if (pending) applyFromEvent(pending);
+        });
+      }
+
+      function reset() {
+        sidebar.style.setProperty('--ak-sidebar-tilt-x', '0deg');
+        sidebar.style.setProperty('--ak-sidebar-tilt-y', '0deg');
+        sidebar.style.setProperty('--ak-sidebar-shift-x', '0px');
+        sidebar.style.setProperty('--ak-sidebar-shift-y', '0px');
+        sidebar.style.setProperty('--ak-label-shift-x', '0px');
+        sidebar.style.setProperty('--ak-label-shift-y', '0px');
+        sidebar.style.setProperty('--ak-voice-shift-x', '0px');
+        sidebar.style.setProperty('--ak-voice-shift-y', '0px');
+        sidebar.style.setProperty('--ak-pill-shift-x', '0px');
+        sidebar.style.setProperty('--ak-pill-shift-y', '0px');
+      }
+
+      sidebar.addEventListener('pointerenter', function (e) {
+        sidebar.classList.add('is-interacting');
+        applyFromEvent(e);
+      });
+
+      sidebar.addEventListener('pointermove', scheduleApply);
+
+      sidebar.addEventListener('pointerleave', function () {
+        if (raf != null) { cancelAnimationFrame(raf); raf = null; }
+        pending = null;
+        sidebar.classList.remove('is-interacting');
+        reset();
+      });
+    });
+  })();
+
   updateUI();
+  onSlideActivate(slides[0]);
   window.goToSlide = goToSlide;
 })();
 </script>
