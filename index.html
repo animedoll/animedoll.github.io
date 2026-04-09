@@ -207,6 +207,7 @@ body::before {
 
 .slide-inner {
   max-width: 1120px; width: 100%;
+  height: fit-content;
   position: relative;
 }
 
@@ -382,6 +383,7 @@ body::before {
   letter-spacing: 5px; text-transform: uppercase;
   color: var(--pink-deep);
   margin-bottom: 14px;
+  height: fit-content;
   opacity: 0.85;
 }
 .section-label::before {
@@ -396,6 +398,8 @@ body::before {
   font-weight: 900;
   line-height: 1.35;
   margin-bottom: 30px;
+  width: 100%;
+  height: fit-content;
   letter-spacing: -0.01em;
 }
 .slide-title .highlight {
@@ -410,9 +414,14 @@ body::before {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  width: 100%;
+  height: fit-content;
 }
 .content-grid.single { grid-template-columns: 1fr; }
-.content-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+.content-grid.triple {
+  grid-template-columns: 1fr 1fr 1fr;
+  flex-wrap: wrap;
+}
 
 .card {
   background: var(--dark-card);
@@ -421,6 +430,8 @@ body::before {
   border: 1px solid var(--glass-border);
   border-radius: var(--card-radius);
   padding: 28px;
+  width: 100%;
+  height: fit-content;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   position: relative;
   overflow: hidden;
@@ -482,7 +493,8 @@ body::before {
 /* ========== SWOT TABLE ========== */
 .swot-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 14px;
 }
 .swot-cell {
@@ -534,8 +546,11 @@ body::before {
 /* ========== 5W1H TAGS ========== */
 .wh-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 12px;
+  width: 100%;
+  height: fit-content;
 }
 .wh-item {
   background: var(--dark-card);
@@ -547,6 +562,8 @@ body::before {
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 .wh-item::after {
   content: '';
@@ -622,6 +639,8 @@ body::before {
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: fit-content;
 }
 .toc-item::after {
   content: '→';
@@ -713,8 +732,13 @@ body::before {
 /* ========== ARCHITECTURE DIAGRAM ========== */
 .arch-flow {
   display: flex; align-items: stretch; justify-content: center; gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: row;
+  flex-wrap: nowrap;
   width: 100%;
+  height: fit-content;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 1);
 }
 .arch-node {
   background: var(--dark-card);
@@ -722,9 +746,10 @@ body::before {
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  padding: 28px 24px;
+  padding: 24px 24px;
   text-align: center;
   flex: 1; min-width: 200px; width: 100%; max-width: 100%;
+  height: fit-content;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   position: relative;
   overflow: hidden;
@@ -740,9 +765,11 @@ body::before {
   box-shadow: var(--hover-shadow);
 }
 .arch-node.device { border-color: rgba(255, 107, 157, 0.15); }
+.arch-node.device { padding-top: 12px; padding-bottom: 12px; }
 .arch-node.device::before { background: linear-gradient(90deg, var(--pink-deep), transparent); }
 .arch-node.device:hover { border-color: rgba(255, 107, 157, 0.3); box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 107, 157, 0.06); }
 .arch-node.app { border-color: rgba(139, 92, 246, 0.15); }
+.arch-node.app { height: 100%; }
 .arch-node.app::before { background: linear-gradient(90deg, var(--lavender-deep), transparent); }
 .arch-node.app:hover { border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(139, 92, 246, 0.06); }
 .arch-node.cloud { border-color: rgba(96, 165, 250, 0.15); }
@@ -751,6 +778,8 @@ body::before {
 .arch-icon {
   font-size: 36px; margin-bottom: 14px;
   display: block;
+  width: 100%;
+  height: fit-content;
 }
 .arch-node h4 {
   font-size: 15px; font-weight: 700; margin-bottom: 10px;
@@ -763,6 +792,11 @@ body::before {
   opacity: 0.4;
   animation: arrowPulse 2s ease-in-out infinite;
   display: flex; align-items: center;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  width: fit-content;
+  flex-direction: column;
 }
 @keyframes arrowPulse {
   0%, 100% { opacity: 0.25; transform: translateX(0); }
@@ -824,20 +858,27 @@ body::before {
 /* ========== FEATURE CARDS ========== */
 .feature-card {
   text-align: center;
-  padding: 32px 24px;
+  padding: 24px 24px;
 }
 .feature-emoji {
   font-size: 44px; margin-bottom: 18px;
   display: block;
   animation: float 5s ease-in-out infinite;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+  width: 100%;
+  height: fit-content;
+  margin-bottom: 12px;
 }
 .feature-card h3 {
   font-size: 18px; margin-bottom: 12px;
   font-weight: 800;
+  width: 100%;
+  height: fit-content;
 }
 .feature-card p {
   font-size: 13px; color: var(--text-dim); line-height: 1.85;
+  width: 100%;
+  height: fit-content;
 }
 
 /* ========== APP UI MOCKUP ========== */
@@ -992,16 +1033,22 @@ body::before {
 
 /* ========== HARDWARE EXPLODED IMAGE (slide 13) ========== */
 .hw-slide-grid {
+  width: 100%;
+  height: fit-content;
   align-items: stretch;
 }
 .hw-slide-grid .hw-layout {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 10px;
+  height: 100%;
 }
 .hw-slide-grid .hw-part {
-  height: 132px;
-  padding: 14px 18px;
+  width: 100%;
+  height: 100%;
+  padding: 10px 19px 10px 18px;
 }
 .hw-slide-grid .hw-part-icon {
   width: 40px;
@@ -1012,10 +1059,14 @@ body::before {
 .hw-slide-grid .hw-part h4 {
   font-size: 13px;
   margin-bottom: 2px;
+  width: fit-content;
+  height: fit-content;
 }
 .hw-slide-grid .hw-part p {
   font-size: 12px;
   line-height: 1.55;
+  width: fit-content;
+  height: fit-content;
 }
 .hw-explode-col {
   margin: 0;
@@ -1029,13 +1080,14 @@ body::before {
   margin: 0;
   flex: 0 0 auto;
   width: 100%;
+  height: 100%;
   aspect-ratio: 1;
   min-height: 0;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(36, 29, 61, 0.85));
-  padding: 12px;
+  padding: 0;
   box-sizing: border-box;
   width: 100%;
   display: flex;
@@ -1058,6 +1110,7 @@ body::before {
 .hw-explode-caption {
   flex-shrink: 0;
   width: 100%;
+  height: fit-content;
   margin-top: 6px;
   font-size: 11px;
   color: var(--text-dim);
@@ -1149,34 +1202,85 @@ body::before {
   opacity: 0.6;
 }
 
+/* Business Model slide: persist previewed layout adjustments */
+.slide[data-index="7"] .slide-inner {
+  width: 100%;
+  height: fit-content;
+  display: grid;
+  flex-wrap: wrap;
+}
+.slide[data-index="9"] .slide-inner {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+.slide[data-index="7"] .slide-title {
+  width: 100%;
+  height: fit-content;
+}
+.slide[data-index="7"] .bmc-grid {
+  width: 100%;
+  height: fit-content;
+  display: grid;
+  flex-direction: column;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+.slide[data-index="7"] .bmc-cell {
+  width: 100%;
+  height: 100%;
+}
+
 /* ========== CMF SLIDE COMPACT LAYOUT (Slide 12) ========== */
 .slide[data-index="11"] {
   padding-top: 40px;
   padding-bottom: 40px;
 }
 .slide-inner--cmf {
-  max-height: calc(100vh - 80px);
-  overflow: hidden;
+  width: 100%;
+  height: fit-content;
+  max-height: none;
+  overflow: visible;
 }
 .slide-inner--cmf .section-label {
   margin-bottom: 8px;
 }
 .slide-inner--cmf .slide-title {
+  width: 100%;
+  height: fit-content;
   margin-bottom: 14px;
 }
 .slide-inner--cmf .cmf-hero-row {
+  width: 100%;
+  height: fit-content;
   margin-bottom: 12px;
   gap: 14px;
-  max-height: 28vh;
+  max-height: none;
 }
 .slide-inner--cmf .cmf-img-frame {
-  max-height: 28vh;
-  padding: 6px;
+  max-height: none;
+  width: 100%;
+  height: fit-content;
+  padding: 0;
 }
 .slide-inner--cmf .cmf-img-frame img {
-  max-height: calc(28vh - 36px);
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: flex;
+  flex-wrap: wrap;
+  max-height: none;
+}
+.slide-inner--cmf .cmf-hero-row .cmf-img-frame:first-child img {
+  width: 100%;
+}
+.slide-inner--cmf .cmf-hero-row .cmf-img-frame:nth-child(2) img {
+  height: 100%;
 }
 .slide-inner--cmf .cmf-stats-row {
+  width: 100%;
+  height: fit-content;
   margin-bottom: 12px;
   gap: 10px;
 }
@@ -1195,10 +1299,14 @@ body::before {
   margin-top: 1px;
 }
 .slide-inner--cmf .cmf-details-row {
+  width: 100%;
+  height: fit-content;
   gap: 12px;
 }
 .slide-inner--cmf .cmf-details-row .card {
   padding: 18px 20px;
+  width: 100%;
+  height: 100%;
 }
 .slide-inner--cmf .cmf-details-row .card-icon {
   width: 34px; height: 34px;
@@ -1319,7 +1427,9 @@ body::before {
 .pain-flow {
   display: flex; align-items: center; gap: 12px;
   margin-bottom: 16px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: fit-content;
 }
 .pain-from, .pain-to {
   padding: 10px 18px;
@@ -1335,11 +1445,15 @@ body::before {
   color: var(--pink-soft);
   text-decoration: line-through;
   opacity: 0.65;
+  width: 100%;
+  height: 100%;
 }
 .pain-to {
   background: rgba(16, 185, 129, 0.08);
   border: 1px solid rgba(16, 185, 129, 0.15);
   color: var(--mint);
+  width: 100%;
+  height: fit-content;
 }
 .pain-arrow {
   font-size: 18px; color: var(--lavender); opacity: 0.5;
@@ -1359,6 +1473,8 @@ body::before {
   position: relative;
   overflow: hidden;
   transition: all 0.4s ease;
+  width: 100%;
+  height: fit-content;
 }
 .opportunity-box:hover {
   border-color: rgba(139, 92, 246, 0.2);
@@ -1563,6 +1679,8 @@ body::before {
 }
 .scene-hero-label {
   padding: 14px 18px;
+  width: 100%;
+  height: fit-content;
   font-size: 14px;
   font-weight: 700;
   color: var(--text-light);
@@ -1572,33 +1690,36 @@ body::before {
 
 /* 场景渲染页：版心 800px，地铁主图与双列卡片（各 390px）与浏览器预览对齐 */
 .slide-inner--scene-render {
-  max-width: 800px;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  height: fit-content;
 }
 .slide-inner--scene-render .scene-hero,
 .slide-inner--scene-render .scene-hero-img-wrap {
   width: 100%;
-  max-width: 800px;
+  height: fit-content;
 }
 .slide-inner--scene-render .scene-cards {
-  grid-template-columns: repeat(2, minmax(0, 390px));
+  width: 100%;
+  height: fit-content;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 .slide-inner--scene-render .scene-card,
 .slide-inner--scene-render .scene-visual,
 .slide-inner--scene-render .scene-card-body {
-  width: 390px;
-  height: fit-content;
+  width: 100%;
+  height: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
 .slide-inner--scene-render .scene-visual {
-  height: 125px;
+  height: fit-content;
   aspect-ratio: auto;
 }
 .slide-inner--scene-render .scene-hero-img-wrap img {
   width: 100%;
-  max-width: 800px;
   height: 100%;
   max-height: 296px;
   object-fit: cover;
@@ -1803,8 +1924,8 @@ body::before {
     <div class="slide-inner">
       <div class="section-label anim-item">REQUIREMENT ANALYSIS</div>
       <div class="slide-title anim-item">需求分析 · <span class="highlight">机会点总结</span></div>
-      <div style="margin-bottom:24px;">
-        <h3 class="anim-item" style="font-size:16px;margin-bottom:16px;color:var(--cream);">痛点 → 需求转化</h3>
+      <div style="margin-bottom:24px;width:100%;height:fit-content;">
+        <h3 class="anim-item" style="font-size:16px;margin-bottom:16px;color:var(--cream);width:100%;height:fit-content;">痛点 → 需求转化</h3>
         <div class="pain-flow anim-item">
           <span class="pain-from">静态陪伴</span>
           <span class="pain-arrow">→</span>
@@ -2043,7 +2164,7 @@ body::before {
           <div class="card-icon gold">🔍</div>
           <h3>隐藏摄像头设计</h3>
           <p style="margin-bottom:12px;">微型摄像头巧妙融入公仔装饰，避免突兀感与隐私抵触。</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;width:100%;height:fit-content;">
             <span style="padding:5px 14px;border-radius:20px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);font-size:12px;color:var(--gold);">🔘 纽扣造型</span>
             <span style="padding:5px 14px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:12px;color:var(--lavender);">🕶️ 墨镜造型</span>
             <span style="padding:5px 14px;border-radius:20px;background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);font-size:12px;color:var(--pink-soft);">🎀 蝴蝶结造型</span>
