@@ -29,6 +29,7 @@
   --gold: #F59E0B;
   --text-light: #EDE8F5;
   --text-dim: #A89CC8;
+  --text-dark: #7d6f9a;
   --slide-transition: 0.65s cubic-bezier(0.23, 1, 0.32, 1);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-bg: rgba(22, 16, 48, 0.55);
@@ -1031,94 +1032,38 @@ body::before {
 .hw-part h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
 .hw-part p { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
 
-/* ========== HARDWARE EXPLODED IMAGE (slide 13) ========== */
-.hw-slide-grid {
+/* 硬件爆炸图：与 CMF 白底页共用 cmf-white-split 栅格 */
+.slide-inner--cmf .cmf-white-split .hw-layout {
   width: 100%;
-  height: fit-content;
-  align-items: stretch;
-}
-.hw-slide-grid .hw-layout {
-  width: 100%;
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  height: 100%;
 }
-.hw-slide-grid .hw-part {
+.slide-inner--cmf .cmf-white-split .hw-part {
   width: 100%;
-  height: 100%;
+  min-height: 0;
   padding: 10px 19px 10px 18px;
 }
-.hw-slide-grid .hw-part-icon {
+.slide-inner--cmf .cmf-white-split .hw-part-icon {
   width: 40px;
   height: 40px;
   border-radius: 12px;
   font-size: 18px;
 }
-.hw-slide-grid .hw-part h4 {
+.slide-inner--cmf .cmf-white-split .hw-part h4 {
   font-size: 13px;
   margin-bottom: 2px;
   width: fit-content;
   height: fit-content;
 }
-.hw-slide-grid .hw-part p {
+.slide-inner--cmf .cmf-white-split .hw-part p {
   font-size: 12px;
   line-height: 1.55;
   width: fit-content;
   height: fit-content;
-}
-.hw-explode-col {
-  margin: 0;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  align-self: start;
-}
-.hw-explode-frame {
-  margin: 0;
-  flex: 0 0 auto;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 1;
-  min-height: 0;
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(36, 29, 61, 0.85));
-  padding: 0;
-  box-sizing: border-box;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  transition: all 0.4s ease;
-}
-.hw-explode-frame:hover {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-  border-color: rgba(139, 92, 246, 0.15);
-}
-.hw-explode-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  display: block;
-}
-.hw-explode-caption {
-  flex-shrink: 0;
-  width: 100%;
-  height: fit-content;
-  margin-top: 6px;
-  font-size: 11px;
-  color: var(--text-dim);
-  text-align: center;
-  line-height: 1.65;
-  padding: 0 2px;
-  box-sizing: border-box;
-  text-wrap: balance;
 }
 
 /* ========== CMF SPEC ========== */
@@ -1232,10 +1177,101 @@ body::before {
   height: 100%;
 }
 
-/* ========== CMF SLIDE COMPACT LAYOUT (Slide 12) ========== */
-.slide[data-index="11"] {
+/* ========== CMF 与硬件爆炸图：slide-inner--cmf 紧凑布局 ========== */
+.slide[data-index="11"],
+.slide[data-index="12"],
+.slide[data-index="13"] {
   padding-top: 40px;
   padding-bottom: 40px;
+}
+.slide-inner--cmf .cmf-hero-row--single {
+  grid-template-columns: 1fr;
+  max-width: min(640px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+.slide-inner--cmf .cmf-details-row--single {
+  grid-template-columns: 1fr;
+  max-width: min(720px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+/* 白底页：左图右材质 */
+.slide-inner--cmf .cmf-white-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: 18px;
+  width: 100%;
+  margin-bottom: 12px;
+  align-items: stretch;
+}
+/* 横屏：左图 1/3、右栏 2/3；≤900px 仍为单列 */
+@media (orientation: landscape) {
+  .slide-inner--cmf .cmf-white-split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+}
+.slide-inner--cmf .cmf-white-split__visual {
+  min-height: 0;
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+.slide-inner--cmf .cmf-white-split__visual img {
+  width: 100%;
+  max-height: min(380px, 48vh);
+  object-fit: contain;
+}
+.slide-inner--cmf .cmf-white-split__right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+.slide-inner--cmf .cmf-stats-row--pair {
+  grid-template-columns: 1fr 1fr;
+}
+.slide-inner--cmf .cmf-white-split__right .cmf-stats-row {
+  margin-bottom: 0;
+}
+.slide-inner--cmf .cmf-white-split__material {
+  padding: 18px 20px;
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.slide-inner--cmf .cmf-white-split__material .card-icon {
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.slide-inner--cmf .cmf-white-split__material h3 {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.slide-inner--cmf .cmf-white-split__material ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+.slide-inner--cmf .cmf-white-split__material li {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+.slide-inner--cmf .cmf-white-split__material p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  margin: 0 0 12px;
+}
+.slide-inner--cmf .cmf-white-split__material .cmf-cam-tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 .slide-inner--cmf {
   width: 100%;
@@ -1343,7 +1379,7 @@ body::before {
 /* ========== RESPONSIVE ========== */
 @media (max-width: 900px) {
   .slide { padding: 40px 24px; }
-  .content-grid, .swot-grid, .wh-grid, .app-screens, .bmc-grid, .cmf-specs { grid-template-columns: 1fr; }
+  .content-grid, .app-screens, .bmc-grid, .cmf-specs { grid-template-columns: 1fr; }
   .content-grid.triple { grid-template-columns: 1fr; }
   .scene-cards { grid-template-columns: 1fr; }
   .slide-inner--scene-render .scene-cards { grid-template-columns: 1fr; }
@@ -1356,6 +1392,13 @@ body::before {
   .cmf-hero-row {
     grid-template-columns: 1fr;
     gap: 14px;
+  }
+  .slide-inner--cmf .cmf-white-split {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .slide-inner--cmf .cmf-white-split__visual img {
+    max-height: min(280px, 42vh);
   }
   .cmf-stats-row {
     grid-template-columns: 1fr 1fr;
@@ -1378,12 +1421,6 @@ body::before {
   .cover-hero-wrap {
     width: min(55vw, 220px);
   }
-  .hw-slide-grid .hw-explode-col {
-    order: -1;
-    max-width: 100%;
-    justify-self: center;
-  }
-  .hw-explode-frame { width: 100%; aspect-ratio: 1; }
   .persona-card { flex-direction: column; align-items: center; text-align: center; }
   .arch-flow { flex-direction: column; }
   .arch-arrow { transform: rotate(90deg); }
@@ -1588,7 +1625,7 @@ body::before {
   padding: 10px 14px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-dim);
+  color: var(--text-dark);
   text-align: center;
   letter-spacing: 1px;
   background: linear-gradient(180deg, transparent, rgba(10, 8, 22, 0.85));
@@ -1747,7 +1784,7 @@ body::before {
 
 <canvas id="particles-canvas"></canvas>
 <div class="progress-bar" id="progressBar"></div>
-<div class="slide-counter"><span class="current" id="currentSlide">01</span> / <span id="totalSlides">16</span></div>
+<div class="slide-counter"><span class="current" id="currentSlide">01</span> / <span id="totalSlides">17</span></div>
 
 <div class="nav-dots" id="navDots"></div>
 <button class="nav-arrow prev hidden" id="prevBtn" onclick="prevSlide()">◂</button>
@@ -1805,7 +1842,7 @@ body::before {
             <p>CMF设计 · 硬件布局 · App界面 · 场景渲染</p>
           </div>
         </div>
-        <div class="toc-item anim-item" onclick="goToSlide(15)">
+        <div class="toc-item anim-item" onclick="goToSlide(16)">
           <div class="toc-num c4">04</div>
           <div class="toc-text">
             <h3>总结与展望</h3>
@@ -2109,117 +2146,127 @@ body::before {
     </div>
   </div>
 
-  <!-- ==================== SLIDE 12: CMF设计 ==================== -->
+  <!-- ==================== SLIDE 12: CMF — 白底效果图 & 材质 ==================== -->
   <div class="slide" data-index="11">
     <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;right:-60px;"></div>
     <div class="slide-inner slide-inner--cmf">
       <div class="section-label anim-item">SOLUTION DISPLAY</div>
-      <div class="slide-title anim-item">外观设计 · <span class="highlight">CMF & 尺寸</span></div>
+      <div class="slide-title anim-item">外观设计 · <span class="highlight">白底 & 材质</span></div>
 
-      <div class="cmf-hero-row anim-item">
-        <div class="cmf-img-frame">
-          <img src="images/effect_picture_3_view.png" alt="AnimeDoll 产品三视图：正视、侧视、背视" decoding="async" />
-          <span class="cmf-img-label">三视图 · 正视 / 侧视 / 背视</span>
-        </div>
-        <div class="cmf-img-frame">
+      <div class="cmf-white-split anim-item">
+        <div class="cmf-img-frame cmf-white-split__visual">
           <img src="images/effect_picture_white_bg.png" alt="AnimeDoll 白底产品效果图" decoding="async" onerror="this.onerror=null;this.src='effect_picture_white_bg.png'">
           <span class="cmf-img-label">白底产品效果图</span>
         </div>
-      </div>
-
-      <div class="cmf-stats-row anim-item">
-        <div class="cmf-stat">
-          <span class="stat-icon">📏</span>
-          <div class="stat-value" style="color:var(--pink-deep);">10<span style="font-size:12px">cm</span></div>
-          <div class="stat-label">极限尺寸</div>
-        </div>
-        <div class="cmf-stat">
-          <span class="stat-icon">⚖️</span>
-          <div class="stat-value" style="color:var(--lavender);">&lt;50<span style="font-size:12px">g</span></div>
-          <div class="stat-label">轻盈重量</div>
-        </div>
-        <div class="cmf-stat">
-          <span class="stat-icon">🧶</span>
-          <div class="stat-value" style="color:var(--mint);">毛绒</div>
-          <div class="stat-label">亲肤材质</div>
-        </div>
-        <div class="cmf-stat">
-          <span class="stat-icon">🔩</span>
-          <div class="stat-value" style="color:var(--cyber-blue);">ABS</div>
-          <div class="stat-label">轻质骨架</div>
-        </div>
-      </div>
-
-      <div class="cmf-details-row">
-        <div class="card anim-item">
-          <div class="card-icon green">🧶</div>
-          <h3>材质选择</h3>
-          <ul>
-            <li>头部：亲肤短毛绒，增加治愈触感</li>
-            <li>身体骨架：轻质ABS塑料，包裹电子元件</li>
-            <li>表面：抗污涂层，耐日常使用</li>
-          </ul>
-        </div>
-        <div class="card anim-item">
-          <div class="card-icon gold">🔍</div>
-          <h3>隐藏摄像头设计</h3>
-          <p style="margin-bottom:12px;">微型摄像头巧妙融入公仔装饰，避免突兀感与隐私抵触。</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;width:100%;height:fit-content;">
-            <span style="padding:5px 14px;border-radius:20px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);font-size:12px;color:var(--gold);">🔘 纽扣造型</span>
-            <span style="padding:5px 14px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:12px;color:var(--lavender);">🕶️ 墨镜造型</span>
-            <span style="padding:5px 14px;border-radius:20px;background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);font-size:12px;color:var(--pink-soft);">🎀 蝴蝶结造型</span>
+        <div class="cmf-white-split__right">
+          <div class="cmf-stats-row cmf-stats-row--pair anim-item">
+            <div class="cmf-stat">
+              <span class="stat-icon">🧶</span>
+              <div class="stat-value" style="color:var(--mint);">毛绒</div>
+              <div class="stat-label">亲肤材质</div>
+            </div>
+            <div class="cmf-stat">
+              <span class="stat-icon">🔩</span>
+              <div class="stat-value" style="color:var(--cyber-blue);">ABS</div>
+              <div class="stat-label">轻质骨架</div>
+            </div>
+          </div>
+          <div class="card cmf-white-split__material anim-item">
+            <div class="card-icon green">🧶</div>
+            <h3>材质选择</h3>
+            <ul>
+              <li>头部：亲肤短毛绒，增加治愈触感</li>
+              <li>身体骨架：轻质ABS塑料，包裹电子元件</li>
+              <li>表面：抗污涂层，耐日常使用</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 13: 硬件布局 ==================== -->
+  <!-- ==================== SLIDE 13: CMF — 三视图 & 隐藏摄像头 ==================== -->
   <div class="slide" data-index="12">
+    <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;right:-60px;"></div>
+    <div class="slide-inner slide-inner--cmf">
+      <div class="section-label anim-item">SOLUTION DISPLAY</div>
+      <div class="slide-title anim-item">外观设计 · <span class="highlight">三视图 & 摄像</span></div>
+
+      <div class="cmf-white-split anim-item">
+        <div class="cmf-img-frame cmf-white-split__visual">
+          <img src="images/effect_picture_3_view.png" alt="AnimeDoll 产品三视图：正视、侧视、背视" decoding="async" />
+          <span class="cmf-img-label">三视图 · 正视 / 侧视 / 背视</span>
+        </div>
+        <div class="cmf-white-split__right">
+          <div class="cmf-stats-row cmf-stats-row--pair anim-item">
+            <div class="cmf-stat">
+              <span class="stat-icon">📏</span>
+              <div class="stat-value" style="color:var(--pink-deep);">10<span style="font-size:12px">cm</span></div>
+              <div class="stat-label">极限尺寸</div>
+            </div>
+            <div class="cmf-stat">
+              <span class="stat-icon">⚖️</span>
+              <div class="stat-value" style="color:var(--lavender);">&lt;50<span style="font-size:12px">g</span></div>
+              <div class="stat-label">轻盈重量</div>
+            </div>
+          </div>
+          <div class="card cmf-white-split__material anim-item">
+            <div class="card-icon gold">🔍</div>
+            <h3>隐藏摄像头设计</h3>
+            <p>微型摄像头巧妙融入公仔装饰，避免突兀感与隐私抵触。</p>
+            <div class="cmf-cam-tags">
+              <span style="padding:5px 14px;border-radius:20px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);font-size:12px;color:var(--gold);">🔘 纽扣造型</span>
+              <span style="padding:5px 14px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:12px;color:var(--lavender);">🕶️ 墨镜造型</span>
+              <span style="padding:5px 14px;border-radius:20px;background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);font-size:12px;color:var(--pink-soft);">🎀 蝴蝶结造型</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 14: 硬件布局（布局同 CMF 白底 / 三视图页） ==================== -->
+  <div class="slide" data-index="13">
     <div class="glow-blob" style="width:300px;height:300px;background:var(--cyber-blue);top:-80px;left:-60px;"></div>
-    <div class="slide-inner">
+    <div class="slide-inner slide-inner--cmf">
       <div class="section-label anim-item">SOLUTION DISPLAY</div>
       <div class="slide-title anim-item">内部结构 · <span class="highlight">硬件爆炸图</span></div>
-      <div class="content-grid hw-slide-grid">
-        <div class="hw-layout">
-          <div class="hw-part anim-item">
-            <div class="hw-part-icon" style="background:rgba(255,107,157,0.12);">🔊</div>
-            <div>
-              <h4>头部模组</h4>
-              <p>微型定向扬声器（声音向下传播，减少对路人打扰）与收音麦克风</p>
+      <div class="cmf-white-split anim-item">
+        <div class="cmf-img-frame cmf-white-split__visual">
+          <img src="images/effect_picture_explode.png" alt="AnimeDoll 硬件爆炸图：头胸背模组、摄像头与充电口位置" decoding="async" loading="eager" onerror="this.onerror=null;this.src='images/effect_picture_explode.jpg'">
+          <span class="cmf-img-label">爆炸图 · 头 / 胸腹 / 背部模组</span>
+        </div>
+        <div class="cmf-white-split__right">
+          <div class="hw-layout">
+            <div class="hw-part anim-item">
+              <div class="hw-part-icon" style="background:rgba(255,107,157,0.12);">🔊</div>
+              <div>
+                <h4>头部模组</h4>
+                <p>微型定向扬声器（声音向下传播，减少对路人打扰）与收音麦克风</p>
+              </div>
             </div>
-          </div>
-          <div class="hw-part anim-item">
-            <div class="hw-part-icon" style="background:rgba(139,92,246,0.12);">📷</div>
-            <div>
-              <h4>胸部 / 腹部模组</h4>
-              <p>柔性 PCB 主板、蓝牙天线与 OV 系列摄像头模组</p>
+            <div class="hw-part anim-item">
+              <div class="hw-part-icon" style="background:rgba(139,92,246,0.12);">📷</div>
+              <div>
+                <h4>胸部 / 腹部模组</h4>
+                <p>柔性 PCB 主板、蓝牙天线与 OV 系列摄像头模组</p>
+              </div>
             </div>
-          </div>
-          <div class="hw-part anim-item">
-            <div class="hw-part-icon" style="background:rgba(96,165,250,0.12);">🔋</div>
-            <div>
-              <h4>背部模组</h4>
-              <p>Type-C 充电口（隐藏在衣服下）及 300mAh 锂电池</p>
+            <div class="hw-part anim-item">
+              <div class="hw-part-icon" style="background:rgba(96,165,250,0.12);">🔋</div>
+              <div>
+                <h4>背部模组</h4>
+                <p>Type-C 充电口（隐藏在衣服下）及 300mAh 锂电池</p>
+              </div>
             </div>
           </div>
         </div>
-        <figure class="hw-explode-col anim-item">
-          <div class="hw-explode-frame">
-            <img src="images/effect_picture_explode.png" alt="AnimeDoll 硬件爆炸图：头胸背模组、摄像头与充电口位置" decoding="async" loading="eager" onerror="this.onerror=null;this.src='images/effect_picture_explode.jpg'">
-          </div>
-          <figcaption class="hw-explode-caption">
-            <span style="color:var(--pink-soft);">● 头部</span> 扬声器 + 麦克风 ·
-            <span style="color:var(--lavender);">● 胸腹</span> 主板 + 摄像头 ·
-            <span style="color:var(--cyber-blue);">● 背部</span> 电池 + 充电
-          </figcaption>
-        </figure>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 14: App UI ==================== -->
-  <div class="slide" data-index="13">
+  <!-- ==================== SLIDE 15: App UI ==================== -->
+  <div class="slide" data-index="14">
     <div class="glow-blob" style="width:300px;height:300px;background:var(--pink-deep);bottom:-80px;right:-60px;"></div>
     <div class="slide-inner">
       <div class="section-label anim-item">SOLUTION DISPLAY</div>
@@ -2260,8 +2307,8 @@ body::before {
     </div>
   </div>
 
-  <!-- ==================== SLIDE 15: 场景渲染 ==================== -->
-  <div class="slide" data-index="14">
+  <!-- ==================== SLIDE 16: 场景渲染 ==================== -->
+  <div class="slide" data-index="15">
     <div class="glow-blob" style="width:350px;height:350px;background:var(--lavender-deep);top:-80px;left:-60px;"></div>
     <div class="slide-inner slide-inner--scene-render">
       <div class="section-label anim-item">SOLUTION DISPLAY</div>
@@ -2296,8 +2343,8 @@ body::before {
     </div>
   </div>
 
-  <!-- ==================== SLIDE 16: 总结与展望 ==================== -->
-  <div class="slide" data-index="15">
+  <!-- ==================== SLIDE 17: 总结与展望 ==================== -->
+  <div class="slide" data-index="16">
     <div class="glow-blob" style="width:400px;height:400px;background:var(--pink-deep);top:-120px;right:-100px;"></div>
     <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;left:-60px;animation-delay:3s;"></div>
     <div class="deco-star" style="top:18%;left:15%;animation-delay:0.3s;"></div>
