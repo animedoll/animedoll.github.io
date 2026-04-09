@@ -2,2458 +2,1772 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AnimeDoll — 你的跨次元 AI 专属陪伴</title>
 <link rel="icon" href="images/logo.ico" type="image/x-icon">
 <link rel="icon" href="images/logo.png" type="image/png">
 <link rel="apple-touch-icon" href="images/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Zen+Maru+Gothic:wght@400;500;700;900&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --pink-soft: #FFB7C5;
-  --pink-deep: #FF6B9D;
-  --pink-neon: #FF4F8F;
-  --lavender: #C4B5FD;
-  --lavender-deep: #8B5CF6;
-  --lavender-light: #DDD6FE;
-  --mint: #6EE7B7;
-  --mint-deep: #10B981;
-  --cyber-blue: #60A5FA;
-  --cyber-glow: #818CF8;
-  --dark-bg: #0A0816;
-  --dark-card: rgba(22, 16, 48, 0.65);
-  --dark-card-solid: #161030;
-  --dark-surface: #1E1738;
-  --cream: #FFF8F0;
-  --gold: #F59E0B;
-  --text-light: #EDE8F5;
-  --text-dim: #A89CC8;
-  --text-dark: #7d6f9a;
-  --slide-transition: 0.65s cubic-bezier(0.23, 1, 0.32, 1);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-bg: rgba(22, 16, 48, 0.55);
-  --glass-blur: blur(20px);
-  --card-radius: 18px;
-  --hover-lift: translateY(-6px);
-  --hover-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(139, 92, 246, 0.08);
+  --ak-bg-deep: #061218;
+  --ak-teal-dark: #0a2430;
+  --ak-cyan: #05a7dc;
+  --ak-cyan-glow: rgba(5, 167, 220, 0.35);
+  --ak-cyan-dim: #016d8d;
+  --ak-orange: #ff5e19;
+  --ak-panel: #fdfdfb;
+  --ak-panel-gray: #ebeceb;
+  --ak-dark: #424242;
+  --ak-black: #161919;
+  --ak-text: #323232;
+  --ak-text-muted: #6a6a6a;
+  --ak-text-light: #e8eef2;
+  --ak-line: rgba(255, 255, 255, 0.85);
+  --slide-transition: 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+  --hud-pad: clamp(12px, 2.5vw, 28px);
+  --content-max: 1100px;
+  --safe-top: max(0px, env(safe-area-inset-top, 0px));
+  --safe-bottom: max(0px, env(safe-area-inset-bottom, 0px));
+  --safe-left: max(0px, env(safe-area-inset-left, 0px));
+  --safe-right: max(0px, env(safe-area-inset-right, 0px));
+  --slide-transition-ms: 480;
+}
+
+.slide a[href] {
+  color: #0084ff;
+  text-decoration: none;
+}
+.slide a[href]:hover {
+  text-decoration: underline;
 }
 
 html, body {
-  width: 100%; height: 100%;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100%;
   overflow: hidden;
-  font-family: 'Noto Sans SC', 'Inter', 'Zen Maru Gothic', sans-serif;
-  background: var(--dark-bg);
-  color: var(--text-light);
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+  background: var(--ak-bg-deep);
+  color: var(--ak-text-light);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  user-select: none;
-  text-rendering: optimizeLegibility;
 }
 
-/* ========== AMBIENT MESH GRADIENT BG ========== */
+/* ========== 背景：深青渐变 + 网格 ========== */
 body::before {
   content: '';
-  position: fixed; inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 80% 90%, rgba(255, 107, 157, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 60% 40%, rgba(96, 165, 250, 0.04) 0%, transparent 60%);
+  position: fixed;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
-  animation: ambientShift 20s ease-in-out infinite alternate;
-}
-@keyframes ambientShift {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 0%, rgba(1, 109, 141, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(5, 167, 220, 0.12) 0%, transparent 50%),
+    linear-gradient(180deg, #0a1c28 0%, var(--ak-bg-deep) 45%, #050c10 100%);
 }
 
-/* ========== PARTICLES CANVAS ========== */
-#particles-canvas {
-  position: fixed; inset: 0;
-  z-index: 0; pointer-events: none;
-}
-
-/* ========== PROGRESS BAR ========== */
-.progress-bar {
-  position: fixed; top: 0; left: 0;
-  height: 2px; z-index: 1000;
-  background: linear-gradient(90deg, var(--pink-neon), var(--lavender-deep), var(--cyber-blue), var(--mint));
-  background-size: 200% 100%;
-  animation: progressGradient 3s ease infinite;
-  transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  box-shadow: 0 0 20px var(--pink-deep), 0 0 40px rgba(255, 107, 157, 0.15);
-}
-.progress-bar::after {
+body::after {
   content: '';
-  position: absolute; right: 0; top: -2px;
-  width: 80px; height: 6px;
-  background: radial-gradient(circle at right, var(--pink-soft), transparent);
-  filter: blur(3px);
-}
-@keyframes progressGradient {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 200% 0%; }
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: gridDrift 80s linear infinite;
 }
 
-/* ========== SLIDE COUNTER ========== */
-.slide-counter {
-  position: fixed; bottom: 32px; right: 40px;
-  z-index: 1000;
-  font-family: 'Inter', 'Zen Maru Gothic', sans-serif;
-  font-size: 13px; font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 3px;
-  opacity: 0.6;
-  display: flex; align-items: baseline; gap: 2px;
-  transition: opacity 0.3s ease;
+@keyframes gridDrift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(48px, 48px); }
 }
-.slide-counter:hover { opacity: 1; }
-.slide-counter .current {
-  color: var(--pink-soft);
-  font-size: 24px;
+
+@media (prefers-reduced-motion: reduce) {
+  body::after { animation: none; }
+}
+
+/* ========== 顶栏 HUD ========== */
+.ak-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(10px + var(--safe-top)) calc(var(--hud-pad) + var(--safe-right)) 8px calc(var(--hud-pad) + var(--safe-left));
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+.ak-topbar .line-left {
+  width: clamp(40px, 8vw, 72px);
+  height: 3px;
+  background: var(--ak-line);
+  flex-shrink: 0;
+}
+.ak-topbar .line-right {
+  flex: 1;
+  height: 3px;
+  background: var(--ak-line);
+  min-width: 0;
+}
+.ak-topbar .time-block {
+  font-family: 'IBM Plex Mono', 'Noto Sans SC', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  pointer-events: auto;
+}
+.ak-topbar .tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ak-cyan);
+  opacity: 0.9;
+  pointer-events: auto;
+}
+.ak-topbar .hud-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+.ak-topbar .hud-dots {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+.ak-topbar .hud-dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.32);
+}
+.ak-topbar .hud-dots span:nth-child(2) {
+  background: var(--ak-cyan);
+  box-shadow: 0 0 8px var(--ak-cyan-glow);
+}
+.ak-topbar .hud-pill {
+  font-size: 8px;
   font-weight: 800;
-  text-shadow: 0 0 20px rgba(255, 183, 197, 0.3);
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 2px 7px;
+  border-radius: 1px;
 }
 
-/* ========== NAV DOTS ========== */
-.nav-dots {
-  position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+/* ========== 进度条 ========== */
+.progress-bar {
+  position: fixed;
+  top: var(--safe-top);
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 1001;
+  background: linear-gradient(90deg, var(--ak-orange), var(--ak-cyan));
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 12px var(--ak-cyan-glow);
+}
+
+/* ========== 页码 ========== */
+.slide-counter {
+  position: fixed;
+  bottom: calc(var(--hud-pad) + var(--safe-bottom));
+  right: calc(var(--hud-pad) + 36px + var(--safe-right));
   z-index: 1000;
-  display: flex; flex-direction: column; gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.15em;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.slide-counter .current {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ak-orange);
+  text-shadow: 0 0 20px rgba(255, 94, 25, 0.35);
+}
+
+/* ========== 导航点 ========== */
+.nav-dots {
+  position: fixed;
+  right: calc(14px + var(--safe-right));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .nav-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--text-dim);
-  cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-  border: none; outline: none;
-  opacity: 0.3;
-}
-.nav-dot:hover { transform: scale(1.8); opacity: 0.7; background: var(--pink-soft); }
-.nav-dot.active {
-  background: linear-gradient(180deg, var(--pink-deep), var(--lavender-deep));
-  box-shadow: 0 0 12px var(--pink-deep), 0 0 24px rgba(255, 107, 157, 0.2);
-  opacity: 1;
-  height: 24px; border-radius: 3px;
   width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: height 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0.6;
+}
+.nav-dot:hover {
+  opacity: 1;
+  background: var(--ak-cyan);
+}
+.nav-dot:focus-visible {
+  outline: 2px solid var(--ak-orange);
+  outline-offset: 2px;
+}
+.nav-dot.active {
+  height: 28px;
+  opacity: 1;
+  background: linear-gradient(180deg, var(--ak-orange), #cc4a12);
+  box-shadow: 0 0 14px rgba(255, 94, 25, 0.45);
 }
 
-/* ========== NAV ARROWS ========== */
+/* ========== 箭头 ========== */
 .nav-arrow {
-  position: fixed; top: 50%; z-index: 1000;
-  width: 44px; height: 44px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  color: var(--text-dim);
+  position: fixed;
+  top: 50%;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  background: rgba(22, 25, 25, 0.75);
+  color: rgba(255, 255, 255, 0.65);
   font-size: 18px;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-  display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .nav-arrow:hover {
-  background: rgba(255, 107, 157, 0.12);
-  border-color: rgba(255, 107, 157, 0.25);
-  box-shadow: 0 8px 32px rgba(255, 107, 157, 0.15), inset 0 0 0 1px rgba(255, 107, 157, 0.1);
-  color: var(--pink-soft);
-  transform: translateY(-50%) scale(1.08);
+  background: rgba(5, 167, 220, 0.15);
+  border-color: rgba(5, 167, 220, 0.45);
+  color: #fff;
 }
-.nav-arrow.prev { left: 20px; transform: translateY(-50%); }
-.nav-arrow.next { right: 52px; transform: translateY(-50%); }
+.nav-arrow:focus-visible {
+  outline: 2px solid var(--ak-cyan);
+  outline-offset: 2px;
+}
+.nav-arrow.prev { left: calc(var(--hud-pad) + var(--safe-left)); transform: translateY(-50%); }
+.nav-arrow.next { right: calc(var(--hud-pad) + 28px + var(--safe-right)); transform: translateY(-50%); }
 .nav-arrow.hidden { opacity: 0; pointer-events: none; }
 
-/* ========== SLIDES CONTAINER ========== */
+/* ========== 全屏按钮 ========== */
+.fs-btn {
+  position: fixed;
+  bottom: calc(var(--hud-pad) + var(--safe-bottom));
+  left: calc(var(--hud-pad) + var(--safe-left));
+  z-index: 1000;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.fs-btn:hover {
+  color: var(--ak-cyan);
+  border-color: rgba(5, 167, 220, 0.4);
+  background: rgba(5, 167, 220, 0.08);
+}
+.fs-btn:focus-visible {
+  outline: 2px solid var(--ak-orange);
+  outline-offset: 2px;
+}
+
+/* ========== 幻灯片容器 ========== */
 .slides-wrapper {
   position: relative;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: calc(48px + var(--safe-top));
+  z-index: 1;
 }
 
 .slide {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  padding: 60px 80px;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 52px clamp(48px, 6vw, 72px) 72px clamp(20px, 4vw, 56px);
   opacity: 0;
-  transform: translateX(80px) scale(0.98);
-  transition: opacity var(--slide-transition), transform var(--slide-transition), filter var(--slide-transition);
+  transform: translateX(48px);
+  transition: opacity var(--slide-transition), transform var(--slide-transition);
   pointer-events: none;
   z-index: 1;
-  filter: blur(2px);
+  contain: layout style;
 }
 .slide.active {
-  opacity: 1; transform: translateX(0) scale(1);
-  pointer-events: auto; z-index: 10;
-  filter: blur(0);
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 10;
+  will-change: opacity, transform;
 }
 .slide.exit-left {
-  opacity: 0; transform: translateX(-80px) scale(0.98);
-  filter: blur(2px);
+  opacity: 0;
+  transform: translateX(-48px);
 }
 .slide.exit-right {
-  opacity: 0; transform: translateX(80px) scale(0.98);
-  filter: blur(2px);
+  opacity: 0;
+  transform: translateX(48px);
 }
 .slide.enter-from-right {
-  opacity: 0; transform: translateX(80px) scale(0.98);
-  filter: blur(2px);
+  opacity: 0;
+  transform: translateX(48px);
 }
 .slide.enter-from-left {
-  opacity: 0; transform: translateX(-80px) scale(0.98);
-  filter: blur(2px);
+  opacity: 0;
+  transform: translateX(-48px);
 }
 
-.slide-inner {
-  max-width: 1120px; width: 100%;
-  height: fit-content;
-  position: relative;
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: opacity 0.2s ease;
+    transform: none !important;
+    will-change: auto;
+  }
+  .slide.exit-left, .slide.exit-right, .slide.enter-from-right, .slide.enter-from-left {
+    opacity: 0;
+  }
+  .slide.active { opacity: 1; }
 }
 
-/* ========== DECORATIVE ELEMENTS ========== */
-.deco-star {
-  position: absolute;
-  width: 20px; height: 20px;
-  background: var(--gold);
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  animation: twinkle 3s ease-in-out infinite;
-  opacity: 0.5;
-}
-@keyframes twinkle {
-  0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
-  50% { opacity: 0.8; transform: scale(1.1) rotate(15deg); }
-}
-
-.deco-circle {
-  position: absolute;
-  border-radius: 50%;
-  border: 1.5px solid;
-  opacity: 0.1;
-  animation: float 8s ease-in-out infinite;
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(3deg); }
-}
-
-.glow-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.10;
-  animation: blobFloat 12s ease-in-out infinite;
-}
-@keyframes blobFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -40px) scale(1.15); }
-  66% { transform: translate(-20px, 20px) scale(0.85); }
-}
-
-/* ========== COVER SLIDE ========== */
-.cover-slide {
-  text-align: center;
-  flex-direction: column;
-}
-.cover-slide .slide-inner {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 20px;
-}
-.cover-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 7px 22px;
-  border-radius: 30px;
-  background: linear-gradient(135deg, rgba(255, 107, 157, 0.12), rgba(139, 92, 246, 0.12));
-  border: 1px solid rgba(255, 107, 157, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 4px;
-  color: var(--pink-soft);
-  text-transform: uppercase;
-  animation: fadeInUp 0.8s ease 0.3s both;
-}
-.cover-badge::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--pink-deep);
-  box-shadow: 0 0 8px var(--pink-deep);
-  animation: pulse 2s ease-in-out infinite;
-}
-.cover-hero-wrap {
-  width: min(34vmin, 280px);
-  aspect-ratio: 1 / 1;
-  border-radius: 24px;
-  overflow: hidden;
-  flex-shrink: 0;
-  box-shadow:
-    0 32px 64px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 0 80px rgba(139, 92, 246, 0.1);
-  background: radial-gradient(ellipse at 30% 20%, rgba(255, 107, 157, 0.15), rgba(10, 8, 22, 0.95));
-  animation: fadeInUp 0.8s ease 0.45s both, heroFloat 6s ease-in-out infinite 1.5s;
-  position: relative;
-}
-.cover-hero-wrap::after {
-  content: '';
-  position: absolute; inset: 0;
-  border-radius: 24px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-  pointer-events: none;
-}
-@keyframes heroFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-.cover-hero-wrap img {
+/* ========== 通用内层布局：侧栏 + 主区 ========== */
+.slide-frame {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: clamp(16px, 3vw, 40px);
+  max-width: var(--content-max);
   width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-.cover-title {
-  font-family: 'ZCOOL KuaiLe', 'Zen Maru Gothic', sans-serif;
-  font-size: clamp(48px, 7vw, 92px);
-  background: linear-gradient(135deg, var(--pink-soft) 0%, var(--lavender) 40%, var(--cyber-blue) 80%);
-  background-size: 200% auto;
-  animation: fadeInUp 0.8s ease 0.65s both, shimmer 4s linear infinite 1.5s;
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.15;
-  position: relative;
-  filter: drop-shadow(0 0 40px rgba(255, 183, 197, 0.15));
-}
-@keyframes shimmer {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
-}
-.cover-title::after {
-  content: '✦';
-  position: absolute; top: -8px; right: -28px;
-  font-size: 22px;
-  -webkit-text-fill-color: var(--gold);
-  animation: twinkle 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
-}
-.cover-subtitle {
-  font-size: clamp(15px, 2vw, 20px);
-  color: var(--text-dim);
-  font-weight: 300;
-  letter-spacing: 3px;
-  animation: fadeInUp 0.8s ease 0.85s both;
-}
-.cover-tagline {
-  font-size: clamp(13px, 1.4vw, 16px);
-  color: var(--lavender-light);
-  font-weight: 500;
-  margin-top: 4px;
-  padding: 12px 28px;
-  border-radius: 14px;
-  background: rgba(139, 92, 246, 0.06);
-  border: 1px solid rgba(139, 92, 246, 0.12);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  animation: fadeInUp 0.8s ease 1.05s both;
-  letter-spacing: 1px;
-}
-.cover-hint {
-  position: absolute; bottom: -60px;
-  font-size: 11px; color: var(--text-dim);
-  letter-spacing: 5px; opacity: 0.4;
-  animation: fadeInUp 0.8s ease 1.35s both, pulse 3s ease-in-out infinite 1.65s;
-  text-transform: uppercase;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+  align-items: stretch;
+  perspective: 1200px;
 }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+.ak-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transform: rotateY(6deg);
+  transform-origin: right center;
+  transition: transform 0.4s ease;
 }
-
-/* ========== SECTION HEADERS ========== */
-.section-label {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: 'Inter', sans-serif;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 5px; text-transform: uppercase;
-  color: var(--pink-deep);
-  margin-bottom: 14px;
-  height: fit-content;
+@media (min-width: 821px) and (orientation: landscape) {
+  .slide-frame .ak-sidebar {
+    transform: rotateY(9deg);
+  }
+}
+.ak-sidebar-label {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.35em;
+  color: var(--ak-cyan);
   opacity: 0.85;
 }
-.section-label::before {
-  content: '';
-  width: 28px; height: 1.5px;
-  background: linear-gradient(90deg, var(--pink-deep), transparent);
-}
 
-.slide-title {
-  font-family: 'Zen Maru Gothic', sans-serif;
-  font-size: clamp(26px, 3.8vw, 42px);
-  font-weight: 900;
-  line-height: 1.35;
-  margin-bottom: 30px;
-  width: 100%;
-  height: fit-content;
-  letter-spacing: -0.01em;
-}
-.slide-title .highlight {
-  background: linear-gradient(135deg, var(--pink-soft), var(--lavender));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 20px rgba(255, 183, 197, 0.15));
-}
-
-/* ========== CONTENT STYLES ========== */
-.content-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  width: 100%;
-  height: fit-content;
-}
-.content-grid.single { grid-template-columns: 1fr; }
-.content-grid.triple {
-  grid-template-columns: 1fr 1fr 1fr;
-  flex-wrap: wrap;
-}
-
-.card {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--card-radius);
-  padding: 28px;
-  width: 100%;
-  height: fit-content;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-}
-.card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--pink-deep), var(--lavender-deep), transparent);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-.card::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
-  pointer-events: none;
-}
-.card:hover {
-  border-color: rgba(139, 92, 246, 0.15);
-  transform: var(--hover-lift);
-  box-shadow: var(--hover-shadow);
-}
-.card:hover::before { opacity: 1; }
-
-.card-icon {
-  width: 42px; height: 42px;
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  margin-bottom: 16px;
+.voice-strip {
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.88);
   position: relative;
 }
-.card-icon.pink { background: rgba(255, 107, 157, 0.1); box-shadow: 0 0 20px rgba(255, 107, 157, 0.05); }
-.card-icon.purple { background: rgba(139, 92, 246, 0.1); box-shadow: 0 0 20px rgba(139, 92, 246, 0.05); }
-.card-icon.blue { background: rgba(96, 165, 250, 0.1); box-shadow: 0 0 20px rgba(96, 165, 250, 0.05); }
-.card-icon.green { background: rgba(16, 185, 129, 0.1); box-shadow: 0 0 20px rgba(16, 185, 129, 0.05); }
-.card-icon.gold { background: rgba(245, 158, 11, 0.1); box-shadow: 0 0 20px rgba(245, 158, 11, 0.05); }
-
-.card h3 {
-  font-size: 16px; font-weight: 700;
-  margin-bottom: 10px; color: var(--cream);
-  letter-spacing: 0.01em;
-}
-.card p, .card li {
-  font-size: 13.5px; line-height: 1.85;
-  color: var(--text-dim);
-}
-.card ul { list-style: none; padding: 0; }
-.card li { position: relative; padding-left: 18px; margin-bottom: 2px; }
-.card li::before {
-  content: ''; position: absolute; left: 0; top: 10px;
-  width: 5px; height: 5px;
-  border-radius: 1px;
-  background: linear-gradient(135deg, var(--pink-soft), var(--lavender));
-  transform: rotate(45deg);
+.voice-strip::before {
+  content: 'VOICE';
+  position: absolute;
+  top: -14px;
+  left: 8px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #000;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  padding: 2px 8px;
 }
 
-/* ========== SWOT TABLE ========== */
-.swot-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 14px;
+.chapter-pill {
+  align-self: flex-start;
+  background: var(--ak-dark);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-left: 3px solid var(--ak-orange);
 }
-.swot-cell {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 16px;
-  padding: 22px;
-  border: 1px solid var(--glass-border);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
+
+.ak-main {
+  min-width: 0;
 }
-.swot-cell::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.015) 0%, transparent 60%);
-  pointer-events: none;
-}
-.swot-cell:hover {
-  transform: translateY(-4px);
+
+/* ========== 卡片组件 ========== */
+.ak-card {
+  background: var(--ak-panel);
+  color: var(--ak-text);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-}
-.swot-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 12px; font-weight: 800;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-  display: flex; align-items: center; gap: 10px;
-}
-.swot-label .letter {
-  width: 28px; height: 28px;
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 900;
-}
-.swot-cell.s .letter { background: rgba(16, 185, 129, 0.15); color: var(--mint); }
-.swot-cell.w .letter { background: rgba(245, 158, 11, 0.15); color: var(--gold); }
-.swot-cell.o .letter { background: rgba(96, 165, 250, 0.15); color: var(--cyber-blue); }
-.swot-cell.t .letter { background: rgba(255, 107, 157, 0.15); color: var(--pink-deep); }
-.swot-cell.s:hover { border-color: rgba(16, 185, 129, 0.2); }
-.swot-cell.w:hover { border-color: rgba(245, 158, 11, 0.2); }
-.swot-cell.o:hover { border-color: rgba(96, 165, 250, 0.2); }
-.swot-cell.t:hover { border-color: rgba(255, 107, 157, 0.2); }
-.swot-cell p {
-  font-size: 13px; line-height: 1.85; color: var(--text-dim);
-}
-.swot-cell ul { list-style: none; padding: 0; }
-.swot-cell li {
-  font-size: 12.5px;
-  line-height: 1.75;
-  color: var(--text-dim);
-  padding-left: 14px;
   position: relative;
-  margin-bottom: 3px;
+  overflow: hidden;
 }
-.swot-cell li::before {
+.ak-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--ak-orange);
+  opacity: 0.95;
+}
+.ak-card--cyan::before {
+  background: linear-gradient(90deg, var(--ak-cyan), var(--ak-cyan-dim));
+}
+.ak-card--dark {
+  background: var(--ak-panel-gray);
+}
+/* 明日方舟风：渐变描边（参考 arknights-ui border-image） */
+.ak-card.ak-edge-cyan {
+  border: 1px solid transparent;
+  border-image: linear-gradient(180deg, var(--ak-cyan), #454545, var(--ak-cyan)) 1;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+}
+/* 深磁贴：总结页等强调对比 */
+.ak-card.ak-tile-dark {
+  background: linear-gradient(165deg, var(--ak-dark) 0%, var(--ak-black) 100%);
+  color: var(--ak-text-light);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+.ak-card.ak-tile-dark .ak-title {
+  color: #fff;
+}
+.ak-card.ak-tile-dark .ak-title .sub {
+  color: rgba(255, 255, 255, 0.55);
+}
+.ak-card.ak-tile-dark .roadmap-phase {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.ak-card.ak-tile-dark .roadmap-phase h3 {
+  color: #fff;
+}
+.ak-card.ak-tile-dark .roadmap-phase p {
+  color: rgba(255, 255, 255, 0.72);
+}
+.ak-card.ak-tile-dark .phase-badge {
+  opacity: 0.95;
+}
+.ak-card.ak-tile-dark .roadmap-arrow {
+  color: var(--ak-cyan);
+  opacity: 0.55;
+}
+.ak-card.ak-tile-dark .ending-vision .big-quote {
+  color: #fff;
+}
+.ak-card.ak-tile-dark .ending-tag {
+  color: rgba(255, 255, 255, 0.55);
+}
+.ak-card.ak-tile-dark .stat-pill {
+  background: rgba(5, 167, 220, 0.15);
+  border-color: rgba(5, 167, 220, 0.45);
+  color: #fff;
+}
+.ak-card-inner {
+  padding: 24px 28px 28px;
+}
+
+.ak-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(26px, 3.2vw, 38px);
+  line-height: 1.25;
+  color: var(--ak-text);
+  margin-bottom: 8px;
+}
+.ak-title .sub {
+  display: block;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ak-text-muted);
+  margin-top: 8px;
+  letter-spacing: 0.02em;
+}
+
+.ak-list {
+  list-style: none;
+  margin-top: 16px;
+}
+.ak-list li {
+  position: relative;
+  padding: 10px 0 10px 22px;
+  font-size: 15px;
+  line-height: 1.55;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: var(--ak-text);
+}
+.ak-list li:last-child { border-bottom: none; }
+.ak-list li::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 8px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--lavender);
+  top: 18px;
+  width: 8px;
+  height: 8px;
+  background: var(--ak-cyan);
+  border-radius: 1px;
+  opacity: 0.85;
 }
 
-/* ========== 5W1H TAGS ========== */
-.wh-grid {
+/* ========== 封面 ========== */
+.cover-slide {
+  flex-direction: column;
+  text-align: center;
+}
+.cover-slide .slide-inner {
+  max-width: 880px;
+  width: 100%;
+}
+.cover-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.4em;
+  color: var(--ak-cyan);
+  margin-bottom: 20px;
+}
+.cover-hero {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.15;
+  color: #fff;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.45);
+  margin-bottom: 16px;
+}
+.cover-sub {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 520px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+.cover-deco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cover-deco .bar {
+  height: 4px;
+  width: 120px;
+  background: linear-gradient(90deg, transparent, var(--ak-orange), transparent);
+}
+.cover-deco span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ========== 目录网格 ========== */
+.toc-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  gap: 12px;
-  width: 100%;
-  height: fit-content;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 8px;
 }
-.wh-item {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 14px;
-  padding: 20px;
-  border: 1px solid var(--glass-border);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+.toc-item {
+  background: var(--ak-panel);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 18px 16px 18px 20px;
   position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.wh-item::after {
+.toc-item::before {
   content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.015) 0%, transparent 60%);
-  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--ak-cyan);
 }
-.wh-item:hover {
-  border-color: rgba(139, 92, 246, 0.2);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+.toc-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+@media (prefers-reduced-motion: reduce) {
+  .toc-item:hover { transform: none; }
+}
+.toc-item .num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ak-orange);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.toc-item .label {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 17px;
+  color: var(--ak-text);
+}
+
+/* ========== 两栏对比 ========== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+@media (max-width: 700px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+.mini-card {
+  background: var(--ak-panel-gray);
+  padding: 16px 18px;
+  border-left: 4px solid var(--ak-dark);
+  color: var(--ak-text);
+}
+.mini-card h4 {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ak-cyan-dim);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.mini-card h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ak-text);
+  margin-bottom: 8px;
+}
+.mini-card p {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* ========== 数据条（装饰） ========== */
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.stat-pill {
+  background: rgba(5, 167, 220, 0.12);
+  border: 1px solid rgba(5, 167, 220, 0.35);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 2px;
+}
+
+/* ========== 结尾页 ========== */
+.end-slide .ak-card-inner {
+  text-align: center;
+}
+.end-hero {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(28px, 4vw, 42px);
+  color: var(--ak-text);
+  margin-bottom: 12px;
+}
+.end-note {
+  font-size: 15px;
+  color: var(--ak-text-muted);
+  line-height: 1.65;
+}
+
+.anim-item {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: akFadeUp 0.6s ease forwards;
+}
+.slide.active .anim-item:nth-child(1) { animation-delay: 0.05s; }
+.slide.active .anim-item:nth-child(2) { animation-delay: 0.12s; }
+.slide.active .anim-item:nth-child(3) { animation-delay: 0.18s; }
+.slide.active .anim-item:nth-child(4) { animation-delay: 0.24s; }
+.slide.active .anim-item:nth-child(5) { animation-delay: 0.3s; }
+
+@keyframes akFadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-item {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* ========== AnimeDoll 内容扩展（方舟代币） ========== */
+.slide-frame--wide { grid-template-columns: minmax(140px, 180px) 1fr; }
+
+/* 侧栏 + 主区：窄屏与竖屏平板必须单列，且须写在 .slide-frame--wide 之后以覆盖双列 */
+@media (max-width: 820px), (orientation: portrait) and (max-width: 1100px) {
+  .slide-frame,
+  .slide-frame.slide-frame--wide {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .ak-sidebar {
+    order: 2;
+    transform: none;
+  }
+  .ak-main { order: 1; }
+}
+
+/* 竖屏：隐藏侧栏（INDEX / VOICE 等），仅保留主内容区 */
+@media (orientation: portrait) and (max-width: 1100px) {
+  .slide-frame .ak-sidebar {
+    display: none;
+  }
+}
+
+.ak-main--scroll {
+  max-height: calc(100vh - 120px);
+  max-height: calc(100dvh - 120px);
+  max-height: calc(100svh - 120px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ak-cyan) rgba(10, 36, 48, 0.75);
+}
+/* 明日方舟风：细轨道 + 青主色滑条，悬停时橙色强调（WebKit / Chromium / Safari） */
+.ak-main--scroll::-webkit-scrollbar {
+  width: 7px;
+}
+.ak-main--scroll::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, rgba(6, 18, 24, 0.55), rgba(10, 36, 48, 0.85));
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.ak-main--scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--ak-cyan) 0%, var(--ak-cyan-dim) 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--ak-cyan-glow), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.ak-main--scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--ak-orange) 0%, #cc4a12 100%);
+  box-shadow: 0 0 14px rgba(255, 94, 25, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 94, 25, 0.35);
+}
+.cover-slide-inner { max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.cover-hero-wrap {
+  width: min(34vmin, 280px);
+  aspect-ratio: 1;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+.cover-hero-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover-title-ak {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(36px, 5vw, 56px);
+  color: #fff;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.45);
+  line-height: 1.15;
+}
+.cover-subtitle { font-size: clamp(15px, 2vw, 18px); color: rgba(255, 255, 255, 0.68); font-weight: 500; letter-spacing: 0.02em; }
+.cover-tagline { font-size: clamp(12px, 1.4vw, 15px); color: rgba(255, 255, 255, 0.5); margin-top: 4px; }
+.toc-jump { cursor: pointer; text-align: left; }
+.toc-item-row { display: flex; gap: 16px; align-items: flex-start; width: 100%; }
+.toc-desc { font-size: 12px; color: var(--ak-text-muted); margin-top: 8px; line-height: 1.45; }
+.toc-grid .toc-item .label { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; font-size: 16px; }
+.slide.active .anim-item:nth-child(6) { animation-delay: 0.36s; }
+.slide.active .anim-item:nth-child(7) { animation-delay: 0.42s; }
+.slide.active .anim-item:nth-child(8) { animation-delay: 0.48s; }
+.slide.active .anim-item:nth-child(9) { animation-delay: 0.54s; }
+.slide.active .anim-item:nth-child(10) { animation-delay: 0.6s; }
+.slide.active .anim-item:nth-child(11) { animation-delay: 0.66s; }
+.slide.active .anim-item:nth-child(12) { animation-delay: 0.72s; }
+
+.ad-h3 { font-size: 15px; font-weight: 800; color: var(--ak-text); margin-bottom: 12px; }
+.ad-muted { font-size: 13px; color: var(--ak-text-muted); line-height: 1.6; }
+.ad-strong-cyan { color: var(--ak-cyan-dim); font-weight: 700; }
+.ad-strong-orange { color: var(--ak-orange); font-weight: 700; }
+
+.research-a-split { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+@media (min-width: 900px) {
+  .research-a-split { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: 18px; align-items: stretch; }
+  .research-a-split .wh-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, auto); gap: 10px; }
+}
+.research-b-split { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+@media (min-width: 900px) {
+  .research-b-split { display: grid; grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr); gap: 18px; align-items: stretch; }
+}
+.research-b-col { height: 100%; }
+
+.wh-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; height: 100%; }
+.wh-item {
+  background: var(--ak-panel-gray);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 14px 16px;
+  border-radius: 2px;
+  border-left: 3px solid var(--ak-cyan);
 }
 .wh-tag {
   display: inline-block;
-  padding: 3px 12px;
-  border-radius: 6px;
-  font-family: 'Inter', sans-serif;
+  padding: 2px 10px;
   font-size: 10px; font-weight: 800;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-  background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(139, 92, 246, 0.15));
-  color: var(--pink-soft);
-}
-.wh-item p {
-  font-size: 13px; line-height: 1.75; color: var(--text-dim);
-}
-
-/* ========== QUOTE BLOCK ========== */
-.quote-block {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-left: 2px solid;
-  border-image: linear-gradient(180deg, var(--lavender-deep), var(--pink-deep)) 1;
-  border-radius: 0 16px 16px 0;
-  padding: 22px 28px;
-  margin: 14px 0;
-  position: relative;
-  transition: all 0.3s ease;
-}
-.quote-block:hover {
-  transform: translateX(4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-}
-.quote-block::before {
-  content: '"';
-  font-family: 'Zen Maru Gothic', serif;
-  font-size: 56px;
-  color: var(--lavender);
-  opacity: 0.12;
-  position: absolute; top: -6px; left: 14px;
-  line-height: 1;
-}
-.quote-block p {
-  font-size: 14px; line-height: 1.8;
-  color: var(--text-dim);
-  font-style: italic;
-}
-
-/* ========== TOC ========== */
-.toc-list {
-  display: flex; flex-direction: column; gap: 12px;
-}
-.toc-item {
-  display: flex; align-items: center; gap: 20px;
-  padding: 20px 28px;
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: var(--card-radius);
-  border: 1px solid var(--glass-border);
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: fit-content;
-}
-.toc-item::after {
-  content: '→';
-  position: absolute;
-  right: 28px;
-  font-size: 18px;
-  color: var(--text-dim);
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.toc-item:hover {
-  border-color: rgba(139, 92, 246, 0.2);
-  transform: translateX(6px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(139, 92, 246, 0.06);
-}
-.toc-item:hover::after {
-  opacity: 0.5;
-  transform: translateX(0);
-}
-.toc-num {
-  width: 46px; height: 46px;
-  border-radius: 13px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Inter', 'Zen Maru Gothic', sans-serif;
-  font-size: 18px; font-weight: 800;
-  flex-shrink: 0;
-  letter-spacing: -0.02em;
-}
-.toc-num.c1 { background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(255, 107, 157, 0.04)); color: var(--pink-deep); box-shadow: 0 0 20px rgba(255, 107, 157, 0.06); }
-.toc-num.c2 { background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.04)); color: var(--lavender-deep); box-shadow: 0 0 20px rgba(139, 92, 246, 0.06); }
-.toc-num.c3 { background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(96, 165, 250, 0.04)); color: var(--cyber-blue); box-shadow: 0 0 20px rgba(96, 165, 250, 0.06); }
-.toc-num.c4 { background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.04)); color: var(--mint-deep); box-shadow: 0 0 20px rgba(16, 185, 129, 0.06); }
-.toc-text h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-.toc-text p { font-size: 12.5px; color: var(--text-dim); letter-spacing: 0.3px; }
-
-/* ========== STORYBOARD ========== */
-.story-timeline {
-  position: relative;
-  display: flex; flex-direction: column; gap: 20px;
-  padding-left: 44px;
-}
-.story-timeline::before {
-  content: '';
-  position: absolute; left: 15px; top: 0; bottom: 0;
-  width: 1.5px;
-  background: linear-gradient(180deg, var(--pink-deep), var(--lavender-deep), var(--cyber-blue), transparent);
-}
-.story-item {
-  position: relative;
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: var(--card-radius);
-  padding: 24px;
-  border: 1px solid var(--glass-border);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.story-item:hover {
-  transform: translateX(6px);
-  border-color: rgba(255, 183, 197, 0.15);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-}
-.story-item::before {
-  content: '';
-  position: absolute; left: -36px; top: 28px;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--pink-deep);
-  box-shadow: 0 0 16px var(--pink-deep), 0 0 32px rgba(255, 107, 157, 0.2);
-}
-.story-item::after {
-  content: '';
-  position: absolute; left: -28px; top: 33px;
-  width: 16px; height: 1px;
-  background: linear-gradient(90deg, var(--pink-deep), transparent);
-  opacity: 0.4;
-}
-.story-time {
-  font-family: 'Inter', sans-serif;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--pink-soft);
+  letter-spacing: 0.15em;
   margin-bottom: 8px;
+  background: rgba(5, 167, 220, 0.12);
+  color: var(--ak-cyan-dim);
 }
-.story-item h4 { font-size: 15px; margin-bottom: 6px; font-weight: 700; }
-.story-item p { font-size: 13px; color: var(--text-dim); line-height: 1.75; }
+.wh-item p { font-size: 12px; line-height: 1.65; color: var(--ak-text); }
 
-/* ========== ARCHITECTURE DIAGRAM ========== */
-.arch-flow {
-  display: flex; align-items: stretch; justify-content: center; gap: 16px;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  width: 100%;
-  height: fit-content;
-  border-style: solid;
-  border-width: 1px;
-  border-color: rgba(0, 0, 0, 1);
-}
-.arch-node {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 24px 24px;
-  text-align: center;
-  flex: 1; min-width: 200px; width: 100%; max-width: 100%;
-  height: fit-content;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-}
-.arch-node::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 2px;
-  opacity: 0.6;
-}
-.arch-node:hover {
-  transform: var(--hover-lift);
-  box-shadow: var(--hover-shadow);
-}
-.arch-node.device { border-color: rgba(255, 107, 157, 0.15); }
-.arch-node.device { padding-top: 12px; padding-bottom: 12px; }
-.arch-node.device::before { background: linear-gradient(90deg, var(--pink-deep), transparent); }
-.arch-node.device:hover { border-color: rgba(255, 107, 157, 0.3); box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 107, 157, 0.06); }
-.arch-node.app { border-color: rgba(139, 92, 246, 0.15); }
-.arch-node.app { height: 100%; }
-.arch-node.app::before { background: linear-gradient(90deg, var(--lavender-deep), transparent); }
-.arch-node.app:hover { border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(139, 92, 246, 0.06); }
-.arch-node.cloud { border-color: rgba(96, 165, 250, 0.15); }
-.arch-node.cloud::before { background: linear-gradient(90deg, var(--cyber-blue), transparent); }
-.arch-node.cloud:hover { border-color: rgba(96, 165, 250, 0.3); box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(96, 165, 250, 0.06); }
-.arch-icon {
-  font-size: 36px; margin-bottom: 14px;
-  display: block;
-  width: 100%;
-  height: fit-content;
-}
-.arch-node h4 {
-  font-size: 15px; font-weight: 700; margin-bottom: 10px;
-  letter-spacing: 0.5px;
-}
-.arch-node p { font-size: 12px; color: var(--text-dim); line-height: 1.75; }
-.arch-arrow {
-  font-size: 24px;
-  color: var(--lavender);
-  opacity: 0.4;
-  animation: arrowPulse 2s ease-in-out infinite;
-  display: flex; align-items: center;
-  justify-content: center;
-  text-align: center;
-  vertical-align: middle;
-  width: fit-content;
-  flex-direction: column;
-}
-@keyframes arrowPulse {
-  0%, 100% { opacity: 0.25; transform: translateX(0); }
-  50% { opacity: 0.65; transform: translateX(4px); }
-}
+.data-bar-chart { margin-top: 8px; margin-bottom: 8px; padding-top: 12px; padding-bottom: 12px; padding-left: 12px; padding-right: 12px; border-top: 1px solid rgba(0, 0, 0, 0.06); }
+.data-bar-chart h4 { font-size: 12px; font-weight: 700; color: var(--ak-text-muted); margin-bottom: 10px; }
+.data-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 11px; }
+.data-bar-label { flex: 0 0 100px; color: var(--ak-text-muted); }
+.data-bar-track { flex: 1; height: 18px; background: rgba(0, 0, 0, 0.06); border-radius: 2px; overflow: hidden; }
+.data-bar-fill { height: 100%; width: calc(var(--w, 0.5) * 100%); border-radius: 0; }
+.data-bar-fill.ak-fill { background: linear-gradient(90deg, var(--ak-orange), var(--ak-cyan)); }
+.data-bar-fill.ak-fill-2 { background: linear-gradient(90deg, var(--ak-cyan), var(--ak-cyan-dim)); }
+.data-bar-fill.ak-fill-3 { background: linear-gradient(90deg, var(--ak-cyan-dim), #93c5fd); }
+.data-bar-val { font-size: 11px; font-weight: 700; color: var(--ak-text); }
+.data-bar-caption { font-size: 10px; color: var(--ak-text-muted); margin-top: 8px; }
 
-/* ========== PERSONA CARD ========== */
-.persona-card {
-  display: flex; gap: 32px;
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 22px;
-  padding: 32px;
-  border: 1px solid var(--glass-border);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s ease;
-}
-.persona-card::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 107, 157, 0.02) 0%, transparent 50%);
-  pointer-events: none;
-}
-.persona-card:hover {
-  border-color: rgba(139, 92, 246, 0.15);
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.25);
-}
-.persona-avatar {
-  width: 110px; height: 110px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--pink-deep), var(--lavender-deep));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 44px;
-  flex-shrink: 0;
-  box-shadow: 0 0 40px rgba(255, 107, 157, 0.15), 0 0 80px rgba(139, 92, 246, 0.08);
-  animation: float 6s ease-in-out infinite;
-}
-.persona-info h3 { font-size: 19px; margin-bottom: 10px; font-weight: 800; }
-.persona-info .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-.persona-tag {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px; font-weight: 600;
-  background: rgba(139, 92, 246, 0.1);
-  color: var(--lavender);
-  border: 1px solid rgba(139, 92, 246, 0.15);
-  transition: all 0.3s ease;
-}
-.persona-tag:hover {
-  background: rgba(139, 92, 246, 0.2);
-  transform: translateY(-1px);
-}
-.persona-info p {
-  font-size: 13.5px; color: var(--text-dim); line-height: 1.85;
-}
+.cagr-sparkline { margin-top: 8px; padding: 12px; background: var(--ak-panel-gray); border: 1px solid rgba(0, 0, 0, 0.06); }
+.cagr-sparkline-head { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; color: var(--ak-cyan-dim); font-weight: 700; letter-spacing: 0.02em; }
+.cagr-badge { color: var(--ak-orange); font-weight: 800; }
+.cagr-sparkline-caption { font-size: 10px; color: var(--ak-text-muted); margin-top: 8px; }
 
-/* ========== FEATURE CARDS ========== */
-.feature-card {
-  text-align: center;
-  padding: 24px 24px;
-}
-.feature-emoji {
-  font-size: 44px; margin-bottom: 18px;
-  display: block;
-  animation: float 5s ease-in-out infinite;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
-  width: 100%;
-  height: fit-content;
-  margin-bottom: 12px;
-}
-.feature-card h3 {
-  font-size: 18px; margin-bottom: 12px;
-  font-weight: 800;
-  width: 100%;
-  height: fit-content;
-}
-.feature-card p {
-  font-size: 13px; color: var(--text-dim); line-height: 1.85;
-  width: 100%;
-  height: fit-content;
-}
-
-/* ========== APP UI MOCKUP ========== */
-.app-screens {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 18px;
-}
-.app-screen {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 22px;
-  padding: 20px;
-  border: 1px solid var(--glass-border);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.app-screen::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 30%);
-  pointer-events: none;
-}
-.app-screen:hover {
-  transform: var(--hover-lift);
-  box-shadow: var(--hover-shadow);
-  border-color: rgba(139, 92, 246, 0.15);
-}
-.app-screen-header {
-  display: flex; align-items: center; gap: 5px;
-  margin-bottom: 16px; padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-.app-screen-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-}
-.app-screen-dot:nth-child(1) { background: #FF6B6B; }
-.app-screen-dot:nth-child(2) { background: #FFD93D; }
-.app-screen-dot:nth-child(3) { background: #6BCB77; }
-.app-screen h4 {
-  font-size: 15px; font-weight: 700; margin-bottom: 10px;
-  display: flex; align-items: center; gap: 8px;
-}
-.app-screen p { font-size: 12px; color: var(--text-dim); line-height: 1.85; }
-.app-screen-visual {
-  width: 100%; height: 80px;
-  border-radius: 14px;
-  margin-top: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: var(--text-dim);
-  transition: all 0.3s ease;
-}
-.app-screen:hover .app-screen-visual {
-  transform: scale(1.02);
-}
-
-/* ========== ROADMAP ========== */
-.roadmap {
-  display: flex; gap: 20px; align-items: stretch;
-}
-.roadmap-phase {
-  flex: 1;
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 22px;
-  padding: 32px;
-  border: 1px solid var(--glass-border);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.roadmap-phase:hover {
-  transform: var(--hover-lift);
-  box-shadow: var(--hover-shadow);
-}
-.roadmap-phase::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 2px;
-}
-.roadmap-phase.p1::before { background: linear-gradient(90deg, var(--pink-deep), var(--lavender), transparent); }
-.roadmap-phase.p2::before { background: linear-gradient(90deg, var(--lavender-deep), var(--cyber-blue), transparent); }
-.roadmap-phase.p3::before { background: linear-gradient(90deg, var(--cyber-blue), var(--mint), transparent); }
-.phase-badge {
-  display: inline-block;
-  padding: 4px 14px;
-  border-radius: 20px;
-  font-family: 'Inter', sans-serif;
-  font-size: 10px; font-weight: 800;
-  letter-spacing: 3px;
-  margin-bottom: 16px;
-}
-.p1 .phase-badge { background: rgba(255, 107, 157, 0.1); color: var(--pink-deep); }
-.p2 .phase-badge { background: rgba(139, 92, 246, 0.1); color: var(--lavender-deep); }
-.p3 .phase-badge { background: rgba(96, 165, 250, 0.12); color: var(--cyber-blue); }
-.roadmap-phase h3 { font-size: 20px; margin-bottom: 12px; font-weight: 800; }
-.roadmap-phase p { font-size: 13px; color: var(--text-dim); line-height: 1.85; }
-.roadmap-arrow {
-  display: flex; align-items: center;
-  font-size: 28px; color: var(--lavender); opacity: 0.35;
-  animation: arrowPulse 2s ease-in-out infinite;
-}
-
-/* ========== ENDING SLIDE ========== */
-.ending-vision {
-  text-align: center;
-  max-width: 680px;
-  margin: 0 auto;
-}
-.ending-vision .big-quote {
-  font-family: 'ZCOOL KuaiLe', sans-serif;
-  font-size: clamp(22px, 3.2vw, 34px);
-  line-height: 1.65;
-  background: linear-gradient(135deg, var(--pink-soft) 0%, var(--lavender) 50%, var(--mint) 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 24px;
-  animation: shimmer 6s linear infinite;
-  filter: drop-shadow(0 0 30px rgba(255, 183, 197, 0.1));
-}
-
-/* ========== HARDWARE EXPLODED VIEW ========== */
-.hw-layout {
-  display: flex; flex-direction: column; gap: 14px;
-}
-.hw-part {
-  display: flex; align-items: center; gap: 20px;
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 16px;
-  padding: 20px 24px;
-  border: 1px solid var(--glass-border);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.hw-part:hover {
-  border-color: rgba(139, 92, 246, 0.15);
-  transform: translateX(6px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-}
-.hw-part-icon {
-  width: 48px; height: 48px;
-  border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
-.hw-part h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-.hw-part p { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
-
-/* 硬件爆炸图：与 CMF 白底页共用 cmf-white-split 栅格 */
-.slide-inner--cmf .cmf-white-split .hw-layout {
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-.slide-inner--cmf .cmf-white-split .hw-part {
-  width: 100%;
-  min-height: 0;
-  padding: 10px 19px 10px 18px;
-}
-.slide-inner--cmf .cmf-white-split .hw-part-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  font-size: 18px;
-}
-.slide-inner--cmf .cmf-white-split .hw-part h4 {
-  font-size: 13px;
-  margin-bottom: 2px;
-  width: fit-content;
-  height: fit-content;
-}
-.slide-inner--cmf .cmf-white-split .hw-part p {
-  font-size: 12px;
-  line-height: 1.55;
-  width: fit-content;
-  height: fit-content;
-}
-
-/* ========== CMF SPEC ========== */
-.cmf-specs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-.cmf-item {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 16px;
-  padding: 24px;
-  height: 98px;
-  border: 1px solid var(--glass-border);
-  text-align: center;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.cmf-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
-}
-.cmf-item .big-num {
-  font-family: 'Inter', 'Zen Maru Gothic', sans-serif;
-  font-size: 32px; font-weight: 900;
-  margin-bottom: 4px;
-  letter-spacing: -0.02em;
-}
-.cmf-item .label {
-  font-size: 11px; color: var(--text-dim);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-/* ========== BUSINESS MODEL ========== */
-.bmc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 14px;
-}
-.bmc-cell {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 16px;
-  padding: 22px;
-  border: 1px solid var(--glass-border);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-}
-.bmc-cell::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.015) 0%, transparent 60%);
-  pointer-events: none;
-}
-.bmc-cell:hover {
-  border-color: rgba(139, 92, 246, 0.15);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
-}
-.bmc-cell h4 {
-  font-size: 12px; font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-  color: var(--lavender);
-}
-.bmc-cell p, .bmc-cell li {
-  font-size: 12px; color: var(--text-dim); line-height: 1.85;
-}
-.bmc-cell ul { list-style: none; padding: 0; }
-.bmc-cell li { padding-left: 16px; position: relative; margin-bottom: 2px; }
-.bmc-cell li::before {
-  content: ''; position: absolute; left: 2px; top: 8px;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--pink-soft);
-  opacity: 0.6;
-}
-
-/* Business Model slide: persist previewed layout adjustments */
-.slide[data-index="8"] .slide-inner {
-  width: 100%;
-  height: fit-content;
-  display: grid;
-  flex-wrap: wrap;
-}
-.slide[data-index="10"] .slide-inner {
-  width: 100%;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-}
-.slide[data-index="8"] .slide-title {
-  width: 100%;
-  height: fit-content;
-}
-.slide[data-index="8"] .bmc-grid {
-  width: 100%;
-  height: fit-content;
-  display: grid;
-  flex-direction: column;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-}
-.slide[data-index="8"] .bmc-cell {
-  width: 100%;
+.swot-quadrant-wrap {
+  border-radius: 2px;
+  padding: 10px;
   height: 100%;
+  background: linear-gradient(135deg, rgba(5, 167, 220, 0.08), rgba(255, 94, 25, 0.06));
 }
+.swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height: 100%; }
+.swot-cell {
+  background: var(--ak-panel);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 14px 16px;
+  border-radius: 2px;
+}
+.swot-label { font-size: 11px; font-weight: 800; margin-bottom: 8px; color: var(--ak-cyan-dim); display: flex; align-items: center; gap: 8px; }
+.swot-label .letter { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--ak-panel-gray); border-radius: 2px; font-size: 12px; }
+.swot-cell ul { list-style: none; padding: 0; margin: 0; }
+.swot-cell li { font-size: 11px; line-height: 1.55; color: var(--ak-text); padding-left: 12px; position: relative; margin-bottom: 4px; }
+.swot-cell li::before { content: ''; position: absolute; left: 0; top: 7px; width: 4px; height: 4px; background: var(--ak-cyan); border-radius: 1px; }
 
-/* ========== CMF 与硬件爆炸图：slide-inner--cmf 紧凑布局 ========== */
-.slide[data-index="12"],
-.slide[data-index="13"],
-.slide[data-index="14"] {
-  padding-top: 40px;
-  padding-bottom: 40px;
-}
-.slide-inner--cmf .cmf-hero-row--single {
-  grid-template-columns: 1fr;
-  max-width: min(640px, 100%);
-  margin-left: auto;
-  margin-right: auto;
-}
-.slide-inner--cmf .cmf-details-row--single {
-  grid-template-columns: 1fr;
-  max-width: min(720px, 100%);
-  margin-left: auto;
-  margin-right: auto;
-}
-/* 白底页：左图右材质 */
-.slide-inner--cmf .cmf-white-split {
-  display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
-  gap: 18px;
-  width: 100%;
-  margin-bottom: 12px;
-  align-items: stretch;
-}
-/* 横屏：左图 1/3、右栏 2/3；≤900px 仍为单列 */
-@media (orientation: landscape) {
-  .slide-inner--cmf .cmf-white-split {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  }
-}
-.slide-inner--cmf .cmf-white-split__visual {
-  min-height: 0;
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.1);
-}
-.slide-inner--cmf .cmf-white-split__visual img {
-  width: 100%;
-  max-height: min(380px, 48vh);
-  object-fit: contain;
-}
-.slide-inner--cmf .cmf-white-split__right {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: 0;
-}
-.slide-inner--cmf .cmf-stats-row--pair {
-  grid-template-columns: 1fr 1fr;
-}
-.slide-inner--cmf .cmf-white-split__right .cmf-stats-row {
-  margin-bottom: 0;
-}
-.slide-inner--cmf .cmf-white-split__material {
-  padding: 18px 20px;
-  flex: 1;
-  min-height: 0;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-.slide-inner--cmf .cmf-white-split__material .card-icon {
-  width: 34px;
-  height: 34px;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-.slide-inner--cmf .cmf-white-split__material h3 {
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-.slide-inner--cmf .cmf-white-split__material ul {
-  margin: 0;
-  padding-left: 1.1em;
-}
-.slide-inner--cmf .cmf-white-split__material li {
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--text-dim);
-}
-.slide-inner--cmf .cmf-white-split__material p {
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--text-dim);
-  margin: 0 0 12px;
-}
-.slide-inner--cmf .cmf-white-split__material .cmf-cam-tags {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  width: 100%;
-}
-.slide-inner--cmf {
-  width: 100%;
-  height: fit-content;
-  max-height: none;
-  overflow: visible;
-}
-.slide-inner--cmf .section-label {
-  margin-bottom: 8px;
-}
-.slide-inner--cmf .slide-title {
-  width: 100%;
-  height: fit-content;
-  margin-bottom: 14px;
-}
-.slide-inner--cmf .cmf-hero-row {
-  width: 100%;
-  height: fit-content;
-  margin-bottom: 12px;
-  gap: 14px;
-  max-height: none;
-}
-.slide-inner--cmf .cmf-img-frame {
-  max-height: none;
-  width: 100%;
-  height: fit-content;
-  padding: 0;
-}
-.slide-inner--cmf .cmf-img-frame img {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  display: flex;
-  flex-wrap: wrap;
-  max-height: none;
-}
-.slide-inner--cmf .cmf-hero-row .cmf-img-frame:first-child img {
-  width: 100%;
-}
-.slide-inner--cmf .cmf-hero-row .cmf-img-frame:nth-child(2) img {
-  height: 100%;
-}
-.slide-inner--cmf .cmf-stats-row {
-  width: 100%;
-  height: fit-content;
-  margin-bottom: 12px;
-  gap: 10px;
-}
-.slide-inner--cmf .cmf-stat {
-  padding: 12px 10px;
-}
-.slide-inner--cmf .cmf-stat .stat-icon {
-  font-size: 18px;
-  margin-bottom: 2px;
-}
-.slide-inner--cmf .cmf-stat .stat-value {
-  font-size: 18px;
-}
-.slide-inner--cmf .cmf-stat .stat-label {
-  font-size: 9px;
-  margin-top: 1px;
-}
-.slide-inner--cmf .cmf-details-row {
-  width: 100%;
-  height: fit-content;
-  gap: 12px;
-}
-.slide-inner--cmf .cmf-details-row .card {
-  padding: 18px 20px;
-  width: 100%;
-  height: 100%;
-}
-.slide-inner--cmf .cmf-details-row .card-icon {
-  width: 34px; height: 34px;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-.slide-inner--cmf .cmf-details-row .card h3 {
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-.slide-inner--cmf .cmf-details-row .card p,
-.slide-inner--cmf .cmf-details-row .card li {
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-/* ========== SLIDE ENTRY ANIMATIONS ========== */
-.slide.active .anim-item {
-  animation: slideItemIn 0.55s cubic-bezier(0.23, 1, 0.32, 1) both;
-}
-.slide.active .anim-item:nth-child(1) { animation-delay: 0.08s; }
-.slide.active .anim-item:nth-child(2) { animation-delay: 0.15s; }
-.slide.active .anim-item:nth-child(3) { animation-delay: 0.22s; }
-.slide.active .anim-item:nth-child(4) { animation-delay: 0.29s; }
-.slide.active .anim-item:nth-child(5) { animation-delay: 0.36s; }
-.slide.active .anim-item:nth-child(6) { animation-delay: 0.43s; }
-.slide.active .anim-item:nth-child(7) { animation-delay: 0.50s; }
-
-@keyframes slideItemIn {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 900px) {
-  .slide { padding: 40px 24px; }
-  .content-grid, .app-screens, .bmc-grid, .cmf-specs { grid-template-columns: 1fr; }
-  .content-grid.triple { grid-template-columns: 1fr; }
-  .scene-cards { grid-template-columns: 1fr; }
-  .slide-inner--scene-render .scene-cards { grid-template-columns: 1fr; }
-  .slide-inner--scene-render .scene-card,
-  .slide-inner--scene-render .scene-visual,
-  .slide-inner--scene-render .scene-card-body {
-    width: 100%;
-    max-width: 100%;
-  }
-  .cmf-hero-row {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-  .slide-inner--cmf .cmf-white-split {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-  .slide-inner--cmf .cmf-white-split__visual img {
-    max-height: min(280px, 42vh);
-  }
-  .cmf-stats-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .cmf-details-row {
-    grid-template-columns: 1fr;
-  }
-  .scene-hero-img-wrap {
-    width: 100%;
-    max-height: 240px;
-  }
-  .scene-hero-img-wrap img {
-    width: 100%;
-    height: 100%;
-    max-height: 240px;
-    object-fit: cover;
-    object-position: center;
-  }
-  .cover-hero-wrap {
-    width: min(55vw, 220px);
-  }
-  .persona-card { flex-direction: column; align-items: center; text-align: center; }
-  .arch-flow { flex-direction: column; }
-  .arch-arrow { transform: rotate(90deg); }
-  .roadmap { flex-direction: column; }
-  .nav-dots { display: none; }
-  .nav-arrow { display: none; }
-  .slide-counter { bottom: 20px; right: 24px; }
-  .competitive-layout { grid-template-columns: 1fr; }
-  .flywheel-flow { grid-template-columns: 1fr; }
-  .flywheel-arrow { transform: rotate(90deg); }
-}
-
-/* iPad / Tablet: 768px–1024px */
-@media (min-width: 768px) and (max-width: 1100px) {
-  .cmf-hero-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  .cmf-stats-row {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .cmf-details-row {
-    grid-template-columns: 1fr 1fr;
-  }
-  .scene-hero-img-wrap {
-    height: auto;
-    max-height: 280px;
-  }
-  .scene-hero-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .slide { padding: 32px 16px; }
-  .cover-title { font-size: clamp(36px, 10vw, 48px) !important; }
-  .slide-title { font-size: clamp(22px, 5vw, 28px); }
-}
-
-/* ========== PAIN POINT CONVERSION ========== */
-.pain-flow {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 16px;
-  flex-wrap: nowrap;
-  width: 100%;
-  height: fit-content;
-}
-.pain-from, .pain-to {
-  padding: 10px 18px;
-  border-radius: 12px;
-  font-size: 13.5px; font-weight: 500;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: all 0.3s ease;
-}
-.pain-from {
-  background: rgba(255, 107, 157, 0.08);
-  border: 1px solid rgba(255, 107, 157, 0.15);
-  color: var(--pink-soft);
-  text-decoration: line-through;
-  opacity: 0.65;
-  width: 100%;
-  height: 100%;
-}
-.pain-to {
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.15);
-  color: var(--mint);
-  width: 100%;
-  height: fit-content;
-}
-.pain-arrow {
-  font-size: 18px; color: var(--lavender); opacity: 0.5;
-  animation: arrowPulse 2s ease-in-out infinite;
-}
-
-/* ========== OPPORTUNITY CALLOUT ========== */
-.opportunity-box {
-  background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), rgba(139, 92, 246, 0.05));
-  border: 1px solid rgba(255, 107, 157, 0.1);
-  border-radius: 22px;
-  padding: 36px;
-  text-align: center;
-  margin-top: 24px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s ease;
-  width: 100%;
-  height: fit-content;
-}
-.opportunity-box:hover {
-  border-color: rgba(139, 92, 246, 0.2);
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.2);
-}
-.opportunity-box::after {
-  content: '';
-  position: absolute; top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.03), transparent 50%);
-  pointer-events: none;
-}
-.opportunity-box .emoji { font-size: 40px; margin-bottom: 14px; display: block; }
-.opportunity-box h3 {
-  font-family: 'ZCOOL KuaiLe', sans-serif;
-  font-size: 22px;
-  background: linear-gradient(135deg, var(--pink-soft), var(--lavender));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 10px;
-}
-.opportunity-box p { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
-
-/* ========== COMPETITIVE LANDSCAPE ========== */
-.competitive-layout {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 16px;
-}
-.competitive-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-.competitor-card {
-  background: var(--dark-card);
-  border: 1px solid var(--glass-border);
-  border-radius: 14px;
-  padding: 18px;
-}
-.competitor-card h4 { font-size: 14px; margin-bottom: 8px; }
-.competitor-card p { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
-.positioning-callout {
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(255, 107, 157, 0.08));
-  border: 1px solid rgba(139, 92, 246, 0.22);
-  border-radius: 18px;
-  padding: 18px;
-}
-.positioning-callout h3 { margin-bottom: 8px; }
-.positioning-matrix {
-  margin-top: 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 12px;
-  position: relative;
-  min-height: 180px;
-  background: rgba(255, 255, 255, 0.01);
-}
-.positioning-matrix .axis {
-  position: absolute;
-  font-size: 10px;
-  color: var(--text-dim);
-  letter-spacing: 1px;
-}
+.competitive-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; }
+@media (max-width: 900px) { .competitive-layout { grid-template-columns: 1fr; } }
+.competitive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 700px) { .competitive-grid { grid-template-columns: 1fr; } }
+.competitor-card { background: var(--ak-panel-gray); padding: 12px 14px; border-left: 3px solid var(--ak-dark); }
+.competitor-card h4 { font-size: 13px; font-weight: 800; color: var(--ak-text); margin-bottom: 6px; }
+.competitor-card p { font-size: 11px; line-height: 1.55; color: var(--ak-text-muted); }
+.positioning-callout { background: var(--ak-panel); padding: 14px; border-top: 4px solid var(--ak-orange); }
+.positioning-callout h3 { font-size: 15px; font-weight: 900; font-family: 'Noto Serif SC', serif; color: var(--ak-text); margin-bottom: 8px; }
+.positioning-callout > p { font-size: 12px; color: var(--ak-text-muted); line-height: 1.5; }
+.positioning-matrix { position: relative; min-height: 160px; margin-top: 12px; border: 1px solid rgba(0, 0, 0, 0.08); background: var(--ak-panel-gray); border-radius: 2px; }
+.positioning-matrix .axis { position: absolute; font-size: 10px; color: var(--ak-text-muted); }
 .positioning-matrix .axis.x { bottom: 6px; right: 8px; }
 .positioning-matrix .axis.y { top: 8px; left: 8px; writing-mode: vertical-rl; }
 .matrix-point {
-  position: absolute;
-  font-size: 11px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(139, 92, 246, 0.14);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  color: var(--lavender-light);
+  position: absolute; font-size: 10px; padding: 4px 8px; border-radius: 2px;
+  background: rgba(5, 167, 220, 0.12); border: 1px solid rgba(5, 167, 220, 0.35); color: var(--ak-cyan-dim);
 }
-.matrix-point.highlight {
-  background: rgba(255, 107, 157, 0.18);
-  border-color: rgba(255, 107, 157, 0.35);
-  color: var(--pink-soft);
-  box-shadow: 0 0 24px rgba(255, 107, 157, 0.14);
-}
+.matrix-point.highlight { background: rgba(255, 94, 25, 0.15); border-color: var(--ak-orange); color: var(--ak-orange); font-weight: 700; }
 
-/* ========== COMMUNITY FLYWHEEL ========== */
-.flywheel-flow {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 18px;
+.persona-card { display: flex; gap: 20px; background: var(--ak-panel-gray); padding: 18px 20px; border: 1px solid rgba(0, 0, 0, 0.06); }
+.persona-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--ak-cyan-dim), var(--ak-dark));
+  display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0;
 }
-.flywheel-node {
-  border: 1px solid var(--glass-border);
-  background: var(--dark-card);
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--text-dim);
+.persona-info h3 { font-size: 16px; font-weight: 800; color: var(--ak-text); margin-bottom: 8px; }
+.persona-tag {
+  display: inline-block; padding: 3px 10px; font-size: 10px; font-weight: 600;
+  background: rgba(5, 167, 220, 0.1); color: var(--ak-cyan-dim); border-radius: 2px; margin: 0 4px 4px 0;
 }
-.flywheel-arrow {
-  text-align: center;
-  color: var(--lavender);
-  opacity: 0.7;
-}
+.persona-info p { font-size: 12px; color: var(--ak-text-muted); line-height: 1.65; }
+.content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.content-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 900px) { .content-grid, .content-grid.triple { grid-template-columns: 1fr; } }
 
-/* ========== SCENE RENDER CARDS ========== */
-.scene-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-.scene-card {
-  background: var(--dark-card-solid);
-  border-radius: 22px;
-  overflow: hidden;
-  border: 1px solid var(--glass-border);
-  transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.scene-card:hover {
-  transform: var(--hover-lift);
-  box-shadow: var(--hover-shadow);
-  border-color: rgba(139, 92, 246, 0.15);
-}
-/* 与上方地铁主图 scene-hero 一致为 2:1 */
-.scene-visual {
-  width: 100%;
-  aspect-ratio: 2 / 1;
-  min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(40px, 10vw, 64px);
-  position: relative;
-  overflow: hidden;
-}
-.scene-visual::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 50%, var(--dark-card));
-}
-.scene-card.day .scene-visual {
-  background: linear-gradient(135deg, #FFE4E1, #E8D5F5, #D4E7FE);
-}
-.scene-card.night .scene-visual {
-  background: linear-gradient(135deg, #1a1033, #0d1b2a, #162447);
-}
-.scene-card-body {
-  padding: 20px;
-}
-.scene-card-body h4 { font-size: 16px; margin-bottom: 6px; }
-.scene-card-body p { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
-
-/* ========== PRODUCT & SCENE PHOTOS ========== */
-/* CMF 页 — 重新设计：上下两段式布局 */
-.cmf-hero-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-bottom: 20px;
-  width: 100%;
-}
-.cmf-img-frame {
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(36, 29, 61, 0.8));
-  padding: 10px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
-  transition: all 0.4s ease;
-  position: relative;
-}
-.cmf-img-frame:hover {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-  border-color: rgba(139, 92, 246, 0.18);
-  transform: translateY(-4px);
-}
-.cmf-img-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  display: block;
-  border-radius: 10px;
-}
-.cmf-img-frame .cmf-img-label {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: 10px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-dark);
-  text-align: center;
-  letter-spacing: 1px;
-  background: linear-gradient(180deg, transparent, rgba(10, 8, 22, 0.85));
-  border-radius: 0 0 18px 18px;
-}
-.cmf-stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 18px;
-  width: 100%;
-}
-.cmf-stat {
-  background: var(--dark-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 16px;
-  padding: 18px 14px;
-  border: 1px solid var(--glass-border);
-  text-align: center;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-}
-.cmf-stat::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.015) 0%, transparent 60%);
-  pointer-events: none;
-}
-.cmf-stat:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
-  border-color: rgba(139, 92, 246, 0.15);
-}
-.cmf-stat .stat-icon {
-  font-size: 22px;
-  margin-bottom: 6px;
-  display: block;
-}
-.cmf-stat .stat-value {
-  font-family: 'Inter', 'Zen Maru Gothic', sans-serif;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-}
-.cmf-stat .stat-label {
-  font-size: 10px;
-  color: var(--text-dim);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 600;
-  margin-top: 2px;
-}
-.cmf-details-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  width: 100%;
-}
-.scene-hero {
-  margin-bottom: 20px;
-  border-radius: 22px;
-  overflow: hidden;
-  border: 1px solid var(--glass-border);
-  background: var(--dark-card-solid);
-  transition: all 0.4s ease;
-}
-.scene-hero:hover {
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3);
-  border-color: rgba(139, 92, 246, 0.12);
-}
-.scene-hero-img-wrap {
-  position: relative;
-  line-height: 0;
-  width: 100%;
-  height: 296px;
-  overflow: hidden;
-}
-.scene-hero-img-wrap img {
-  width: 100%;
-  height: 100%;
-  max-height: 296px;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-.scene-hero-label {
+.quote-block {
+  background: var(--ak-panel-gray);
+  border-left: 3px solid var(--ak-orange);
   padding: 14px 18px;
-  width: 100%;
-  height: fit-content;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-light);
-  border-top: 1px solid rgba(255,255,255,0.06);
-  background: rgba(26,19,51,0.95);
+  margin-top: 10px;
 }
+.quote-block p { font-size: 12px; color: var(--ak-text-muted); font-style: italic; line-height: 1.65; }
 
-/* 场景渲染页：版心 800px，地铁主图与双列卡片（各 390px）与浏览器预览对齐 */
-.slide-inner--scene-render {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: fit-content;
-}
-.slide-inner--scene-render .scene-hero,
-.slide-inner--scene-render .scene-hero-img-wrap {
-  width: 100%;
-  height: fit-content;
-}
-.slide-inner--scene-render .scene-cards {
-  width: 100%;
-  height: fit-content;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-.slide-inner--scene-render .scene-card,
-.slide-inner--scene-render .scene-visual,
-.slide-inner--scene-render .scene-card-body {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-.slide-inner--scene-render .scene-visual {
-  height: fit-content;
-  aspect-ratio: auto;
-}
-.slide-inner--scene-render .scene-hero-img-wrap img {
-  width: 100%;
-  height: 100%;
-  max-height: 296px;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
+.pain-flow { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.pain-from { text-decoration: line-through; opacity: 0.65; padding: 8px 12px; background: rgba(0, 0, 0, 0.06); font-size: 12px; color: var(--ak-text-muted); border-radius: 2px; }
+.pain-to { padding: 8px 12px; background: rgba(5, 167, 220, 0.1); font-size: 12px; color: var(--ak-text); border-radius: 2px; border: 1px solid rgba(5, 167, 220, 0.25); }
+.pain-arrow { color: var(--ak-cyan); opacity: 0.7; }
 
-/* breathing light effect */
+.opportunity-box {
+  margin-top: 16px; padding: 20px 24px; text-align: center;
+  background: var(--ak-panel); border-top: 4px solid var(--ak-cyan);
+}
+.opportunity-box .emoji { font-size: 32px; display: block; margin-bottom: 8px; }
+.opportunity-box h3 { font-size: 16px; font-weight: 900; font-family: 'Noto Serif SC', serif; color: var(--ak-text); margin: 10px 0; }
+.opportunity-box p { font-size: 13px; color: var(--ak-text-muted); line-height: 1.65; }
+
+.bmc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 900px) { .bmc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .bmc-grid { grid-template-columns: 1fr; } }
+.bmc-cell { background: var(--ak-panel-gray); padding: 12px 14px; border-left: 3px solid var(--ak-cyan); min-height: 0; }
+.bmc-cell h4 { font-size: 11px; font-weight: 800; color: var(--ak-cyan-dim); margin-bottom: 8px; letter-spacing: 0.02em; }
+.bmc-cell p, .bmc-cell li { font-size: 11px; color: var(--ak-text); line-height: 1.55; }
+.bmc-cell ul { list-style: none; padding: 0; margin: 0; }
+.bmc-cell li { padding-left: 12px; position: relative; margin-bottom: 4px; }
+.bmc-cell li::before { content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px; background: var(--ak-orange); border-radius: 1px; }
+
+.bmc-economics { margin-top: 12px; padding: 12px 14px; background: var(--ak-panel); border: 1px solid rgba(0, 0, 0, 0.06); }
+.bmc-economics-head { font-size: 10px; font-weight: 800; letter-spacing: 0.15em; color: var(--ak-orange); margin-bottom: 10px; }
+.bmc-economics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .bmc-economics-row { grid-template-columns: 1fr; } }
+.bmc-economics-label { display: block; font-size: 10px; color: var(--ak-text-muted); margin-bottom: 6px; }
+.stacked-h { display: flex; height: 24px; border-radius: 2px; overflow: hidden; border: 1px solid rgba(0, 0, 0, 0.08); }
+.stacked-h .seg {
+  flex: 0 0 calc(var(--pct) * 1%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 700; color: #fff;
+}
+.stacked-h .seg.hardware { background: linear-gradient(180deg, var(--ak-orange), #c2410c); }
+.stacked-h .seg.sub { background: linear-gradient(180deg, var(--ak-cyan-dim), #0e7490); }
+.stacked-h .seg.merch { background: linear-gradient(180deg, var(--ak-cyan), #0369a1); }
+.stacked-h .seg.bom { background: linear-gradient(180deg, #f59e0b, #b45309); }
+.stacked-h .seg.api { background: linear-gradient(180deg, #64748b, #334155); }
+.stacked-h .seg.ip { background: linear-gradient(180deg, var(--ak-cyan-dim), #0f766e); }
+.bmc-economics-note { font-size: 10px; color: var(--ak-text-muted); margin-top: 8px; line-height: 1.45; }
+
+.feature-card { text-align: center; padding: 16px 12px !important; }
+.feature-emoji { font-size: 36px; display: block; margin-bottom: 10px; }
+.feature-card h3 { font-size: 15px; font-weight: 800; color: var(--ak-text); margin-bottom: 8px; }
+.feature-card p { font-size: 12px; color: var(--ak-text-muted); line-height: 1.6; }
+
+.arch-flow { display: flex; align-items: stretch; justify-content: center; gap: 12px; flex-wrap: nowrap; }
+@media (max-width: 900px) { .arch-flow { flex-direction: column; } .arch-arrow { transform: rotate(90deg); } }
+.arch-node { flex: 1; min-width: 0; background: var(--ak-panel-gray); padding: 16px 14px; border: 1px solid rgba(0, 0, 0, 0.06); border-radius: 2px; text-align: center; border-top: 2px solid var(--ak-cyan); }
+.arch-node.device { border-top-color: var(--ak-orange); }
+.arch-node.app { border-top-color: var(--ak-cyan); }
+.arch-node.cloud { border-top-color: var(--ak-cyan-dim); }
+.arch-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+.arch-node h4 { font-size: 13px; font-weight: 800; color: var(--ak-text); margin-bottom: 8px; }
+.arch-node p { font-size: 11px; color: var(--ak-text-muted); line-height: 1.55; }
+.arch-arrow { font-size: 22px; color: var(--ak-cyan); opacity: 0.5; display: flex; align-items: center; }
+
+.story-timeline { position: relative; padding-left: 36px; }
+.story-timeline::before {
+  content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(180deg, var(--ak-orange), var(--ak-cyan));
+}
+.story-item { position: relative; padding: 14px 16px; background: var(--ak-panel-gray); margin-bottom: 12px; border: 1px solid rgba(0, 0, 0, 0.06); }
+.story-item::before {
+  content: ''; position: absolute; left: -36px; top: 20px; width: 10px; height: 10px;
+  background: var(--ak-orange); border-radius: 2px; box-shadow: 0 0 12px rgba(255, 94, 25, 0.35);
+}
+.story-time { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; color: var(--ak-cyan-dim); margin-bottom: 6px; }
+.story-item h4 { font-size: 14px; font-weight: 800; color: var(--ak-text); margin-bottom: 6px; }
+.story-item p { font-size: 12px; color: var(--ak-text-muted); line-height: 1.6; }
+
+.slide-inner--cmf .cmf-white-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch; }
+@media (max-width: 900px) { .slide-inner--cmf .cmf-white-split { grid-template-columns: 1fr; } }
+.cmf-img-frame { background: #fff; border: 1px solid rgba(0, 0, 0, 0.08); padding: 8px; position: relative; }
+.cmf-img-frame img { width: 100%; max-height: min(380px, 48vh); object-fit: contain; display: block; }
+.cmf-img-label { display: block; font-size: 11px; text-align: center; padding: 8px; color: var(--ak-text-muted); background: var(--ak-panel-gray); }
+.cmf-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.cmf-stat { text-align: center; padding: 12px; background: var(--ak-panel-gray); border: 1px solid rgba(0, 0, 0, 0.06); }
+.cmf-stat .stat-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+.cmf-stat .stat-value { font-size: 18px; font-weight: 900; color: var(--ak-text); }
+.cmf-stat .stat-label { font-size: 9px; color: var(--ak-text-muted); letter-spacing: 0.05em; }
+.cmf-cam-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.cmf-tag { padding: 4px 10px; font-size: 11px; border-radius: 2px; border: 1px solid rgba(0, 0, 0, 0.08); background: var(--ak-panel-gray); color: var(--ak-text); }
+
+.hw-layout { display: flex; flex-direction: column; gap: 8px; }
+.hw-part { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; background: var(--ak-panel-gray); border: 1px solid rgba(0, 0, 0, 0.06); }
+.hw-part-icon { width: 40px; height: 40px; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: rgba(5, 167, 220, 0.1); }
+.hw-part h4 { font-size: 13px; font-weight: 800; color: var(--ak-text); margin-bottom: 4px; }
+.hw-part p { font-size: 11px; color: var(--ak-text-muted); line-height: 1.5; }
+
+.app-screens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 900px) { .app-screens { grid-template-columns: 1fr; } }
+.app-screen { background: var(--ak-panel-gray); padding: 14px; border: 1px solid rgba(0, 0, 0, 0.06); border-top: 3px solid var(--ak-cyan); }
+.app-screen-header { display: flex; gap: 4px; margin-bottom: 10px; }
+.app-screen-dot { width: 5px; height: 5px; border-radius: 50%; background: #ccc; }
+.app-screen h4 { font-size: 13px; font-weight: 800; color: var(--ak-text); margin-bottom: 8px; }
+.app-screen p { font-size: 11px; color: var(--ak-text-muted); line-height: 1.55; }
+.app-screen-visual { height: 72px; border-radius: 2px; display: flex; align-items: center; justify-content: center; margin-top: 10px; background: rgba(5, 167, 220, 0.08); }
+
+.scene-hero { margin-bottom: 14px; border: 1px solid rgba(0, 0, 0, 0.06); }
+.scene-hero-img-wrap { line-height: 0; overflow: hidden; max-height: 280px; }
+.scene-hero-img-wrap img { width: 100%; height: 100%; max-height: 280px; object-fit: cover; }
+.scene-hero-label { padding: 10px 14px; font-size: 12px; font-weight: 700; color: var(--ak-text); background: var(--ak-panel); }
+.scene-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 700px) { .scene-cards { grid-template-columns: 1fr; } }
+.scene-card { background: var(--ak-panel); border: 1px solid rgba(0, 0, 0, 0.06); overflow: hidden; }
+.scene-visual { aspect-ratio: 2 / 1; display: flex; align-items: center; justify-content: center; font-size: 48px; background: var(--ak-panel-gray); position: relative; }
+.scene-card.day .scene-visual { background: linear-gradient(135deg, #e8f4f8, #f0f0e8); }
+.scene-card.night .scene-visual { background: linear-gradient(135deg, #0a1c28, #161919); }
+.scene-card-body { padding: 14px 16px; }
+.scene-card-body h4 { font-size: 14px; font-weight: 800; color: var(--ak-text); margin-bottom: 6px; }
+.scene-card-body p { font-size: 11px; color: var(--ak-text-muted); line-height: 1.55; }
 .breathing-glow {
-  position: absolute;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: var(--cyber-glow);
-  box-shadow: 0 0 24px var(--cyber-glow), 0 0 48px rgba(129, 140, 248, 0.4), 0 0 80px rgba(129, 140, 248, 0.15);
+  position: absolute; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--ak-cyan); box-shadow: 0 0 20px var(--ak-cyan-glow);
   animation: breathe 2.5s ease-in-out infinite;
-  z-index: 2;
 }
-@keyframes breathe {
-  0%, 100% { opacity: 0.25; transform: scale(0.7); }
-  50% { opacity: 1; transform: scale(1.15); }
+@keyframes breathe { 0%, 100% { opacity: 0.25; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) { .breathing-glow { animation: none; opacity: 0.8; } }
+
+.flywheel-flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-items: center; margin-bottom: 14px; }
+@media (max-width: 700px) { .flywheel-flow { grid-template-columns: 1fr; } .flywheel-arrow { transform: rotate(90deg); text-align: center; } }
+.flywheel-node { text-align: center; padding: 10px 12px; background: var(--ak-panel-gray); font-size: 11px; color: var(--ak-text); border: 1px solid rgba(0, 0, 0, 0.06); }
+.flywheel-arrow { text-align: center; color: var(--ak-cyan); opacity: 0.6; font-size: 14px; }
+
+.roadmap { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; justify-content: center; }
+@media (max-width: 900px) { .roadmap { flex-direction: column; } .roadmap-arrow { transform: rotate(90deg); align-self: center; } }
+.roadmap-phase { flex: 1; min-width: 160px; background: var(--ak-panel-gray); padding: 18px 16px; border: 1px solid rgba(0, 0, 0, 0.06); border-top: 3px solid var(--ak-orange); }
+.roadmap-phase.p2 { border-top-color: var(--ak-cyan); }
+.roadmap-phase.p3 { border-top-color: var(--ak-cyan-dim); }
+.phase-badge { font-size: 9px; font-weight: 800; letter-spacing: 0.15em; color: var(--ak-orange); margin-bottom: 10px; display: inline-block; }
+.p2 .phase-badge { color: var(--ak-cyan); }
+.p3 .phase-badge { color: var(--ak-cyan-dim); }
+.roadmap-phase h3 { font-size: 15px; font-weight: 900; font-family: 'Noto Serif SC', serif; color: var(--ak-text); margin-bottom: 8px; }
+.roadmap-phase p { font-size: 11px; color: var(--ak-text-muted); line-height: 1.55; }
+.roadmap-arrow { font-size: 22px; color: var(--ak-cyan); opacity: 0.4; display: flex; align-items: center; }
+.ending-vision { text-align: center; margin-top: 20px; }
+.ending-vision .big-quote {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 900;
+  color: var(--ak-text);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.ending-tag { font-size: 12px; color: var(--ak-text-muted); }
+
+.ad-card-dark { background: var(--ak-panel-gray); color: var(--ak-text); padding: 16px 18px; border: 1px solid rgba(0, 0, 0, 0.06); border-left: 3px solid var(--ak-orange); }
+.ad-card-dark h3 { font-size: 14px; font-weight: 800; color: var(--ak-text); margin-bottom: 8px; }
+.ad-card-dark p, .ad-card-dark li { font-size: 12px; color: var(--ak-text-muted); line-height: 1.6; }
+.ad-card-dark ul { list-style: none; padding: 0; margin: 0; }
+.ad-card-dark li { padding-left: 14px; position: relative; margin-bottom: 4px; }
+.ad-card-dark li::before { content: ''; position: absolute; left: 0; top: 8px; width: 5px; height: 5px; background: var(--ak-cyan); border-radius: 1px; }
+
+/* ========== 移动端竖屏 / 窄屏 ========== */
+@media (max-width: 640px), (max-width: 900px) and (orientation: portrait) {
+  .ak-topbar .hud-status { display: none; }
+  .ak-topbar .time-block { font-size: 11px; letter-spacing: 0; }
+  .slide {
+    padding: 36px 14px calc(108px + var(--safe-bottom)) 14px;
+    align-items: center;
+  }
+  .nav-dots {
+    top: auto;
+    bottom: calc(var(--safe-bottom) + var(--hud-pad));
+    left: max(var(--hud-pad), var(--safe-left));
+    right: auto;
+    /* 显式宽度，避免 flex 子项 min-width:auto 撑破视口导致整页横向滚动 */
+    width: calc(100% - max(var(--hud-pad), var(--safe-left)) - max(var(--hud-pad), var(--safe-right)));
+    max-width: calc(100vw - max(var(--hud-pad), var(--safe-left)) - max(var(--hud-pad), var(--safe-right)));
+    min-width: 0;
+    transform: none;
+    flex-direction: row;
+    gap: clamp(1px, 0.35vw, 3px);
+    justify-content: stretch;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding: 6px 2px;
+    align-items: center;
+    min-height: 44px;
+  }
+  .nav-dot {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    height: 8px;
+    padding: 12px 0;
+    box-sizing: border-box;
+    border-radius: 2px;
+    transition: background 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-dot.active {
+    flex: 2.25 1 0;
+    min-width: 0;
+    width: auto;
+    height: 8px;
+    background: linear-gradient(90deg, var(--ak-orange), #cc4a12);
+    box-shadow: 0 0 12px rgba(255, 94, 25, 0.45);
+  }
+  .nav-arrow.next {
+    right: calc(var(--hud-pad) + var(--safe-right));
+  }
+  .slide-counter {
+    bottom: calc(var(--safe-bottom) + var(--hud-pad) + 40px);
+    right: max(var(--hud-pad), var(--safe-right));
+  }
+  .slide-counter .current { font-size: 22px; }
+  .fs-btn {
+    bottom: calc(var(--safe-bottom) + var(--hud-pad) + 40px);
+    left: max(var(--hud-pad), var(--safe-left));
+    font-size: 10px;
+    padding: 6px 10px;
+  }
+  .ak-main--scroll {
+    max-height: calc(100vh - var(--safe-top) - var(--safe-bottom) - 200px);
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 200px);
+    max-height: calc(100svh - var(--safe-top) - var(--safe-bottom) - 200px);
+  }
+  .ak-card-inner { padding: 18px 16px 20px; }
+  .wh-grid { grid-template-columns: 1fr; }
+  .swot-grid { grid-template-columns: 1fr; }
+  .persona-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .persona-info { width: 100%; }
+  .persona-info p { text-align: left; }
+  .data-bar-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 4px 10px;
+  }
+  .data-bar-label { grid-column: 1; grid-row: 1; }
+  .data-bar-val { grid-column: 2; grid-row: 1; }
+  .data-bar-track { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+  .cmf-img-frame img {
+    max-height: min(300px, 42dvh);
+  }
 }
 </style>
 </head>
 <body>
 
-<canvas id="particles-canvas"></canvas>
-<div class="progress-bar" id="progressBar"></div>
-<div class="slide-counter"><span class="current" id="currentSlide">01</span> / <span id="totalSlides">19</span></div>
+<div class="ak-topbar" aria-hidden="true">
+  <span class="line-left"></span>
+  <span class="tag">ANIMEDOLL</span>
+  <span class="line-right"></span>
+  <span class="hud-status">
+    <span class="hud-dots"><span></span><span></span><span></span></span>
+    <span class="hud-pill">LIVE</span>
+  </span>
+  <span class="time-block" id="hudTime">--:--:--</span>
+</div>
+
+<div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="1" aria-valuemax="19" aria-valuenow="1" aria-label="演示进度"></div>
+
+<button type="button" class="nav-arrow prev" id="prevBtn" aria-label="上一页">&#8249;</button>
+<button type="button" class="nav-arrow next" id="nextBtn" aria-label="下一页">&#8250;</button>
 
 <div class="nav-dots" id="navDots"></div>
-<button class="nav-arrow prev hidden" id="prevBtn" onclick="prevSlide()">◂</button>
-<button class="nav-arrow next" id="nextBtn" onclick="nextSlide()">▸</button>
+
+<div class="slide-counter" aria-live="polite">
+  <span class="current" id="currentSlide">01</span>
+  <span>/</span>
+  <span id="totalSlides">19</span>
+</div>
+
+<button type="button" class="fs-btn" id="fsBtn" title="全屏演示">FULLSCREEN</button>
 
 <div class="slides-wrapper" id="slidesWrapper">
 
-  <!-- ==================== SLIDE 1: COVER ==================== -->
+  <!-- 1 封面 -->
   <div class="slide cover-slide active" data-index="0">
-    <div class="glow-blob" style="width:400px;height:400px;background:var(--pink-deep);top:-100px;right:-100px;"></div>
-    <div class="glow-blob" style="width:350px;height:350px;background:var(--lavender-deep);bottom:-80px;left:-80px;animation-delay:3s;"></div>
-    <div class="deco-star" style="top:15%;left:12%;animation-delay:0.5s;"></div>
-    <div class="deco-star" style="top:25%;right:18%;animation-delay:1.2s;width:14px;height:14px;"></div>
-    <div class="deco-star" style="bottom:20%;left:20%;animation-delay:0.8s;width:16px;height:16px;"></div>
-    <div class="deco-star" style="bottom:30%;right:15%;animation-delay:1.5s;"></div>
-    <div class="deco-circle" style="width:200px;height:200px;border-color:var(--pink-soft);top:10%;right:10%;"></div>
-    <div class="deco-circle" style="width:140px;height:140px;border-color:var(--lavender);bottom:15%;left:8%;animation-delay:2s;"></div>
-    <div class="slide-inner">
-      <div class="cover-badge">PRODUCT PROPOSAL 2026</div>
-      <div class="cover-hero-wrap">
+    <div class="slide-inner cover-slide-inner">
+      <div class="cover-badge anim-item">PRODUCT PROPOSAL 2026</div>
+      <div class="cover-hero-wrap anim-item">
         <img src="images/effect_image_heroshot.jpg" alt="AnimeDoll 产品主视觉" width="600" height="600" loading="eager" decoding="async" />
       </div>
-      <div class="cover-title">AnimeDoll</div>
-      <div class="cover-subtitle">你的跨次元 AI 专属陪伴</div>
-      <div class="cover-tagline">嵌入式智能二次元公仔挂件产品策划案</div>
-      <div class="cover-hint">← 滑动或按方向键翻页 →</div>
+      <h1 class="cover-title-ak anim-item">AnimeDoll</h1>
+      <p class="cover-subtitle anim-item">你的跨次元 AI 专属陪伴</p>
+      <p class="cover-tagline anim-item">嵌入式智能二次元公仔挂件产品策划案</p>
+      <div class="cover-deco anim-item">
+        <span class="bar"></span>
+        <span>方向键 / 空格翻页</span>
+        <span class="bar"></span>
+      </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 2: TOC ==================== -->
+  <!-- 2 目录 -->
   <div class="slide" data-index="1">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);top:-60px;left:-60px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">CONTENTS</div>
-      <div class="slide-title anim-item">目录 <span class="highlight">Overview</span></div>
-      <div class="toc-list">
-        <div class="toc-item anim-item" onclick="goToSlide(2)">
-          <div class="toc-num c1">01</div>
-          <div class="toc-text">
-            <h3>需求分析</h3>
-            <p>前期调研 · 用户画像 · 痛点洞察 · 机会点总结</p>
-          </div>
-        </div>
-        <div class="toc-item anim-item" onclick="goToSlide(7)">
-          <div class="toc-num c2">02</div>
-          <div class="toc-text">
-            <h3>概念设计</h3>
-            <p>产品定义 · 商业模式 · 核心功能 · 技术架构 · 故事版</p>
-          </div>
-        </div>
-        <div class="toc-item anim-item" onclick="goToSlide(12)">
-          <div class="toc-num c3">03</div>
-          <div class="toc-text">
-            <h3>方案展示</h3>
-            <p>CMF设计 · 硬件布局 · App界面 · 场景渲染</p>
-          </div>
-        </div>
-        <div class="toc-item anim-item" onclick="goToSlide(17)">
-          <div class="toc-num c4">04</div>
-          <div class="toc-text">
-            <h3>社区与数据飞轮</h3>
-            <p>UGC生态 · 使用增长飞轮 · 线下社区运营</p>
-          </div>
-        </div>
-        <div class="toc-item anim-item" onclick="goToSlide(18)">
-          <div class="toc-num c1">05</div>
-          <div class="toc-text">
-            <h3>总结与展望</h3>
-            <p>三阶段路标 · 开放平台 · 愿景致辞</p>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">INDEX</span>
+        <div class="voice-strip">按章节快速跳转至需求分析、概念设计、方案展示与总结。</div>
+        <div class="chapter-pill">SECTION MAP</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card ak-edge-cyan">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">目录 <span class="sub">Overview</span></h2>
+            <div class="toc-grid">
+              <div class="toc-item toc-jump anim-item" onclick="goToSlide(2)"><div class="toc-item-row"><div class="num">01</div><div><div class="label">需求分析</div><p class="toc-desc">前期调研 · 用户画像 · 痛点洞察 · 机会点总结</p></div></div></div>
+              <div class="toc-item toc-jump anim-item" onclick="goToSlide(7)"><div class="toc-item-row"><div class="num">02</div><div><div class="label">概念设计</div><p class="toc-desc">产品定义 · 商业模式 · 核心功能 · 技术架构 · 故事版</p></div></div></div>
+              <div class="toc-item toc-jump anim-item" onclick="goToSlide(12)"><div class="toc-item-row"><div class="num">03</div><div><div class="label">方案展示</div><p class="toc-desc">CMF设计 · 硬件布局 · App界面 · 场景渲染</p></div></div></div>
+              <div class="toc-item toc-jump anim-item" onclick="goToSlide(17)"><div class="toc-item-row"><div class="num">04</div><div><div class="label">社区与数据飞轮</div><p class="toc-desc">UGC生态 · 使用增长飞轮 · 线下社区运营</p></div></div></div>
+              <div class="toc-item toc-jump anim-item" onclick="goToSlide(18)"><div class="toc-item-row"><div class="num">05</div><div><div class="label">总结与展望</div><p class="toc-desc">三阶段路标 · 开放平台 · 愿景致辞</p></div></div></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 3: 3.1 背景与5W1H ==================== -->
+  <!-- 3 背景与5W1H -->
   <div class="slide" data-index="2">
-    <div class="glow-blob" style="width:350px;height:350px;background:var(--pink-deep);bottom:-100px;right:-80px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">REQUIREMENT ANALYSIS</div>
-      <div class="slide-title anim-item">前期调研 · <span class="highlight">背景与5W1H</span></div>
-      <div class="card anim-item" style="margin-bottom:16px;">
-        <h3>市场数据速览（2025）</h3>
-        <ul>
-          <li>中国二次元周边市场规模突破 <strong style="color:var(--pink-soft);">1300亿元</strong></li>
-          <li>Z世代情绪消费同比增长 <strong style="color:var(--lavender);">35%+</strong></li>
-          <li>小红书 #痛包 话题浏览量突破 <strong style="color:var(--cyber-blue);">5亿</strong></li>
-        </ul>
-      </div>
-      <div class="card anim-item" style="margin-bottom:24px;">
-        <div class="card-icon pink">🌐</div>
-        <h3>设计背景</h3>
-        <p>"陪伴经济"崛起，Z世代对二次元周边（谷子）的消费从"收集"转向"情感寄托"。AI 可穿戴设备兴起，但缺乏针对垂直亚文化群体的情感设计。</p>
-      </div>
-      <div class="wh-grid">
-        <div class="wh-item anim-item">
-          <div class="wh-tag">WHO</div>
-          <p>15-28岁泛二次元爱好者、谷子收集控、痛包文化参与者</p>
-        </div>
-        <div class="wh-item anim-item">
-          <div class="wh-tag">WHAT</div>
-          <p>10cm大小、具备看和说能力的实体AI挂件</p>
-        </div>
-        <div class="wh-item anim-item">
-          <div class="wh-tag">WHEN</div>
-          <p>日常通勤、逛街、参加漫展与朋友聚会时</p>
-        </div>
-        <div class="wh-item anim-item">
-          <div class="wh-tag">WHERE</div>
-          <p>挂在痛包、单肩包、书包的显眼位置</p>
-        </div>
-        <div class="wh-item anim-item">
-          <div class="wh-tag">WHY</div>
-          <p>打破次元壁，提供情绪价值，社交破冰神器</p>
-        </div>
-        <div class="wh-item anim-item">
-          <div class="wh-tag">HOW</div>
-          <p>通过 BLE 连接手机App，调用云端多模态模型实现视听交互</p>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">REQUIREMENT</span>
+        <div class="voice-strip">市场数据与 5W1H：界定用户、场景与产品形态。</div>
+        <div class="chapter-pill">前期调研 · 5W1H</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card ak-card--cyan">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">前期调研 · <span class="sub">背景与5W1H</span></h2>
+            <div class="research-a-split">
+              <div class="research-a-col">
+                <div class="ad-card-dark anim-item">
+                  <h3>市场数据速览（2025）</h3>
+                  <ul>
+                    <li>中国二次元周边市场规模突破 <span class="ad-strong-orange">1300亿元</span></li>
+                    <li>Z世代情绪消费同比增长 <span class="ad-strong-cyan">35%+</span></li>
+                    <li>小红书 #痛包 话题浏览量突破 <span class="ad-strong-cyan">5亿</span></li>
+                  </ul>
+                </div>
+                <div class="data-bar-chart anim-item">
+                  <h4>关键指标对比（归一化示意）</h4>
+                  <div class="data-bar-row"><span class="data-bar-label">周边市场规模</span><div class="data-bar-track"><div class="data-bar-fill ak-fill" style="--w:1"></div></div><span class="data-bar-val">高</span></div>
+                  <div class="data-bar-row"><span class="data-bar-label">情绪消费增速</span><div class="data-bar-track"><div class="data-bar-fill ak-fill-2" style="--w:0.35"></div></div><span class="data-bar-val">35%+</span></div>
+                  <div class="data-bar-row"><span class="data-bar-label">社媒话题热度</span><div class="data-bar-track"><div class="data-bar-fill ak-fill-3" style="--w:0.72"></div></div><span class="data-bar-val">5亿+</span></div>
+                  <p class="data-bar-caption">条形长度为相对尺度，便于横向对比；非绝对数值比例。</p>
+                </div>
+                <div class="ad-card-dark anim-item">
+                  <h3>设计背景</h3>
+                  <p>“陪伴经济”崛起，Z世代对二次元周边（谷子）的消费从“收集”转向“情感寄托”。AI 可穿戴设备兴起，但缺乏针对垂直亚文化群体的情感设计。</p>
+                </div>
+              </div>
+              <div class="research-a-col">
+                <div class="wh-grid">
+                  <div class="wh-item anim-item"><div class="wh-tag">WHO</div><p>15-28岁泛二次元爱好者、谷子收集控、痛包文化参与者</p></div>
+                  <div class="wh-item anim-item"><div class="wh-tag">WHAT</div><p>10cm大小、具备看和说能力的实体AI挂件</p></div>
+                  <div class="wh-item anim-item"><div class="wh-tag">WHEN</div><p>日常通勤、逛街、参加漫展与朋友聚会时</p></div>
+                  <div class="wh-item anim-item"><div class="wh-tag">WHERE</div><p>挂在痛包、单肩包、书包的显眼位置</p></div>
+                  <div class="wh-item anim-item"><div class="wh-tag">WHY</div><p>打破次元壁，提供情绪价值，社交破冰神器</p></div>
+                  <div class="wh-item anim-item"><div class="wh-tag">HOW</div><p>通过 BLE 连接手机App，调用云端多模态模型实现视听交互</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 4: SWOT ==================== -->
+  <!-- 4 SWOT -->
   <div class="slide" data-index="3">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--cyber-blue);top:-80px;left:-60px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">REQUIREMENT ANALYSIS</div>
-      <div class="slide-title anim-item">前期调研 · <span class="highlight">行业调研与SWOT</span></div>
-      <div class="card anim-item" style="margin-bottom:24px;">
-        <div class="card-icon blue">📊</div>
-        <h3>行业洞察</h3>
-        <p>潮玩市场 CAGR 25%+，传统毛绒/搪胶公仔同质化严重；AI硬件渗透率上升，但多数产品形态冰冷，情感连接不足。</p>
-      </div>
-      <div class="swot-grid">
-        <div class="swot-cell s anim-item">
-          <div class="swot-label"><span class="letter">S</span> 优势</div>
-          <ul>
-            <li>“智能挂件 × 二次元”细分赛道先发</li>
-            <li>实体形态自带情绪价值与社交属性</li>
-            <li>微型化设计，佩戴自然不突兀</li>
-          </ul>
-        </div>
-        <div class="swot-cell w anim-item">
-          <div class="swot-label"><span class="letter">W</span> 劣势</div>
-          <ul>
-            <li>10cm 体积限制电池与散热空间</li>
-            <li>首批 BOM 成本高，定价压力大</li>
-            <li>端侧算力弱，强依赖手机与云端</li>
-          </ul>
-        </div>
-        <div class="swot-cell o anim-item">
-          <div class="swot-label"><span class="letter">O</span> 机会</div>
-          <ul>
-            <li>大模型 API 成本持续下降</li>
-            <li>痛包文化从圈层走向大众</li>
-            <li>AI-native 新世代进入消费主力期</li>
-          </ul>
-        </div>
-        <div class="swot-cell t anim-item">
-          <div class="swot-label"><span class="letter">T</span> 威胁</div>
-          <ul>
-            <li>知名动漫 IP 授权壁垒与高版税</li>
-            <li>公共场景摄像头隐私争议</li>
-            <li>大厂入局智能玩具赛道竞争加剧</li>
-          </ul>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">REQUIREMENT</span>
+        <div class="voice-strip">行业趋势与 SWOT：看清优势、劣势、机会与威胁。</div>
+        <div class="chapter-pill">行业 · SWOT</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">前期调研 · <span class="sub">行业调研与SWOT</span></h2>
+            <div class="research-b-split">
+              <div class="research-b-col">
+                <div class="ad-card-dark anim-item">
+                  <h3>行业洞察</h3>
+                  <p>潮玩市场 CAGR 25%+，传统毛绒/搪胶公仔同质化严重；AI硬件渗透率上升，但多数产品形态冰冷，情感连接不足。</p>
+                </div>
+                <div class="cagr-sparkline anim-item">
+                  <div class="cagr-sparkline-head"><span>潮玩 / 情绪消费趋势</span><span class="cagr-badge">CAGR 25%+</span></div>
+                  <svg viewBox="0 0 320 88" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="cagrLineAk" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#05a7dc;stop-opacity:0.35"/>
+                        <stop offset="100%" style="stop-color:#016d8d;stop-opacity:0.95"/>
+                      </linearGradient>
+                      <linearGradient id="cagrFillAk" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#05a7dc;stop-opacity:0.2"/>
+                        <stop offset="100%" style="stop-color:#061218;stop-opacity:0"/>
+                      </linearGradient>
+                    </defs>
+                    <rect x="0" y="0" width="320" height="88" fill="rgba(0,0,0,0.04)" rx="4"/>
+                    <path d="M 16 68 L 56 62 L 96 54 L 136 48 L 176 38 L 216 32 L 256 22 L 304 14 L 304 88 L 16 88 Z" fill="url(#cagrFillAk)"/>
+                    <path d="M 16 68 L 56 62 L 96 54 L 136 48 L 176 38 L 216 32 L 256 22 L 304 14" fill="none" stroke="url(#cagrLineAk)" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="304" cy="14" r="4" fill="#ff5e19"/>
+                  </svg>
+                  <p class="cagr-sparkline-caption">示意曲线：行业规模与情绪消费相关赛道保持高增长区间。</p>
+                </div>
+              </div>
+              <div class="research-b-col">
+                <div class="swot-quadrant-wrap anim-item">
+                  <div class="swot-grid">
+                    <div class="swot-cell s anim-item">
+                      <div class="swot-label"><span class="letter">S</span> 优势</div>
+                      <ul>
+                        <li>“智能挂件 × 二次元”细分赛道先发</li>
+                        <li>实体形态自带情绪价值与社交属性</li>
+                        <li>微型化设计，佩戴自然不突兀</li>
+                      </ul>
+                    </div>
+                    <div class="swot-cell w anim-item">
+                      <div class="swot-label"><span class="letter">W</span> 劣势</div>
+                      <ul>
+                        <li>10cm 体积限制电池与散热空间</li>
+                        <li>首批 BOM 成本高，定价压力大</li>
+                        <li>端侧算力弱，强依赖手机与云端</li>
+                      </ul>
+                    </div>
+                    <div class="swot-cell o anim-item">
+                      <div class="swot-label"><span class="letter">O</span> 机会</div>
+                      <ul>
+                        <li>大模型 API 成本持续下降</li>
+                        <li>痛包文化从圈层走向大众</li>
+                        <li>AI-native 新世代进入消费主力期</li>
+                      </ul>
+                    </div>
+                    <div class="swot-cell t anim-item">
+                      <div class="swot-label"><span class="letter">T</span> 威胁</div>
+                      <ul>
+                        <li>知名动漫 IP 授权壁垒与高版税</li>
+                        <li>公共场景摄像头隐私争议</li>
+                        <li>大厂入局智能玩具赛道竞争加剧</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 5: 竞品分析 ==================== -->
+  <!-- 5 竞品 -->
   <div class="slide" data-index="4">
-    <div class="glow-blob" style="width:320px;height:320px;background:var(--cyber-blue);top:-90px;right:-80px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">REQUIREMENT ANALYSIS</div>
-      <div class="slide-title anim-item">竞品分析 · <span class="highlight">竞争格局与定位</span></div>
-      <div class="competitive-layout">
-        <div class="competitive-grid">
-          <div class="competitor-card anim-item">
-            <h4>传统潮玩（高情感 / 低AI）</h4>
-            <p>Jellycat、Sonny Angel 等以治愈与收藏为核心，但缺乏实时互动能力。</p>
-          </div>
-          <div class="competitor-card anim-item">
-            <h4>AI 可穿戴（低情感 / 高AI）</h4>
-            <p>AI Pin、Rabbit R1 强调效率与助手能力，缺少角色感与情绪连接。</p>
-          </div>
-          <div class="competitor-card anim-item">
-            <h4>智能玩具（中情感 / 中AI）</h4>
-            <p>Vector、电子宠物具备基础互动，但非挂件形态，难融入痛包文化。</p>
-          </div>
-          <div class="competitor-card anim-item">
-            <h4>虚拟陪伴（高AI / 无实体）</h4>
-            <p>Character.AI、Replika 的对话能力强，但缺失可触达的实体陪伴。</p>
-          </div>
-        </div>
-        <div class="positioning-callout anim-item">
-          <h3>AnimeDoll 定位：高情感 × 高 AI</h3>
-          <p>以二次元实体形态承载 AI 能力，成为“可带出门的情绪伙伴”。</p>
-          <div class="positioning-matrix">
-            <span class="axis y">情感温度 ↑</span>
-            <span class="axis x">AI 能力 →</span>
-            <span class="matrix-point" style="left:8%;top:25%;">传统潮玩</span>
-            <span class="matrix-point" style="left:52%;top:72%;">AI 可穿戴</span>
-            <span class="matrix-point" style="left:18%;top:78%;">电子宠物</span>
-            <span class="matrix-point highlight" style="left:58%;top:20%;">AnimeDoll</span>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">ANALYSIS</span>
+        <div class="voice-strip">竞争格局矩阵：定位「高情感 × 高 AI」差异化。</div>
+        <div class="chapter-pill">竞品分析</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card ak-card--dark">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">竞品分析 · <span class="sub">竞争格局与定位</span></h2>
+            <div class="competitive-layout">
+              <div class="competitive-grid">
+                <div class="competitor-card anim-item"><h4>传统潮玩（高情感 / 低AI）</h4><p>Jellycat、Sonny Angel 等以治愈与收藏为核心，但缺乏实时互动能力。</p></div>
+                <div class="competitor-card anim-item"><h4>AI 可穿戴（低情感 / 高AI）</h4><p>AI Pin、Rabbit R1 强调效率与助手能力，缺少角色感与情绪连接。</p></div>
+                <div class="competitor-card anim-item"><h4>智能玩具（中情感 / 中AI）</h4><p>Vector、电子宠物具备基础互动，但非挂件形态，难融入痛包文化。</p></div>
+                <div class="competitor-card anim-item"><h4>虚拟陪伴（高AI / 无实体）</h4><p>Character.AI、Replika 的对话能力强，但缺失可触达的实体陪伴。</p></div>
+              </div>
+              <div class="positioning-callout anim-item">
+                <h3>AnimeDoll 定位：高情感 × 高 AI</h3>
+                <p>以二次元实体形态承载 AI 能力，成为“可带出门的情绪伙伴”。</p>
+                <div class="positioning-matrix">
+                  <span class="axis y">情感温度 ↑</span>
+                  <span class="axis x">AI 能力 →</span>
+                  <span class="matrix-point" style="left:8%;top:25%;">传统潮玩</span>
+                  <span class="matrix-point" style="left:52%;top:72%;">AI 可穿戴</span>
+                  <span class="matrix-point" style="left:18%;top:78%;">电子宠物</span>
+                  <span class="matrix-point highlight" style="left:58%;top:20%;">AnimeDoll</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 6: 用户调研 ==================== -->
+  <!-- 6 用户画像 -->
   <div class="slide" data-index="5">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;left:-60px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">REQUIREMENT ANALYSIS</div>
-      <div class="slide-title anim-item">用户调研 · <span class="highlight">双画像与洞察</span></div>
-      <div class="content-grid">
-        <div class="persona-card anim-item">
-          <div class="persona-avatar">👧</div>
-          <div class="persona-info">
-            <h3>小A · 19岁 · 大学生</h3>
-            <div class="tags">
-              <span class="persona-tag">二次元爱好者</span>
-              <span class="persona-tag">谷子收集控</span>
-              <span class="persona-tag">漫展常客</span>
-              <span class="persona-tag">Z世代</span>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">USER</span>
+        <div class="voice-strip">双画像与问卷洞察：验证需求与付费意愿。</div>
+        <div class="chapter-pill">用户调研</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">用户调研 · <span class="sub">双画像与洞察</span></h2>
+            <div class="content-grid">
+              <div class="persona-card anim-item">
+                <div class="persona-avatar">👧</div>
+                <div class="persona-info">
+                  <h3>小A · 19岁 · 大学生</h3>
+                  <div>
+                    <span class="persona-tag">二次元爱好者</span>
+                    <span class="persona-tag">谷子收集控</span>
+                    <span class="persona-tag">漫展常客</span>
+                    <span class="persona-tag">Z世代</span>
+                  </div>
+                  <p style="margin-top:10px">背包上挂满了喜欢的二次元角色周边。她希望这些角色能“活”过来，陪她一起看世界。</p>
+                </div>
+              </div>
+              <div class="persona-card anim-item">
+                <div class="persona-avatar">🧑</div>
+                <div class="persona-info">
+                  <h3>小B · 23岁 · 初入职场</h3>
+                  <div>
+                    <span class="persona-tag">轻度二次元</span>
+                    <span class="persona-tag">通勤社畜</span>
+                    <span class="persona-tag">治愈系偏好</span>
+                    <span class="persona-tag">播客用户</span>
+                  </div>
+                  <p style="margin-top:10px">希望通勤时有一个会“接梗”的小伙伴，不需要很复杂，但要足够有个性与陪伴感。</p>
+                </div>
+              </div>
             </div>
-            <p>背包上挂满了喜欢的二次元角色周边。她希望这些角色能“活”过来，陪她一起看世界。</p>
+            <p class="ad-muted anim-item" style="margin-top:14px">问卷样本（n=500）：<span class="ad-strong-cyan">78%</span> 痛包用户希望挂件具备互动能力，<span class="ad-strong-orange">62%</span> 愿为“会说话的挂件”支付溢价。</p>
+            <div class="quote-block anim-item"><p>“每次去漫展，都希望我的推（喜欢的角色）能看到现场有多热闹。”</p></div>
+            <div class="quote-block anim-item"><p>“一个人坐地铁挺无聊的，如果包上的挂件能跟我吐槽两句就好了。”</p></div>
+            <div class="quote-block anim-item"><p>“不需要多智能，只要偶尔冒一句话，让我觉得它‘活着’就够了。”</p></div>
           </div>
-        </div>
-        <div class="persona-card anim-item">
-          <div class="persona-avatar">🧑</div>
-          <div class="persona-info">
-            <h3>小B · 23岁 · 初入职场</h3>
-            <div class="tags">
-              <span class="persona-tag">轻度二次元</span>
-              <span class="persona-tag">通勤社畜</span>
-              <span class="persona-tag">治愈系偏好</span>
-              <span class="persona-tag">播客用户</span>
-            </div>
-            <p>希望通勤时有一个会“接梗”的小伙伴，不需要很复杂，但要足够有个性与陪伴感。</p>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:16px;" class="anim-item">
-        <p style="font-size:13px;color:var(--text-dim);">问卷样本（n=500）：<strong style="color:var(--lavender);">78%</strong> 痛包用户希望挂件具备互动能力，<strong style="color:var(--pink-soft);">62%</strong> 愿为“会说话的挂件”支付溢价。</p>
-      </div>
-      <div style="margin-top:14px;">
-        <div class="quote-block anim-item">
-          <p>"每次去漫展，都希望我的推（喜欢的角色）能看到现场有多热闹。"</p>
-        </div>
-        <div class="quote-block anim-item">
-          <p>"一个人坐地铁挺无聊的，如果包上的挂件能跟我吐槽两句就好了。"</p>
-        </div>
-        <div class="quote-block anim-item">
-          <p>"不需要多智能，只要偶尔冒一句话，让我觉得它‘活着’就够了。"</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 7: 需求分析 & 机会点 ==================== -->
+  <!-- 7 机会点 -->
   <div class="slide" data-index="6">
-    <div class="glow-blob" style="width:350px;height:350px;background:var(--mint-deep);top:-100px;right:-80px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">REQUIREMENT ANALYSIS</div>
-      <div class="slide-title anim-item">需求分析 · <span class="highlight">机会点总结</span></div>
-      <div style="margin-bottom:24px;width:100%;height:fit-content;">
-        <h3 class="anim-item" style="font-size:16px;margin-bottom:16px;color:var(--cream);width:100%;height:fit-content;">痛点 → 需求转化</h3>
-        <div class="pain-flow anim-item">
-          <span class="pain-from">静态陪伴</span>
-          <span class="pain-arrow">→</span>
-          <span class="pain-to">动态交互：个性化语音 + 人设匹配</span>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">INSIGHT</span>
+        <div class="voice-strip">痛点转化为需求：从静态陪伴到可记忆的情绪器。</div>
+        <div class="chapter-pill">机会点</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card ak-card--cyan">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">需求分析 · <span class="sub">机会点总结</span></h2>
+            <p class="ad-h3 anim-item">痛点 → 需求转化</p>
+            <div class="pain-flow anim-item"><span class="pain-from">静态陪伴</span><span class="pain-arrow">→</span><span class="pain-to">动态交互：个性化语音 + 人设匹配</span></div>
+            <div class="pain-flow anim-item"><span class="pain-from">视觉盲区</span><span class="pain-arrow">→</span><span class="pain-to">共同见证：第一视角摄像头 + 环境识别</span></div>
+            <div class="pain-flow anim-item"><span class="pain-from">孤独社交</span><span class="pain-arrow">→</span><span class="pain-to">社交破冰：公仔成为自然对话入口</span></div>
+            <div class="opportunity-box anim-item">
+              <span class="emoji">🌟</span>
+              <h3>“不仅是装饰，更是有记忆的旅行搭子”</h3>
+              <p>AnimeDoll 的核心不在于“生产力工具”，而在于“情绪陪伴器”。（2025 年情绪消费品类 GMV 增速 40%+）</p>
+            </div>
+          </div>
         </div>
-        <div class="pain-flow anim-item">
-          <span class="pain-from">视觉盲区</span>
-          <span class="pain-arrow">→</span>
-          <span class="pain-to">共同见证：第一视角摄像头 + 环境识别</span>
-        </div>
-        <div class="pain-flow anim-item">
-          <span class="pain-from">孤独社交</span>
-          <span class="pain-arrow">→</span>
-          <span class="pain-to">社交破冰：公仔成为自然对话入口</span>
-        </div>
-      </div>
-      <div class="opportunity-box anim-item">
-        <span class="emoji">🌟</span>
-        <h3>"不仅是装饰，更是有记忆的旅行搭子"</h3>
-        <p>AnimeDoll 的核心不在于“生产力工具”，而在于“情绪陪伴器”。（2025 年情绪消费品类 GMV 增速 40%+）</p>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 8: 概念转化 ==================== -->
+  <!-- 8 产品定义 -->
   <div class="slide" data-index="7">
-    <div class="glow-blob" style="width:350px;height:350px;background:var(--lavender-deep);bottom:-80px;right:-60px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">CONCEPT DESIGN</div>
-      <div class="slide-title anim-item">概念转化 · <span class="highlight">产品定义</span></div>
-      <div class="content-grid">
-        <div class="card anim-item">
-          <div class="card-icon purple">💡</div>
-          <h3>产品概念</h3>
-          <p style="font-size:18px;font-weight:700;color:var(--lavender);margin-bottom:12px;">装在口袋里的"赛博手办"</p>
-          <p>从"静止的收藏品"跃迁为"有灵魂的随行搭档"，重新定义周边的情感价值。</p>
-        </div>
-        <div class="card anim-item">
-          <div class="card-icon blue">⚙️</div>
-          <h3>技术实现路径</h3>
-          <ul>
-            <li>基于 BLE 与手机协同工作</li>
-            <li>摄像头捕获画面传至手机</li>
-            <li>手机端调用多模态大模型解析</li>
-            <li>生成符合角色性格的台词</li>
-            <li>云端/本地TTS转化为角色声音</li>
-            <li>挂件扬声器播放语音</li>
-          </ul>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">CONCEPT</span>
+        <div class="voice-strip">从“赛博手办”到端云协同的技术路径。</div>
+        <div class="chapter-pill">产品定义</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">概念转化 · <span class="sub">产品定义</span></h2>
+            <div class="content-grid">
+              <div class="ad-card-dark anim-item">
+                <h3>产品概念</h3>
+                <p style="font-size:16px;font-weight:700;color:var(--ak-cyan-dim);margin-bottom:10px">装在口袋里的“赛博手办”</p>
+                <p>从“静止的收藏品”跃迁为“有灵魂的随行搭档”，重新定义周边的情感价值。</p>
+              </div>
+              <div class="ad-card-dark anim-item">
+                <h3>技术实现路径</h3>
+                <ul>
+                  <li>基于 BLE 与手机协同工作</li>
+                  <li>摄像头捕获画面传至手机</li>
+                  <li>手机端调用多模态大模型解析</li>
+                  <li>生成符合角色性格的台词</li>
+                  <li>云端/本地TTS转化为角色声音</li>
+                  <li>挂件扬声器播放语音</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 9: 商业模式画布 ==================== -->
+  <!-- 9 BMC -->
   <div class="slide" data-index="8">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--gold);top:-80px;left:-60px;opacity:0.08;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">CONCEPT DESIGN</div>
-      <div class="slide-title anim-item">商业模式 · <span class="highlight">Business Model Canvas</span></div>
-      <div class="bmc-grid">
-        <div class="bmc-cell anim-item">
-          <h4>💎 价值主张</h4>
-          <p>提供打破次元壁的实体情感陪伴，让每个角色都有自己的声音与记忆。</p>
-        </div>
-        <div class="bmc-cell anim-item">
-          <h4>👥 客户细分</h4>
-          <ul>
-            <li>二次元圈层用户</li>
-            <li>潮玩盲盒玩家</li>
-            <li>孤独经济消费者</li>
-          </ul>
-        </div>
-        <div class="bmc-cell anim-item">
-          <h4>📱 关键渠道</h4>
-          <ul>
-            <li>B站/小红书种草</li>
-            <li>漫展线下快闪</li>
-            <li>潮玩电商平台</li>
-          </ul>
-        </div>
-        <div class="bmc-cell anim-item">
-          <h4>💰 收入来源</h4>
-          <ul>
-            <li>硬件销售（公仔本体）</li>
-            <li>角色性格包 & 音色库订阅</li>
-            <li>可替换服装 & 配件周边</li>
-          </ul>
-        </div>
-        <div class="bmc-cell anim-item">
-          <h4>🔧 关键资源</h4>
-          <ul>
-            <li>AI多模态大模型</li>
-            <li>嵌入式硬件团队</li>
-            <li>IP内容运营</li>
-          </ul>
-        </div>
-        <div class="bmc-cell anim-item">
-          <h4>🤝 关键伙伴</h4>
-          <ul>
-            <li>动漫IP方（授权合作）</li>
-            <li>云服务商（算力支撑）</li>
-            <li>声优/配音团队</li>
-          </ul>
-        </div>
-        <div class="bmc-cell anim-item">
-          <h4>⚡ 关键活动</h4>
-          <ul>
-            <li>硬件研发与量产迭代</li>
-            <li>角色模型微调与测试</li>
-            <li>IP 谈判与授权运营</li>
-          </ul>
-        </div>
-        <div class="bmc-cell anim-item">
-          <h4>💸 成本结构</h4>
-          <ul>
-            <li>硬件 BOM（约 ¥80-120/台）</li>
-            <li>云端 API 与推理成本</li>
-            <li>IP 版税与市场投放</li>
-          </ul>
-        </div>
-        <div class="bmc-cell anim-item">
-          <h4>❤️ 客户关系</h4>
-          <ul>
-            <li>社区驱动运营</li>
-            <li>UGC 内容反哺产品</li>
-            <li>固件 OTA 持续更新</li>
-          </ul>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">BMC</span>
+        <div class="voice-strip">九块画布 + 收入/成本结构示意。</div>
+        <div class="chapter-pill">商业模式</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">商业模式 · <span class="sub">Business Model Canvas</span></h2>
+            <div class="bmc-grid">
+              <div class="bmc-cell anim-item"><h4>💎 价值主张</h4><p>提供打破次元壁的实体情感陪伴，让每个角色都有自己的声音与记忆。</p></div>
+              <div class="bmc-cell anim-item"><h4>👥 客户细分</h4><ul><li>二次元圈层用户</li><li>潮玩盲盒玩家</li><li>孤独经济消费者</li></ul></div>
+              <div class="bmc-cell anim-item"><h4>📱 关键渠道</h4><ul><li>B站/小红书种草</li><li>漫展线下快闪</li><li>潮玩电商平台</li></ul></div>
+              <div class="bmc-cell anim-item"><h4>💰 收入来源</h4><ul><li>硬件销售（公仔本体）</li><li>角色性格包 & 音色库订阅</li><li>可替换服装 & 配件周边</li></ul></div>
+              <div class="bmc-cell anim-item"><h4>🔧 关键资源</h4><ul><li>AI多模态大模型</li><li>嵌入式硬件团队</li><li>IP内容运营</li></ul></div>
+              <div class="bmc-cell anim-item"><h4>🤝 关键伙伴</h4><ul><li>动漫IP方（授权合作）</li><li>云服务商（算力支撑）</li><li>声优/配音团队</li></ul></div>
+              <div class="bmc-cell anim-item"><h4>⚡ 关键活动</h4><ul><li>硬件研发与量产迭代</li><li>角色模型微调与测试</li><li>IP 谈判与授权运营</li></ul></div>
+              <div class="bmc-cell anim-item"><h4>💸 成本结构</h4><ul><li>硬件 BOM（约 ¥80-120/台）</li><li>云端 API 与推理成本</li><li>IP 版税与市场投放</li></ul></div>
+              <div class="bmc-cell anim-item"><h4>❤️ 客户关系</h4><ul><li>社区驱动运营</li><li>UGC 内容反哺产品</li><li>固件 OTA 持续更新</li></ul></div>
+            </div>
+            <div class="bmc-economics anim-item">
+              <div class="bmc-economics-head">收入 / 成本结构（示意）</div>
+              <div class="bmc-economics-row">
+                <div class="bmc-economics-block">
+                  <span class="bmc-economics-label">收入构成（预估占比）</span>
+                  <div class="stacked-h" role="img" aria-label="收入构成：硬件、订阅、周边">
+                    <span class="seg hardware" style="--pct:45">硬件 45%</span>
+                    <span class="seg sub" style="--pct:30">订阅 30%</span>
+                    <span class="seg merch" style="--pct:25">周边 25%</span>
+                  </div>
+                </div>
+                <div class="bmc-economics-block">
+                  <span class="bmc-economics-label">成本构成（示意）</span>
+                  <div class="stacked-h" role="img" aria-label="成本构成：BOM、云端与 API、版税与投放">
+                    <span class="seg bom" style="--pct:40">BOM 40%</span>
+                    <span class="seg api" style="--pct:35">API 35%</span>
+                    <span class="seg ip" style="--pct:25">版税 25%</span>
+                  </div>
+                </div>
+              </div>
+              <p class="bmc-economics-note">占比为业务规划示意，非审计数据；随量产规模与订阅渗透可调整。</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 10: 核心功能 ==================== -->
+  <!-- 10 三大模块 -->
   <div class="slide" data-index="9">
-    <div class="glow-blob" style="width:350px;height:350px;background:var(--pink-deep);top:-80px;right:-60px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">CONCEPT DESIGN</div>
-      <div class="slide-title anim-item">核心功能 · <span class="highlight">三大模块</span></div>
-      <div class="content-grid triple">
-        <div class="card feature-card anim-item">
-          <span class="feature-emoji">👁️</span>
-          <h3>看 · 视觉感知</h3>
-          <p>定时抓拍或触发式识别眼前事物——识别到另一只AnimeDoll、漫展海报、Coser……</p>
-        </div>
-        <div class="card feature-card anim-item">
-          <span class="feature-emoji">🗣️</span>
-          <h3>说 · 性格语音</h3>
-          <p>内置微型扬声器，支持不同声线TTS（傲娇、呆萌、御姐等），可主动搭话。</p>
-        </div>
-        <div class="card feature-card anim-item">
-          <span class="feature-emoji">📔</span>
-          <h3>记 · 数字记忆</h3>
-          <p>在App中生成"公仔视角的日记/手帐"，记录今天和主人去了哪里、看了什么。</p>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">FEATURE</span>
+        <div class="voice-strip">看 · 说 · 记：感知、表达与数字记忆。</div>
+        <div class="chapter-pill">核心功能</div>
+      </aside>
+      <div class="ak-main">
+        <div class="ak-card ak-card--cyan">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">核心功能 · <span class="sub">三大模块</span></h2>
+            <div class="content-grid triple">
+              <div class="mini-card feature-card anim-item"><span class="feature-emoji">👁️</span><h3>看 · 视觉感知</h3><p>定时抓拍或触发式识别眼前事物——识别到另一只AnimeDoll、漫展海报、Coser……</p></div>
+              <div class="mini-card feature-card anim-item"><span class="feature-emoji">🗣️</span><h3>说 · 性格语音</h3><p>内置微型扬声器，支持不同声线TTS（傲娇、呆萌、御姐等），可主动搭话。</p></div>
+              <div class="mini-card feature-card anim-item"><span class="feature-emoji">📔</span><h3>记 · 数字记忆</h3><p>在App中生成“公仔视角的日记/手帐”，记录今天和主人去了哪里、看了什么。</p></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 11: 系统架构 ==================== -->
+  <!-- 11 架构 -->
   <div class="slide" data-index="10">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--cyber-blue);bottom:-80px;left:-60px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">CONCEPT DESIGN</div>
-      <div class="slide-title anim-item">系统架构 · <span class="highlight">端云结合</span></div>
-      <div class="arch-flow anim-item">
-        <div class="arch-node device">
-          <span class="arch-icon">🧸</span>
-          <h4>挂件端 Device</h4>
-          <p>低功耗MCU + 微型摄像头 + 麦克风阵列 + 微型喇叭 + 小容量锂电池<br><br>只负责<strong style="color:var(--pink-soft)">采集与播放</strong></p>
-        </div>
-        <div class="arch-arrow anim-item">⟶</div>
-        <div class="arch-node app">
-          <span class="arch-icon">📱</span>
-          <h4>手机端 App</h4>
-          <p>算力中枢：处理蓝牙数据流、压缩图片、发起网络请求<br><br>承担<strong style="color:var(--lavender)">桥接与调度</strong></p>
-        </div>
-        <div class="arch-arrow anim-item">⟶</div>
-        <div class="arch-node cloud">
-          <span class="arch-icon">☁️</span>
-          <h4>云端 Cloud</h4>
-          <p>LLM多模态大模型（图像理解+文本生成）+ AI声学模型（声音克隆/合成）<br><br>提供<strong style="color:var(--cyber-blue)">智能与灵魂</strong></p>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">ARCH</span>
+        <div class="voice-strip">挂件采集 — App 调度 — 云端智能。</div>
+        <div class="chapter-pill">系统架构</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">系统架构 · <span class="sub">端云结合</span></h2>
+            <div class="arch-flow anim-item">
+              <div class="arch-node device">
+                <span class="arch-icon">🧸</span>
+                <h4>挂件端 Device</h4>
+                <p>低功耗MCU + 微型摄像头 + 麦克风阵列 + 微型喇叭 + 小容量锂电池<br><br>只负责<strong style="color:var(--ak-orange)">采集与播放</strong></p>
+              </div>
+              <div class="arch-arrow">⟶</div>
+              <div class="arch-node app">
+                <span class="arch-icon">📱</span>
+                <h4>手机端 App</h4>
+                <p>算力中枢：处理蓝牙数据流、压缩图片、发起网络请求<br><br>承担<strong style="color:var(--ak-cyan-dim)">桥接与调度</strong></p>
+              </div>
+              <div class="arch-arrow">⟶</div>
+              <div class="arch-node cloud">
+                <span class="arch-icon">☁️</span>
+                <h4>云端 Cloud</h4>
+                <p>LLM多模态大模型（图像理解+文本生成）+ AI声学模型（声音克隆/合成）<br><br>提供<strong style="color:var(--ak-cyan)">智能与灵魂</strong></p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 12: 故事版 ==================== -->
+  <!-- 12 Storyboard -->
   <div class="slide" data-index="11">
-    <div class="glow-blob" style="width:350px;height:350px;background:var(--pink-deep);top:-80px;left:-60px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">CONCEPT DESIGN</div>
-      <div class="slide-title anim-item">体验流程 · <span class="highlight">Storyboard</span></div>
-      <div class="story-timeline">
-        <div class="story-item anim-item">
-          <div class="story-time">🌅 清晨 · 出门</div>
-          <h4>唤醒仪式</h4>
-          <p>小A把 AnimeDoll 挂在包上出门，捏了一下公仔的爪子（唤醒）。公仔发声：<strong style="color:var(--pink-soft)">"今天也要元气满满哦，主人！"</strong></p>
-        </div>
-        <div class="story-item anim-item">
-          <div class="story-time">🎪 下午 · 漫展现场</div>
-          <h4>主动识别互动</h4>
-          <p>公仔胸前的隐藏摄像头拍到了一位高质量Coser，公仔主动提示：<strong style="color:var(--lavender)">"哇，11点钟方向捕捉到一只野生初音未来！"</strong></p>
-        </div>
-        <div class="story-item anim-item">
-          <div class="story-time">🌙 晚上 · 回家</div>
-          <h4>记忆手帐生成</h4>
-          <p>打开App，发现公仔自动生成了《漫展漫游手帐》，里面有公仔视角的抓拍和配文，小A一键分享到社交平台。</p>
-        </div>
-        <div class="story-item anim-item">
-          <div class="story-time">🤝 周末 · 同好偶遇</div>
-          <h4>双端识别破冰</h4>
-          <p>在咖啡店偶遇另一位 AnimeDoll 用户，两只公仔识别彼此后主动打招呼，帮助主人快速建立连接。</p>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">STORY</span>
+        <div class="voice-strip">从出门唤醒到同好破冰的一日旅程。</div>
+        <div class="chapter-pill">体验流程</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card ak-card--dark">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">体验流程 · <span class="sub">Storyboard</span></h2>
+            <div class="story-timeline">
+              <div class="story-item anim-item">
+                <div class="story-time">🌅 清晨 · 出门</div>
+                <h4>唤醒仪式</h4>
+                <p>小A把 AnimeDoll 挂在包上出门，捏了一下公仔的爪子（唤醒）。公仔发声：<strong style="color:var(--ak-orange)">“今天也要元气满满哦，主人！”</strong></p>
+              </div>
+              <div class="story-item anim-item">
+                <div class="story-time">🎪 下午 · 漫展现场</div>
+                <h4>主动识别互动</h4>
+                <p>公仔胸前的隐藏摄像头拍到了一位高质量Coser，公仔主动提示：<strong style="color:var(--ak-cyan-dim)">“哇，11点钟方向捕捉到一只野生初音未来！”</strong></p>
+              </div>
+              <div class="story-item anim-item">
+                <div class="story-time">🌙 晚上 · 回家</div>
+                <h4>记忆手帐生成</h4>
+                <p>打开App，发现公仔自动生成了《漫展漫游手帐》，里面有公仔视角的抓拍和配文，小A一键分享到社交平台。</p>
+              </div>
+              <div class="story-item anim-item">
+                <div class="story-time">🤝 周末 · 同好偶遇</div>
+                <h4>双端识别破冰</h4>
+                <p>在咖啡店偶遇另一位 AnimeDoll 用户，两只公仔识别彼此后主动打招呼，帮助主人快速建立连接。</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 13: CMF — 白底效果图 & 材质 ==================== -->
+  <!-- 13 CMF 白底 -->
   <div class="slide" data-index="12">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;right:-60px;"></div>
-    <div class="slide-inner slide-inner--cmf">
-      <div class="section-label anim-item">SOLUTION DISPLAY</div>
-      <div class="slide-title anim-item">外观设计 · <span class="highlight">白底 & 材质</span></div>
-
-      <div class="cmf-white-split anim-item">
-        <div class="cmf-img-frame cmf-white-split__visual">
-          <img src="images/effect_picture_white_bg.png" alt="AnimeDoll 白底产品效果图" decoding="async" onerror="this.onerror=null;this.src='effect_picture_white_bg.png'">
-          <span class="cmf-img-label">白底产品效果图</span>
-        </div>
-        <div class="cmf-white-split__right">
-          <div class="cmf-stats-row cmf-stats-row--pair anim-item">
-            <div class="cmf-stat">
-              <span class="stat-icon">🧶</span>
-              <div class="stat-value" style="color:var(--mint);">毛绒</div>
-              <div class="stat-label">亲肤材质</div>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">CMF</span>
+        <div class="voice-strip">白底效果图与材质规格。</div>
+        <div class="chapter-pill">外观设计</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner slide-inner--cmf">
+            <h2 class="ak-title anim-item">外观设计 · <span class="sub">白底 &amp; 材质</span></h2>
+            <div class="cmf-white-split anim-item">
+              <div class="cmf-img-frame">
+                <img src="images/effect_picture_white_bg.png" alt="AnimeDoll 白底产品效果图" decoding="async" onerror="this.onerror=null;this.src='effect_picture_white_bg.png'">
+                <span class="cmf-img-label">白底产品效果图</span>
+              </div>
+              <div>
+                <div class="cmf-stats-row">
+                  <div class="cmf-stat"><span class="stat-icon">🧶</span><div class="stat-value" style="color:var(--ak-cyan-dim)">毛绒</div><div class="stat-label">亲肤材质</div></div>
+                  <div class="cmf-stat"><span class="stat-icon">🔩</span><div class="stat-value" style="color:var(--ak-cyan)">ABS</div><div class="stat-label">轻质骨架</div></div>
+                </div>
+                <div class="ad-card-dark anim-item">
+                  <h3>材质选择</h3>
+                  <ul>
+                    <li>头部：亲肤短毛绒，增加治愈触感</li>
+                    <li>身体骨架：轻质ABS塑料，包裹电子元件</li>
+                    <li>表面：抗污涂层，耐日常使用</li>
+                  </ul>
+                </div>
+              </div>
             </div>
-            <div class="cmf-stat">
-              <span class="stat-icon">🔩</span>
-              <div class="stat-value" style="color:var(--cyber-blue);">ABS</div>
-              <div class="stat-label">轻质骨架</div>
-            </div>
-          </div>
-          <div class="card cmf-white-split__material anim-item">
-            <div class="card-icon green">🧶</div>
-            <h3>材质选择</h3>
-            <ul>
-              <li>头部：亲肤短毛绒，增加治愈触感</li>
-              <li>身体骨架：轻质ABS塑料，包裹电子元件</li>
-              <li>表面：抗污涂层，耐日常使用</li>
-            </ul>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 14: CMF — 三视图 & 隐藏摄像头 ==================== -->
+  <!-- 14 三视图 -->
   <div class="slide" data-index="13">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;right:-60px;"></div>
-    <div class="slide-inner slide-inner--cmf">
-      <div class="section-label anim-item">SOLUTION DISPLAY</div>
-      <div class="slide-title anim-item">外观设计 · <span class="highlight">三视图 & 摄像</span></div>
-
-      <div class="cmf-white-split anim-item">
-        <div class="cmf-img-frame cmf-white-split__visual">
-          <img src="images/effect_picture_3_view.png" alt="AnimeDoll 产品三视图：正视、侧视、背视" decoding="async" />
-          <span class="cmf-img-label">三视图 · 正视 / 侧视 / 背视</span>
-        </div>
-        <div class="cmf-white-split__right">
-          <div class="cmf-stats-row cmf-stats-row--pair anim-item">
-            <div class="cmf-stat">
-              <span class="stat-icon">📏</span>
-              <div class="stat-value" style="color:var(--pink-deep);">10<span style="font-size:12px">cm</span></div>
-              <div class="stat-label">极限尺寸</div>
-            </div>
-            <div class="cmf-stat">
-              <span class="stat-icon">⚖️</span>
-              <div class="stat-value" style="color:var(--lavender);">&lt;50<span style="font-size:12px">g</span></div>
-              <div class="stat-label">轻盈重量</div>
-            </div>
-          </div>
-          <div class="card cmf-white-split__material anim-item">
-            <div class="card-icon gold">🔍</div>
-            <h3>隐藏摄像头设计</h3>
-            <p>微型摄像头巧妙融入公仔装饰，避免突兀感与隐私抵触。</p>
-            <div class="cmf-cam-tags">
-              <span style="padding:5px 14px;border-radius:20px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);font-size:12px;color:var(--gold);">🔘 纽扣造型</span>
-              <span style="padding:5px 14px;border-radius:20px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);font-size:12px;color:var(--lavender);">🕶️ 墨镜造型</span>
-              <span style="padding:5px 14px;border-radius:20px;background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);font-size:12px;color:var(--pink-soft);">🎀 蝴蝶结造型</span>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">CMF</span>
+        <div class="voice-strip">尺寸与隐藏摄像头方案。</div>
+        <div class="chapter-pill">三视图</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner slide-inner--cmf">
+            <h2 class="ak-title anim-item">外观设计 · <span class="sub">三视图 &amp; 摄像</span></h2>
+            <div class="cmf-white-split anim-item">
+              <div class="cmf-img-frame">
+                <img src="images/effect_picture_3_view.png" alt="AnimeDoll 产品三视图" decoding="async" />
+                <span class="cmf-img-label">三视图 · 正视 / 侧视 / 背视</span>
+              </div>
+              <div>
+                <div class="cmf-stats-row">
+                  <div class="cmf-stat"><span class="stat-icon">📏</span><div class="stat-value" style="color:var(--ak-orange)">10<span style="font-size:12px">cm</span></div><div class="stat-label">极限尺寸</div></div>
+                  <div class="cmf-stat"><span class="stat-icon">⚖️</span><div class="stat-value" style="color:var(--ak-cyan-dim)">&lt;50<span style="font-size:12px">g</span></div><div class="stat-label">轻盈重量</div></div>
+                </div>
+                <div class="ad-card-dark anim-item">
+                  <h3>隐藏摄像头设计</h3>
+                  <p>微型摄像头巧妙融入公仔装饰，避免突兀感与隐私抵触。</p>
+                  <div class="cmf-cam-tags">
+                    <span class="cmf-tag">🔘 纽扣造型</span>
+                    <span class="cmf-tag">🕶️ 墨镜造型</span>
+                    <span class="cmf-tag">🎀 蝴蝶结造型</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -2461,50 +1775,33 @@ body::before {
     </div>
   </div>
 
-  <!-- ==================== SLIDE 15: 硬件布局（布局同 CMF 白底 / 三视图页） ==================== -->
+  <!-- 15 爆炸图 -->
   <div class="slide" data-index="14">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--cyber-blue);top:-80px;left:-60px;"></div>
-    <div class="slide-inner slide-inner--cmf">
-      <div class="section-label anim-item">SOLUTION DISPLAY</div>
-      <div class="slide-title anim-item">内部结构 · <span class="highlight">硬件爆炸图</span></div>
-      <div class="cmf-white-split anim-item">
-        <div class="cmf-img-frame cmf-white-split__visual">
-          <img src="images/effect_picture_explode.png" alt="AnimeDoll 硬件爆炸图：头胸背模组、摄像头与充电口位置" decoding="async" loading="eager" onerror="this.onerror=null;this.src='images/effect_picture_explode.jpg'">
-          <span class="cmf-img-label">爆炸图 · 头 / 胸腹 / 背部模组</span>
-        </div>
-        <div class="cmf-white-split__right">
-          <div class="cmf-stats-row cmf-stats-row--pair anim-item">
-            <div class="cmf-stat">
-              <span class="stat-icon">⏱️</span>
-              <div class="stat-value" style="color:var(--mint);">4-6h</div>
-              <div class="stat-label">活跃续航</div>
-            </div>
-            <div class="cmf-stat">
-              <span class="stat-icon">📶</span>
-              <div class="stat-value" style="color:var(--cyber-blue);">10m</div>
-              <div class="stat-label">BLE 距离</div>
-            </div>
-          </div>
-          <div class="hw-layout">
-            <div class="hw-part anim-item">
-              <div class="hw-part-icon" style="background:rgba(255,107,157,0.12);">🔊</div>
-              <div>
-                <h4>头部模组</h4>
-                <p>微型定向扬声器（声音向下传播，减少对路人打扰）与收音麦克风</p>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">HW</span>
+        <div class="voice-strip">头胸背模组与续航、连接规格。</div>
+        <div class="chapter-pill">内部结构</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner slide-inner--cmf">
+            <h2 class="ak-title anim-item">内部结构 · <span class="sub">硬件爆炸图</span></h2>
+            <div class="cmf-white-split anim-item">
+              <div class="cmf-img-frame">
+                <img src="images/effect_picture_explode.png" alt="AnimeDoll 硬件爆炸图" decoding="async" loading="eager" onerror="this.onerror=null;this.src='images/effect_picture_explode.jpg'">
+                <span class="cmf-img-label">爆炸图 · 头 / 胸腹 / 背部模组</span>
               </div>
-            </div>
-            <div class="hw-part anim-item">
-              <div class="hw-part-icon" style="background:rgba(139,92,246,0.12);">📷</div>
               <div>
-                <h4>胸部 / 腹部模组</h4>
-                <p>柔性 PCB 主板、蓝牙天线与 OV 系列摄像头模组</p>
-              </div>
-            </div>
-            <div class="hw-part anim-item">
-              <div class="hw-part-icon" style="background:rgba(96,165,250,0.12);">🔋</div>
-              <div>
-                <h4>背部模组</h4>
-                <p>Type-C 充电口（隐藏在衣服下）及 300mAh 锂电池，支持 IPX4 级生活防溅</p>
+                <div class="cmf-stats-row">
+                  <div class="cmf-stat"><span class="stat-icon">⏱️</span><div class="stat-value" style="color:var(--ak-cyan-dim)">4-6h</div><div class="stat-label">活跃续航</div></div>
+                  <div class="cmf-stat"><span class="stat-icon">📶</span><div class="stat-value" style="color:var(--ak-cyan)">10m</div><div class="stat-label">BLE 距离</div></div>
+                </div>
+                <div class="hw-layout">
+                  <div class="hw-part anim-item"><div class="hw-part-icon">🔊</div><div><h4>头部模组</h4><p>微型定向扬声器（声音向下传播，减少对路人打扰）与收音麦克风</p></div></div>
+                  <div class="hw-part anim-item"><div class="hw-part-icon">📷</div><div><h4>胸部 / 腹部模组</h4><p>柔性 PCB 主板、蓝牙天线与 OV 系列摄像头模组</p></div></div>
+                  <div class="hw-part anim-item"><div class="hw-part-icon">🔋</div><div><h4>背部模组</h4><p>Type-C 充电口（隐藏在衣服下）及 300mAh 锂电池，支持 IPX4 级生活防溅</p></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -2513,150 +1810,143 @@ body::before {
     </div>
   </div>
 
-  <!-- ==================== SLIDE 16: App UI ==================== -->
+  <!-- 16 App -->
   <div class="slide" data-index="15">
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--pink-deep);bottom:-80px;right:-60px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">SOLUTION DISPLAY</div>
-      <div class="slide-title anim-item">交互界面 · <span class="highlight">Companion App</span></div>
-      <p class="anim-item" style="font-size:14px;color:var(--text-dim);margin-bottom:24px;">UI 视觉风格：二次元 · 扁平化 · 手账风</p>
-      <div class="app-screens">
-        <div class="app-screen anim-item">
-          <div class="app-screen-header">
-            <span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span>
-          </div>
-          <h4>✨ 灵魂注入室</h4>
-          <p>设定公仔的称呼、性格Prompt（如：你是一个毒舌但傲娇的魔法少女）、音色选择。</p>
-          <div class="app-screen-visual" style="background:linear-gradient(135deg,rgba(255,107,157,0.08),rgba(139,92,246,0.08));">
-            <span style="font-size:32px;">🎭</span>
-          </div>
-        </div>
-        <div class="app-screen anim-item">
-          <div class="app-screen-header">
-            <span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span>
-          </div>
-          <h4>📸 时空相册</h4>
-          <p>公仔第一视角的照片流及AI生成的内心OS，自动生成手帐。</p>
-          <div class="app-screen-visual" style="background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(16,185,129,0.08));">
-            <span style="font-size:32px;">🖼️</span>
-          </div>
-        </div>
-        <div class="app-screen anim-item">
-          <div class="app-screen-header">
-            <span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span>
-          </div>
-          <h4>⚡ 能量站</h4>
-          <p>查看电量、蓝牙连接状态、固件升级。设备健康一目了然。</p>
-          <div class="app-screen-visual" style="background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(255,107,157,0.08));">
-            <span style="font-size:32px;">🔋</span>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">APP</span>
+        <div class="voice-strip">灵魂注入、时空相册与能量站。</div>
+        <div class="chapter-pill">Companion App</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">交互界面 · <span class="sub">Companion App</span></h2>
+            <p class="ad-muted anim-item" style="margin-bottom:16px">UI 视觉风格：二次元 · 扁平化 · 手账风</p>
+            <div class="app-screens">
+              <div class="app-screen anim-item">
+                <div class="app-screen-header"><span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span></div>
+                <h4>✨ 灵魂注入室</h4>
+                <p>设定公仔的称呼、性格Prompt（如：你是一个毒舌但傲娇的魔法少女）、音色选择。</p>
+                <div class="app-screen-visual"><span style="font-size:28px">🎭</span></div>
+              </div>
+              <div class="app-screen anim-item">
+                <div class="app-screen-header"><span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span></div>
+                <h4>📸 时空相册</h4>
+                <p>公仔第一视角的照片流及AI生成的内心OS，自动生成手帐。</p>
+                <div class="app-screen-visual"><span style="font-size:28px">🖼️</span></div>
+              </div>
+              <div class="app-screen anim-item">
+                <div class="app-screen-header"><span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span></div>
+                <h4>⚡ 能量站</h4>
+                <p>查看电量、蓝牙连接状态、固件升级。设备健康一目了然。</p>
+                <div class="app-screen-visual"><span style="font-size:28px">🔋</span></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 17: 场景渲染 ==================== -->
+  <!-- 17 场景渲染 -->
   <div class="slide" data-index="16">
-    <div class="glow-blob" style="width:350px;height:350px;background:var(--lavender-deep);top:-80px;left:-60px;"></div>
-    <div class="slide-inner slide-inner--scene-render">
-      <div class="section-label anim-item">SOLUTION DISPLAY</div>
-      <div class="slide-title anim-item">使用场景 · <span class="highlight">渲染呈现</span></div>
-      <div class="scene-hero anim-item">
-        <div class="scene-hero-img-wrap">
-          <img src="images/effect_picture_on_subway.png" alt="地铁通勤场景中的 AnimeDoll 挂件" decoding="async" onerror="this.onerror=null;this.src='images/effect_picture_on_subway.jpg'">
-        </div>
-        <p class="scene-hero-label">通勤随行 · 地铁场景</p>
-      </div>
-      <div class="scene-cards">
-        <div class="scene-card day anim-item">
-          <div class="scene-visual">
-            🎒
-          </div>
-          <div class="scene-card-body">
-            <h4>日间 · 痛包融合</h4>
-            <p>AnimeDoll 挂在一个装满吧唧（徽章）的痛包上，完美融入二次元穿搭，成为最亮眼的焦点。</p>
-          </div>
-        </div>
-        <div class="scene-card night anim-item">
-          <div class="scene-visual" style="position:relative;">
-            🧸
-            <div class="breathing-glow" style="top:40%;left:55%;"></div>
-          </div>
-          <div class="scene-card-body">
-            <h4>夜间 · 呼吸灯光</h4>
-            <p>公仔的眼睛或标志性部位发出微弱的呼吸灯光，在暗处营造赛博朋克氛围。</p>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">SCENE</span>
+        <div class="voice-strip">通勤与痛包、夜间呼吸灯氛围。</div>
+        <div class="chapter-pill">使用场景</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card ak-card--cyan">
+          <div class="ak-card-inner slide-inner--scene-render">
+            <h2 class="ak-title anim-item">使用场景 · <span class="sub">渲染呈现</span></h2>
+            <div class="scene-hero anim-item">
+              <div class="scene-hero-img-wrap">
+                <img src="images/effect_picture_on_subway.png" alt="地铁通勤场景中的 AnimeDoll 挂件" decoding="async" onerror="this.onerror=null;this.src='images/effect_picture_on_subway.jpg'">
+              </div>
+              <p class="scene-hero-label">通勤随行 · 地铁场景</p>
+            </div>
+            <div class="scene-cards">
+              <div class="scene-card day anim-item">
+                <div class="scene-visual">🎒</div>
+                <div class="scene-card-body"><h4>日间 · 痛包融合</h4><p>AnimeDoll 挂在一个装满吧唧（徽章）的痛包上，完美融入二次元穿搭，成为最亮眼的焦点。</p></div>
+              </div>
+              <div class="scene-card night anim-item">
+                <div class="scene-visual" style="position:relative">🧸<div class="breathing-glow" style="top:40%;left:55%;"></div></div>
+                <div class="scene-card-body"><h4>夜间 · 呼吸灯光</h4><p>公仔的眼睛或标志性部位发出微弱的呼吸灯光，在暗处营造赛博朋克氛围。</p></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 18: 社区与数据飞轮 ==================== -->
+  <!-- 18 飞轮 -->
   <div class="slide" data-index="17">
-    <div class="glow-blob" style="width:320px;height:320px;background:var(--mint-deep);bottom:-90px;left:-70px;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">COMMUNITY & FLYWHEEL</div>
-      <div class="slide-title anim-item">社区生态 · <span class="highlight">Data Flywheel</span></div>
-      <div class="flywheel-flow anim-item">
-        <div class="flywheel-node">用户使用</div>
-        <div class="flywheel-arrow">→</div>
-        <div class="flywheel-node">人格数据丰富</div>
-        <div class="flywheel-arrow">→</div>
-        <div class="flywheel-node">陪伴体验提升</div>
-      </div>
-      <div class="content-grid triple">
-        <div class="card feature-card anim-item">
-          <span class="feature-emoji">🌐</span>
-          <h3>UGC 日记广场</h3>
-          <p>用户分享“公仔第一视角”的旅行手帐，形成持续传播的内容社区。</p>
-        </div>
-        <div class="card feature-card anim-item">
-          <span class="feature-emoji">🎉</span>
-          <h3>线下同好聚会</h3>
-          <p>AnimeDoll meetup 让同好在现实场景快速破冰，强化品牌归属感。</p>
-        </div>
-        <div class="card feature-card anim-item">
-          <span class="feature-emoji">🧪</span>
-          <h3>创作者计划</h3>
-          <p>开放“灵魂包”创作机制，鼓励用户共创人格模板并形成生态闭环。</p>
+    <div class="slide-frame slide-frame--wide">
+      <aside class="ak-sidebar">
+        <span class="ak-sidebar-label">FLYWHEEL</span>
+        <div class="voice-strip">用户数据 — 体验 — UGC 与线下活动闭环。</div>
+        <div class="chapter-pill">社区生态</div>
+      </aside>
+      <div class="ak-main ak-main--scroll">
+        <div class="ak-card">
+          <div class="ak-card-inner">
+            <h2 class="ak-title anim-item">社区生态 · <span class="sub">Data Flywheel</span></h2>
+            <div class="flywheel-flow anim-item">
+              <div class="flywheel-node">用户使用</div>
+              <div class="flywheel-arrow">→</div>
+              <div class="flywheel-node">人格数据丰富</div>
+              <div class="flywheel-arrow">→</div>
+              <div class="flywheel-node">陪伴体验提升</div>
+            </div>
+            <div class="content-grid triple" style="margin-top:14px">
+              <div class="mini-card feature-card anim-item"><span class="feature-emoji">🌐</span><h3>UGC 日记广场</h3><p>用户分享“公仔第一视角”的旅行手帐，形成持续传播的内容社区。</p></div>
+              <div class="mini-card feature-card anim-item"><span class="feature-emoji">🎉</span><h3>线下同好聚会</h3><p>AnimeDoll meetup 让同好在现实场景快速破冰，强化品牌归属感。</p></div>
+              <div class="mini-card feature-card anim-item"><span class="feature-emoji">🧪</span><h3>创作者计划</h3><p>开放“灵魂包”创作机制，鼓励用户共创人格模板并形成生态闭环。</p></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SLIDE 19: 总结与展望 ==================== -->
-  <div class="slide" data-index="18">
-    <div class="glow-blob" style="width:400px;height:400px;background:var(--pink-deep);top:-120px;right:-100px;"></div>
-    <div class="glow-blob" style="width:300px;height:300px;background:var(--lavender-deep);bottom:-80px;left:-60px;animation-delay:3s;"></div>
-    <div class="deco-star" style="top:18%;left:15%;animation-delay:0.3s;"></div>
-    <div class="deco-star" style="top:22%;right:20%;animation-delay:1s;width:14px;height:14px;"></div>
-    <div class="deco-star" style="bottom:25%;left:18%;animation-delay:0.6s;width:16px;height:16px;"></div>
-    <div class="deco-star" style="bottom:18%;right:12%;animation-delay:1.3s;"></div>
-    <div class="slide-inner">
-      <div class="section-label anim-item">CONCLUSION & FUTURE</div>
-      <div class="slide-title anim-item" style="text-align:left;">总结与 <span class="highlight">未来展望</span></div>
-      <div class="roadmap anim-item">
-        <div class="roadmap-phase p1">
-          <div class="phase-badge">PHASE 1</div>
-          <h3>通用原创版</h3>
-          <p>推出无属性原创设计的 AnimeDoll，验证硬件可行性与交互逻辑，建立用户社区。</p>
+  <!-- 19 总结 -->
+  <div class="slide end-slide" data-index="18">
+      <div class="slide-inner" style="max-width:720px;margin:0 auto">
+      <div class="ak-card ak-tile-dark">
+        <div class="ak-card-inner" style="padding-top:28px;padding-bottom:28px">
+          <div class="ak-sidebar-label anim-item" style="display:block;margin-bottom:8px">CONCLUSION</div>
+          <h2 class="ak-title anim-item" style="text-align:left">总结与未来展望<span class="sub">Conclusion &amp; Future Outlook</span></h2>
+          <div class="roadmap anim-item">
+            <div class="roadmap-phase p1">
+              <div class="phase-badge">PHASE 1</div>
+              <h3>通用原创版</h3>
+              <p>推出无属性原创设计的 AnimeDoll，验证硬件可行性与交互逻辑，建立用户社区。</p>
+            </div>
+            <div class="roadmap-arrow">⟶</div>
+            <div class="roadmap-phase p2">
+              <div class="phase-badge">PHASE 2</div>
+              <h3>IP联名合作版</h3>
+              <p>开启IP联名计划（如初音未来、原神等官方授权），售卖专属“角色灵魂包”。</p>
+            </div>
+            <div class="roadmap-arrow">⟶</div>
+            <div class="roadmap-phase p3">
+              <div class="phase-badge">PHASE 3</div>
+              <h3>开放平台</h3>
+              <p>上线“灵魂工坊”，支持用户微调人格并发布可共享/可交易的自定义灵魂包。</p>
+            </div>
+          </div>
+          <div class="ending-vision anim-item">
+            <p class="big-quote">“让每一只公仔都成为会成长、会回应、会陪伴你的数字生命。”</p>
+            <p class="ending-tag">AnimeDoll — Your Cross-Dimensional AI Companion</p>
+            <div class="stat-row" style="justify-content:center;margin-top:20px">
+              <span class="stat-pill">感谢聆听 · Q&amp;A</span>
+            </div>
+          </div>
         </div>
-        <div class="roadmap-arrow anim-item">⟶</div>
-        <div class="roadmap-phase p2">
-          <div class="phase-badge">PHASE 2</div>
-          <h3>IP联名合作版</h3>
-          <p>开启IP联名计划（如初音未来、原神等官方授权），售卖专属"角色灵魂包"。</p>
-        </div>
-        <div class="roadmap-arrow anim-item">⟶</div>
-        <div class="roadmap-phase p3">
-          <div class="phase-badge">PHASE 3</div>
-          <h3>开放平台</h3>
-          <p>上线“灵魂工坊”，支持用户微调人格并发布可共享/可交易的自定义灵魂包。</p>
-        </div>
-      </div>
-      <div class="ending-vision anim-item" style="margin-top:36px;">
-        <div class="big-quote">"让每一只公仔都成为会成长、会回应、会陪伴你的数字生命。"</div>
-        <p style="font-size:14px;color:var(--text-dim);">AnimeDoll — Your Cross-Dimensional AI Companion</p>
       </div>
     </div>
   </div>
@@ -2664,216 +1954,182 @@ body::before {
 </div>
 
 <script>
-/* ========== PARTICLES ========== */
-const canvas = document.getElementById('particles-canvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
-const PARTICLE_COUNT = 45;
-let mouseX = -1000, mouseY = -1000;
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
-class Particle {
-  constructor() { this.reset(); }
-  reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.baseSize = Math.random() * 1.8 + 0.4;
-    this.size = this.baseSize;
-    this.speedX = (Math.random() - 0.5) * 0.2;
-    this.speedY = (Math.random() - 0.5) * 0.2;
-    this.opacity = Math.random() * 0.3 + 0.05;
-    this.baseOpacity = this.opacity;
-    this.hue = [340, 280, 220, 180][Math.floor(Math.random() * 4)];
-    this.pulse = Math.random() * Math.PI * 2;
-    this.pulseSpeed = 0.005 + Math.random() * 0.01;
+(function () {
+  const hudTime = document.getElementById('hudTime');
+  function tick() {
+    const d = new Date();
+    const pad = function (n) { return String(n).padStart(2, '0'); };
+    hudTime.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
   }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    this.pulse += this.pulseSpeed;
-    this.opacity = this.baseOpacity + Math.sin(this.pulse) * 0.08;
+  tick();
+  setInterval(tick, 1000);
 
-    const dx = this.x - mouseX;
-    const dy = this.y - mouseY;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 150) {
-      const factor = 1 - dist / 150;
-      this.size = this.baseSize + factor * 1.5;
-      this.opacity = Math.min(this.baseOpacity + factor * 0.3, 0.6);
+  const fsBtn = document.getElementById('fsBtn');
+  fsBtn.addEventListener('click', function () {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(function () {});
     } else {
-      this.size = this.baseSize;
+      document.exitFullscreen();
     }
-
-    if (this.x < -10 || this.x > canvas.width + 10 || this.y < -10 || this.y > canvas.height + 10) this.reset();
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = `hsla(${this.hue}, 70%, 72%, ${this.opacity})`;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size * 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = `hsla(${this.hue}, 70%, 72%, ${this.opacity * 0.12})`;
-    ctx.fill();
-  }
-}
-
-for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
-
-function drawConnections() {
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) {
-        const op = (1 - dist / 120) * 0.06;
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `hsla(270, 60%, 70%, ${op})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
-    }
-  }
-}
-
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawConnections();
-  particles.forEach(p => { p.update(); p.draw(); });
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
-
-/* ========== SLIDE NAVIGATION ========== */
-const slides = document.querySelectorAll('.slide');
-const totalSlides = slides.length;
-let currentIndex = 0;
-let isTransitioning = false;
-
-document.getElementById('totalSlides').textContent = String(totalSlides).padStart(2, '0');
-
-// Build nav dots
-const dotsContainer = document.getElementById('navDots');
-slides.forEach((_, i) => {
-  const dot = document.createElement('button');
-  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-  dot.addEventListener('click', () => goToSlide(i));
-  dotsContainer.appendChild(dot);
-});
-
-function updateUI() {
-  document.getElementById('currentSlide').textContent = String(currentIndex + 1).padStart(2, '0');
-  document.getElementById('progressBar').style.width = ((currentIndex + 1) / totalSlides * 100) + '%';
-  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === currentIndex));
-  document.getElementById('prevBtn').classList.toggle('hidden', currentIndex === 0);
-  document.getElementById('nextBtn').classList.toggle('hidden', currentIndex === totalSlides - 1);
-}
-
-function goToSlide(index) {
-  if (isTransitioning || index === currentIndex || index < 0 || index >= totalSlides) return;
-  isTransitioning = true;
-  const direction = index > currentIndex ? 1 : -1;
-  const prevEl = slides[currentIndex];
-  const nextEl = slides[index];
-
-  prevEl.classList.remove('active', 'exit-left', 'exit-right', 'enter-from-right', 'enter-from-left');
-  prevEl.classList.add(direction > 0 ? 'exit-left' : 'exit-right');
-
-  nextEl.classList.remove('active', 'exit-left', 'exit-right', 'enter-from-right', 'enter-from-left');
-  nextEl.classList.add(direction > 0 ? 'enter-from-right' : 'enter-from-left');
-
-  requestAnimationFrame(() => {
-    void nextEl.offsetWidth;
-    nextEl.classList.remove('enter-from-right', 'enter-from-left');
-    nextEl.classList.add('active');
-    currentIndex = index;
-    updateUI();
-    setTimeout(() => {
-      prevEl.classList.remove('exit-left', 'exit-right');
-      isTransitioning = false;
-    }, 700);
   });
-}
 
-function nextSlide() { goToSlide(currentIndex + 1); }
-function prevSlide() { goToSlide(currentIndex - 1); }
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let currentIndex = 0;
+  let isTransitioning = false;
+  var slideTransitionMs = 480;
+  try {
+    var ms = getComputedStyle(document.documentElement).getPropertyValue('--slide-transition-ms').trim();
+    if (ms) slideTransitionMs = parseInt(ms, 10) || slideTransitionMs;
+  } catch (err) {}
 
-// Keyboard navigation
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
-  if (e.key === 'Home') { e.preventDefault(); goToSlide(0); }
-  if (e.key === 'End') { e.preventDefault(); goToSlide(totalSlides - 1); }
-});
+  document.getElementById('totalSlides').textContent = String(totalSlides).padStart(2, '0');
 
-// Touch / swipe navigation
-let touchStartX = 0, touchStartY = 0, touchEndX = 0;
-const wrapper = document.getElementById('slidesWrapper');
+  const dotsContainer = document.getElementById('navDots');
+  slides.forEach(function (_, i) {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', '第 ' + (i + 1) + ' 页');
+    dot.addEventListener('click', function () { goToSlide(i); });
+    dotsContainer.appendChild(dot);
+  });
 
-wrapper.addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].screenX;
-  touchStartY = e.changedTouches[0].screenY;
-}, { passive: true });
-
-wrapper.addEventListener('touchend', e => {
-  touchEndX = e.changedTouches[0].screenX;
-  const diffX = touchStartX - touchEndX;
-  const diffY = Math.abs(touchStartY - e.changedTouches[0].screenY);
-  if (Math.abs(diffX) > 50 && diffY < 100) {
-    diffX > 0 ? nextSlide() : prevSlide();
+  function updateUI() {
+    document.getElementById('currentSlide').textContent = String(currentIndex + 1).padStart(2, '0');
+    var pct = ((currentIndex + 1) / totalSlides) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressBar').setAttribute('aria-valuenow', String(currentIndex + 1));
+    document.getElementById('progressBar').setAttribute('aria-valuemax', String(totalSlides));
+    document.querySelectorAll('.nav-dot').forEach(function (d, i) {
+      d.classList.toggle('active', i === currentIndex);
+    });
+    document.getElementById('prevBtn').classList.toggle('hidden', currentIndex === 0);
+    document.getElementById('nextBtn').classList.toggle('hidden', currentIndex === totalSlides - 1);
   }
-}, { passive: true });
 
-// Mouse drag navigation
-let mouseDown = false, mouseStartX = 0;
-wrapper.addEventListener('mousedown', e => { mouseDown = true; mouseStartX = e.clientX; });
-wrapper.addEventListener('mouseup', e => {
-  if (!mouseDown) return;
-  mouseDown = false;
-  const diff = mouseStartX - e.clientX;
-  if (Math.abs(diff) > 60) {
-    diff > 0 ? nextSlide() : prevSlide();
+  function goToSlide(index) {
+    if (isTransitioning || index === currentIndex || index < 0 || index >= totalSlides) return;
+    isTransitioning = true;
+    var direction = index > currentIndex ? 1 : -1;
+    var prevEl = slides[currentIndex];
+    var nextEl = slides[index];
+
+    prevEl.classList.remove('active', 'exit-left', 'exit-right', 'enter-from-right', 'enter-from-left');
+    prevEl.classList.add(direction > 0 ? 'exit-left' : 'exit-right');
+
+    nextEl.classList.remove('active', 'exit-left', 'exit-right', 'enter-from-right', 'enter-from-left');
+    nextEl.classList.add(direction > 0 ? 'enter-from-right' : 'enter-from-left');
+
+    requestAnimationFrame(function () {
+      void nextEl.offsetWidth;
+      nextEl.classList.remove('enter-from-right', 'enter-from-left');
+      nextEl.classList.add('active');
+      currentIndex = index;
+      updateUI();
+
+      var transitionFinished = false;
+      var fallbackTimer;
+      function finishTransition() {
+        if (transitionFinished) return;
+        transitionFinished = true;
+        clearTimeout(fallbackTimer);
+        nextEl.removeEventListener('transitionend', onTransitionEnd);
+        prevEl.classList.remove('exit-left', 'exit-right');
+        isTransitioning = false;
+      }
+
+      function onTransitionEnd(e) {
+        if (e.target !== nextEl || e.propertyName !== 'opacity') return;
+        finishTransition();
+      }
+
+      nextEl.addEventListener('transitionend', onTransitionEnd);
+      fallbackTimer = setTimeout(finishTransition, slideTransitionMs + 80);
+    });
   }
-});
-wrapper.addEventListener('mouseleave', () => { mouseDown = false; });
 
-// Wheel navigation (debounced)
-let wheelCooldown = false;
-wrapper.addEventListener('wheel', e => {
-  if (wheelCooldown) return;
-  wheelCooldown = true;
-  if (e.deltaY > 30 || e.deltaX > 30) nextSlide();
-  else if (e.deltaY < -30 || e.deltaX < -30) prevSlide();
-  setTimeout(() => { wheelCooldown = false; }, 800);
-}, { passive: true });
+  function nextSlide() { goToSlide(currentIndex + 1); }
+  function prevSlide() { goToSlide(currentIndex - 1); }
 
-// Auto-hide cursor after inactivity
-let cursorTimeout;
-function resetCursorTimeout() {
-  document.body.style.cursor = '';
-  clearTimeout(cursorTimeout);
-  cursorTimeout = setTimeout(() => {
-    document.body.style.cursor = 'none';
-  }, 3000);
-}
-document.addEventListener('mousemove', resetCursorTimeout);
-document.addEventListener('mousedown', resetCursorTimeout);
+  document.getElementById('nextBtn').addEventListener('click', nextSlide);
+  document.getElementById('prevBtn').addEventListener('click', prevSlide);
 
-updateUI();
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      nextSlide();
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      prevSlide();
+    }
+    if (e.key === 'Home') {
+      e.preventDefault();
+      goToSlide(0);
+    }
+    if (e.key === 'End') {
+      e.preventDefault();
+      goToSlide(totalSlides - 1);
+    }
+  });
+
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var touchAxis = null;
+  var wrapper = document.getElementById('slidesWrapper');
+
+  wrapper.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) return;
+    touchStartX = e.touches[0].screenX;
+    touchStartY = e.touches[0].screenY;
+    touchAxis = null;
+  }, { passive: true });
+
+  wrapper.addEventListener('touchmove', function (e) {
+    if (e.touches.length !== 1) return;
+    var mx = e.touches[0].screenX - touchStartX;
+    var my = e.touches[0].screenY - touchStartY;
+    if (!touchAxis && (Math.abs(mx) > 12 || Math.abs(my) > 12)) {
+      touchAxis = Math.abs(mx) >= Math.abs(my) ? 'h' : 'v';
+    }
+  }, { passive: true });
+
+  wrapper.addEventListener('touchend', function (e) {
+    var touchEndX = e.changedTouches[0].screenX;
+    var diffX = touchStartX - touchEndX;
+    var diffY = Math.abs(touchStartY - e.changedTouches[0].screenY);
+    if (touchAxis === 'v') {
+      touchAxis = null;
+      return;
+    }
+    if (Math.abs(diffX) > 50 && diffY < 100) {
+      if (diffX > 0) nextSlide();
+      else prevSlide();
+    }
+    touchAxis = null;
+  }, { passive: true });
+
+  var mouseDown = false;
+  var mouseStartX = 0;
+  wrapper.addEventListener('mousedown', function (e) {
+    mouseDown = true;
+    mouseStartX = e.clientX;
+  });
+  wrapper.addEventListener('mouseup', function (e) {
+    if (!mouseDown) return;
+    mouseDown = false;
+    var diff = mouseStartX - e.clientX;
+    if (Math.abs(diff) > 60) {
+      if (diff > 0) nextSlide();
+      else prevSlide();
+    }
+  });
+  wrapper.addEventListener('mouseleave', function () { mouseDown = false; });
+
+  updateUI();
+  window.goToSlide = goToSlide;
+})();
 </script>
 </body>
 </html>
