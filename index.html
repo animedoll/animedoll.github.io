@@ -657,6 +657,8 @@ body::after {
 .cover-slide {
   flex-direction: column;
   text-align: center;
+  padding-top: clamp(24px, 5vh, 52px);
+  padding-bottom: clamp(40px, 8vh, 72px);
 }
 .cover-slide .slide-inner {
   max-width: 880px;
@@ -668,7 +670,7 @@ body::after {
   font-weight: 900;
   letter-spacing: 0.4em;
   color: var(--ak-cyan);
-  margin-bottom: 20px;
+  margin-bottom: clamp(8px, 2vh, 20px);
 }
 .cover-hero {
   font-family: 'Noto Serif SC', serif;
@@ -907,7 +909,7 @@ body::after {
   box-shadow: 0 0 14px rgba(255, 94, 25, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 94, 25, 0.35);
 }
-.cover-slide-inner { max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; position: relative; overflow: hidden; user-select: none; -webkit-user-select: none; }
+.cover-slide-inner { max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 2vh, 16px); position: relative; overflow: visible; user-select: none; -webkit-user-select: none; }
 .cover-hero-wrap {
   width: min(52vmin, 400px);
   aspect-ratio: 1;
@@ -936,6 +938,67 @@ body::after {
 }
 .cover-subtitle { font-size: clamp(15px, 2vw, 18px); color: rgba(255, 255, 255, 0.68); font-weight: 500; letter-spacing: 0.02em; }
 .cover-tagline { font-size: clamp(12px, 1.4vw, 15px); color: rgba(255, 255, 255, 0.5); margin-top: 4px; }
+
+@media (max-height: 860px) {
+  .cover-slide {
+    padding-top: calc(18px + var(--safe-top));
+    padding-bottom: calc(30px + var(--safe-bottom));
+  }
+  .cover-hero-wrap {
+    width: min(46vmin, 340px);
+  }
+  .cover-title-ak {
+    font-size: clamp(30px, 4.3vw, 48px);
+  }
+  .cover-subtitle {
+    font-size: clamp(14px, 1.8vw, 16px);
+  }
+  .cover-tagline {
+    font-size: clamp(11px, 1.25vw, 14px);
+  }
+  .cover-deco .bar {
+    width: 88px;
+  }
+}
+
+@media (max-height: 740px) {
+  .cover-slide {
+    padding-top: calc(12px + var(--safe-top));
+    padding-bottom: calc(22px + var(--safe-bottom));
+  }
+  .cover-slide-inner {
+    gap: 8px;
+  }
+  .cover-badge {
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    margin-bottom: 4px;
+  }
+  .cover-hero-wrap {
+    width: min(40vmin, 280px);
+  }
+  .cover-title-ak {
+    font-size: clamp(26px, 3.8vw, 40px);
+  }
+  .cover-subtitle {
+    font-size: 13px;
+  }
+  .cover-tagline {
+    margin-top: 0;
+    font-size: 11px;
+  }
+  .cover-deco {
+    gap: 10px;
+  }
+  .cover-deco span {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+  }
+  .cover-deco .bar {
+    width: 64px;
+    height: 3px;
+  }
+}
 .toc-jump { cursor: pointer; text-align: left; }
 .toc-item-row { display: flex; gap: 16px; align-items: flex-start; width: 100%; }
 .toc-desc { font-size: 12px; color: var(--ak-text-muted); margin-top: 8px; line-height: 1.45; }
