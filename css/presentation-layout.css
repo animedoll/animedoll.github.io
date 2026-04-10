@@ -1019,6 +1019,7 @@ body::after {
 }
 .cover-model-load-ring-wrap {
   position: relative;
+  isolation: isolate;
   width: min(88px, 22vmin);
   height: min(88px, 22vmin);
   flex-shrink: 0;
@@ -1041,8 +1042,6 @@ body::after {
     rgba(255, 255, 255, 0.02) 72%,
     transparent 100%
   );
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 .cover-model-load-svg {
   display: block;
