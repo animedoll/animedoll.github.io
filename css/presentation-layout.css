@@ -993,6 +993,48 @@ body::after {
 }
 .cover-hero-canvas-host:active .cover-hero-canvas { cursor: grabbing; }
 
+/* 封面 3D：指针落在画布区（.cover-hero-wrap 为 pointer-events:none，实际命中本层）时提示交互方式 */
+.cover-hero-interact-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(8px, 4vmin, 20px);
+  z-index: 2;
+  transform: translateX(-50%) translateY(6px);
+  padding: 0.45em 0.75em 0.5em;
+  max-width: min(280px, 88%);
+  box-sizing: border-box;
+  font-family: 'IBM Plex Sans', 'Noto Sans SC', system-ui, sans-serif;
+  font-size: clamp(11px, 2.6vmin, 13px);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--ak-text-light, #e8eef2);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--ak-a22, rgba(255, 255, 255, 0.14));
+  background: rgba(6, 18, 24, 0.78);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.2) inset;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cover-slide.active .cover-hero-canvas-host:hover .cover-hero-interact-hint {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover-hero-interact-hint {
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+  }
+}
+
 /* 封面 3D 模型加载态：全层不铺底，避免出现方形半透明框；仅圆环区域用 ::before 圆形衬底 */
 .cover-model-load {
   position: absolute;
@@ -2371,13 +2413,26 @@ html[data-theme="verdant"] .nav-arrow {
   color: rgba(0, 0, 0, 0.58);
 }
 html[data-theme="verdant"] .nav-arrow:hover {
-  color: var(--ak-text);
+  background: var(--ak-a15);
+  border-color: var(--ak-a45);
+  color: var(--ak-cyan);
 }
 html[data-theme="verdant"] .fs-btn,
 html[data-theme="verdant"] .theme-btn {
   color: rgba(0, 0, 0, 0.55);
   background: rgba(253, 253, 252, 0.92);
   border-color: rgba(0, 0, 0, 0.1);
+}
+html[data-theme="verdant"] .fs-btn:hover,
+html[data-theme="verdant"] .theme-btn:hover {
+  color: var(--ak-cyan);
+  border-color: var(--ak-a40);
+  background: var(--ak-a08);
+}
+html[data-theme="verdant"] .fs-btn:focus-visible,
+html[data-theme="verdant"] .theme-btn:focus-visible {
+  outline: 2px solid var(--ak-orange);
+  outline-offset: 2px;
 }
 html[data-theme="verdant"] .voice-strip {
   background: rgba(253, 253, 252, 0.96);
