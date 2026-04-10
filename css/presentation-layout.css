@@ -993,7 +993,7 @@ body::after {
 }
 .cover-hero-canvas-host:active .cover-hero-canvas { cursor: grabbing; }
 
-/* 封面 3D 模型加载态 */
+/* 封面 3D 模型加载态：全层仅均匀压暗，避免椭圆/矩形渐变边界；圆形高光在 .cover-model-load-ring-wrap::before */
 .cover-model-load {
   position: absolute;
   inset: 0;
@@ -1004,9 +1004,9 @@ body::after {
   padding: clamp(12px, 4vmin, 20px);
   box-sizing: border-box;
   pointer-events: auto;
-  background: radial-gradient(ellipse 85% 75% at 50% 45%, rgba(8, 18, 28, 0.72) 0%, rgba(4, 10, 18, 0.38) 55%, transparent 100%);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(4, 10, 18, 0.52);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   transition: opacity 0.45s ease, visibility 0.45s ease;
 }
 .cover-model-load-inner {
@@ -1022,6 +1022,27 @@ body::after {
   width: min(88px, 22vmin);
   height: min(88px, 22vmin);
   flex-shrink: 0;
+}
+.cover-model-load-ring-wrap::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 148%;
+  height: 148%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.08) 52%,
+    rgba(255, 255, 255, 0.02) 72%,
+    transparent 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .cover-model-load-svg {
   display: block;
@@ -1099,7 +1120,16 @@ body::after {
   filter: drop-shadow(0 0 8px var(--ak-w45));
 }
 html[data-theme="verdant"] .cover-model-load {
-  background: radial-gradient(ellipse 85% 75% at 50% 45%, rgba(253, 252, 250, 0.88) 0%, rgba(245, 244, 240, 0.5) 60%, transparent 100%);
+  background: rgba(252, 251, 248, 0.14);
+}
+html[data-theme="verdant"] .cover-model-load-ring-wrap::before {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0.18) 72%,
+    transparent 100%
+  );
 }
 html[data-theme="verdant"] .cover-model-load-label {
   color: var(--ak-text);
