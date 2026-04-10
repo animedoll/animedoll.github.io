@@ -907,16 +907,25 @@ body::after {
   box-shadow: 0 0 14px rgba(255, 94, 25, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 94, 25, 0.35);
 }
-.cover-slide-inner { max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; position: relative; overflow: hidden; }
+.cover-slide-inner { max-width: 880px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; position: relative; overflow: hidden; user-select: none; -webkit-user-select: none; }
 .cover-hero-wrap {
-  width: min(34vmin, 280px);
+  width: min(52vmin, 400px);
   aspect-ratio: 1;
-  border-radius: 2px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  overflow: visible;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
-.cover-hero-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover-hero-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+  background: transparent;
+}
+.cover-hero-wrap:active .cover-hero-canvas { cursor: grabbing; }
 .cover-title-ak {
   font-family: 'Noto Serif SC', serif;
   font-weight: 900;
@@ -1127,6 +1136,29 @@ body::after {
 .story-item p { font-size: 12px; color: var(--ak-text-muted); line-height: 1.6; }
 
 .slide-inner--cmf .cmf-white-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: stretch; }
+.slide-inner--cmf .cmf-white-split > :last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+.slide-inner--cmf .cmf-stats-row { align-items: start; }
+.slide-inner--cmf .cmf-stat { height: fit-content; box-sizing: border-box; }
+.slide-inner--cmf .cmf-white-split > :last-child > .ad-card-dark {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.slide-inner--cmf .cmf-white-split > :last-child > .hw-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.slide-inner--cmf .hw-part {
+  flex: 1 1 0;
+  min-height: 0;
+  align-items: center;
+  box-sizing: border-box;
+}
 @media (max-width: 900px) { .slide-inner--cmf .cmf-white-split { grid-template-columns: 1fr; } }
 .cmf-img-frame { background: #fff; border: 1px solid rgba(0, 0, 0, 0.08); padding: 8px; position: relative; }
 .cmf-img-frame img { width: 100%; max-height: min(380px, 48vh); object-fit: contain; display: block; }
@@ -1349,12 +1381,11 @@ body::after {
 .cover-slide .cover-hero-wrap {
   opacity: 0;
   transform: scale(0.85);
-  transition: opacity 0.8s ease 0.1s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s, box-shadow 1.2s ease 0.6s;
+  transition: opacity 0.8s ease 0.1s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
 }
 .cover-slide.active .cover-hero-wrap {
   opacity: 1;
   transform: scale(1);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 0 60px rgba(5, 167, 220, 0.2);
 }
 .cover-slide .cover-title-ak {
   opacity: 0;
@@ -1621,8 +1652,17 @@ body::after {
   .ad-card-dark:hover, .quote-block:hover, .feature-card:hover { transform: none; }
   .feature-card:hover .feature-emoji { animation: none; }
   .nav-dot.active { animation: none; }
+  .cover-hero-wrap .cover-hero-canvas { cursor: default; }
 }
 </style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -1660,8 +1700,8 @@ body::after {
   <div class="slide cover-slide active" data-index="0">
     <div class="slide-inner cover-slide-inner">
       <div class="cover-badge anim-item">PRODUCT PROPOSAL 2026</div>
-      <div class="cover-hero-wrap">
-        <img src="images/effect_image_heroshot.jpg" alt="AnimeDoll 产品主视觉" width="600" height="600" loading="eager" decoding="async" />
+      <div class="cover-hero-wrap" role="img" aria-label="AnimeDoll 3D 模型预览，可拖动旋转">
+        <canvas id="coverHero3d" class="cover-hero-canvas" width="560" height="560"></canvas>
       </div>
       <h1 class="cover-title-ak">AnimeDoll</h1>
       <p class="cover-subtitle">你的跨次元 AI 专属陪伴</p>
@@ -2516,10 +2556,13 @@ body::after {
   var touchStartX = 0;
   var touchStartY = 0;
   var touchAxis = null;
+  var touchStartedOnHero = false;
   var wrapper = document.getElementById('slidesWrapper');
 
   wrapper.addEventListener('touchstart', function (e) {
     if (e.touches.length !== 1) return;
+    touchStartedOnHero = !!(e.target && e.target.closest && e.target.closest('.cover-hero-wrap'));
+    if (touchStartedOnHero) return;
     touchStartX = e.touches[0].screenX;
     touchStartY = e.touches[0].screenY;
     touchAxis = null;
@@ -2527,6 +2570,7 @@ body::after {
 
   wrapper.addEventListener('touchmove', function (e) {
     if (e.touches.length !== 1) return;
+    if (touchStartedOnHero) return;
     var mx = e.touches[0].screenX - touchStartX;
     var my = e.touches[0].screenY - touchStartY;
     if (!touchAxis && (Math.abs(mx) > 12 || Math.abs(my) > 12)) {
@@ -2535,6 +2579,11 @@ body::after {
   }, { passive: true });
 
   wrapper.addEventListener('touchend', function (e) {
+    if (touchStartedOnHero) {
+      touchStartedOnHero = false;
+      touchAxis = null;
+      return;
+    }
     var touchEndX = e.changedTouches[0].screenX;
     var diffX = touchStartX - touchEndX;
     var diffY = Math.abs(touchStartY - e.changedTouches[0].screenY);
@@ -2552,11 +2601,16 @@ body::after {
   var mouseDown = false;
   var mouseStartX = 0;
   wrapper.addEventListener('mousedown', function (e) {
+    if (e.target && e.target.closest && e.target.closest('.cover-hero-wrap')) return;
     mouseDown = true;
     mouseStartX = e.clientX;
   });
   wrapper.addEventListener('mouseup', function (e) {
     if (!mouseDown) return;
+    if (e.target && e.target.closest && e.target.closest('.cover-hero-wrap')) {
+      mouseDown = false;
+      return;
+    }
     mouseDown = false;
     var diff = mouseStartX - e.clientX;
     if (Math.abs(diff) > 60) {
@@ -2695,9 +2749,9 @@ body::after {
     var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     function params() {
       if (mqReduce.matches) {
-        return { MAX_TILT: 2, BASE_ROTATE_Y: -3, LIFT_PX: 6, HOVER_SCALE: 1.004 };
+        return { MAX_TILT: 0.4, BASE_ROTATE_Y: -1.0, LIFT_PX: 2, HOVER_SCALE: 1.001 };
       }
-      return { MAX_TILT: 5, BASE_ROTATE_Y: -7, LIFT_PX: 16, HOVER_SCALE: 1.014 };
+      return { MAX_TILT: 0.5, BASE_ROTATE_Y: -1.2, LIFT_PX: 3, HOVER_SCALE: 1.002 };
     }
 
     var cards = document.querySelectorAll('.ak-card');
@@ -2825,6 +2879,179 @@ body::after {
   updateUI();
   onSlideActivate(slides[0]);
   window.goToSlide = goToSlide;
+})();
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+(function () {
+  const canvas = document.getElementById('coverHero3d');
+  const wrap = document.querySelector('.cover-hero-wrap');
+  const coverSlide = document.querySelector('.cover-slide');
+  if (!canvas || !wrap || !coverSlide) return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.185;
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.01, 500);
+  camera.position.set(1.15, 0.95, 1.35);
+
+  scene.add(new THREE.AmbientLight(0xe8f4ff, 0.36));
+  const hemi = new THREE.HemisphereLight(0xd0ecff, 0x1f303c, 0.95);
+  scene.add(hemi);
+  const key = new THREE.DirectionalLight(0xffffff, 1.75);
+  key.position.set(2.3, 3.85, 2.1);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xc8e2ff, 0.36);
+  fill.position.set(-3.2, 2.1, 1.4);
+  scene.add(fill);
+  const bounce = new THREE.DirectionalLight(0xa8d4f0, 0.19);
+  bounce.position.set(0.8, -2.8, 1.2);
+  scene.add(bounce);
+  const rim = new THREE.DirectionalLight(0x42bde8, 0.715);
+  rim.position.set(-2.65, 1.6, -2.0);
+  scene.add(rim);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.enablePan = false;
+  controls.minDistance = 0.35;
+  controls.maxDistance = 8;
+  controls.target.set(0, 0, 0);
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.35;
+
+  const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function applyReducedMotion() {
+    if (mqReduce.matches) {
+      controls.autoRotate = false;
+      controls.enableDamping = false;
+    } else {
+      controls.autoRotate = true;
+      controls.enableDamping = true;
+    }
+  }
+  applyReducedMotion();
+  mqReduce.addEventListener('change', applyReducedMotion);
+
+  controls.addEventListener('start', function () {
+    controls.autoRotate = false;
+  });
+  controls.addEventListener('end', function () {
+    if (!mqReduce.matches) controls.autoRotate = true;
+  });
+
+  const MODEL_BASE = 'model/Meshy_AI_Plush_Keychain_0410020357_texture_fbx/';
+  const MODEL_URL = MODEL_BASE + 'model.fbx';
+
+  function disposeLoadedModel(root) {
+    if (!root) return;
+    root.traverse(function (child) {
+      if (!child.isMesh) return;
+      if (child.geometry) child.geometry.dispose();
+      var mats = child.material;
+      if (!mats) return;
+      if (!Array.isArray(mats)) mats = [mats];
+      mats.forEach(function (mat) {
+        if (!mat) return;
+        ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'aoMap', 'lightMap'].forEach(function (key) {
+          var t = mat[key];
+          if (t && t.dispose) t.dispose();
+        });
+        mat.dispose();
+      });
+    });
+  }
+
+  let modelRoot = null;
+  const fbxLoader = new FBXLoader();
+  fbxLoader.setResourcePath(MODEL_BASE);
+  fbxLoader.load(
+    MODEL_URL,
+    function (object) {
+      if (modelRoot) {
+        scene.remove(modelRoot);
+        disposeLoadedModel(modelRoot);
+      }
+      modelRoot = object;
+      modelRoot.traverse(function (child) {
+        if (!child.isMesh || !child.material) return;
+        var mats = child.material;
+        if (!Array.isArray(mats)) mats = [mats];
+        mats.forEach(function (mat) {
+          if (!mat) return;
+          if (mat.map) mat.map.colorSpace = THREE.SRGBColorSpace;
+          if (mat.emissiveMap) mat.emissiveMap.colorSpace = THREE.SRGBColorSpace;
+        });
+      });
+      scene.add(modelRoot);
+
+      var box = new THREE.Box3().setFromObject(modelRoot);
+      var center = box.getCenter(new THREE.Vector3());
+      var size = box.getSize(new THREE.Vector3());
+      modelRoot.position.sub(center);
+
+      var maxDim = Math.max(size.x, size.y, size.z, 0.001);
+      var fit = 0.94 / maxDim;
+      modelRoot.scale.setScalar(fit);
+
+      var box2 = new THREE.Box3().setFromObject(modelRoot);
+      var sphere = box2.getBoundingSphere(new THREE.Sphere());
+      var vFov = camera.fov * (Math.PI / 180);
+      var dist = Math.max(0.25, (sphere.radius / Math.sin(vFov / 2)) * 1.06);
+      camera.position.set(dist * 0.48, dist * 0.36, dist * 0.58);
+      controls.target.copy(sphere.center);
+      camera.near = Math.max(0.001, dist * 0.001);
+      camera.far = Math.max(200, dist * 40);
+      camera.updateProjectionMatrix();
+      controls.update();
+    },
+    undefined,
+    function () {
+      scene.background = null;
+    }
+  );
+
+  function resize() {
+    const w = wrap.clientWidth;
+    const h = wrap.clientHeight;
+    if (w < 2 || h < 2) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  const ro = new ResizeObserver(resize);
+  ro.observe(wrap);
+
+  let running = false;
+  function tick() {
+    if (!running) return;
+    requestAnimationFrame(tick);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+
+  function setRunning(on) {
+    const should = on && coverSlide.classList.contains('active');
+    if (should === running) return;
+    running = should;
+    if (running) tick();
+  }
+
+  const mo = new MutationObserver(function () {
+    setRunning(true);
+  });
+  mo.observe(coverSlide, { attributes: true, attributeFilter: ['class'] });
+  setRunning(true);
 })();
 </script>
 </body>
