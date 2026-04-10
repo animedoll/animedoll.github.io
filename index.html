@@ -1482,6 +1482,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   const loadRing = document.getElementById('coverModelLoadRing');
   const loadPctEl = document.getElementById('coverModelLoadPct');
   const loadLabelEl = document.getElementById('coverModelLoadLabel');
+  var loadSlowLoadTimerId = null;
+  var loadSlowHintShown = false;
   var RING_LEN = 0;
   if (loadRing) {
     RING_LEN = 2 * Math.PI * 28;
@@ -1496,47 +1498,38 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     loadRing.style.strokeDashoffset = String(RING_LEN * (1 - p / 100));
   }
 
-  var slowLoadHintTimer = null;
-  var SLOW_LOAD_HINT_MS = 10000;
-  var loadPhaseLabel = '正在加载预览模型…';
-  var slowLoadHintShown = false;
-  var SLOW_LOAD_HINT_LINE = '\n模型从 GitHub 加载，请检查您的网络环境';
-
-  function refreshCoverLoadLabel() {
-    if (!loadLabelEl) return;
-    loadLabelEl.textContent = slowLoadHintShown ? loadPhaseLabel + SLOW_LOAD_HINT_LINE : loadPhaseLabel;
-  }
-
   function clearSlowLoadHintTimer() {
-    if (slowLoadHintTimer != null) {
-      clearTimeout(slowLoadHintTimer);
-      slowLoadHintTimer = null;
+    if (loadSlowLoadTimerId !== null) {
+      clearTimeout(loadSlowLoadTimerId);
+      loadSlowLoadTimerId = null;
     }
   }
 
   function scheduleSlowLoadHint() {
     clearSlowLoadHintTimer();
-    slowLoadHintTimer = setTimeout(function () {
-      slowLoadHintTimer = null;
-      if (!loadLabelEl || !loadOverlay) return;
-      if (loadOverlay.classList.contains('cover-model-load--hidden')) return;
-      if (loadOverlay.classList.contains('cover-model-load--error')) return;
-      slowLoadHintShown = true;
-      refreshCoverLoadLabel();
-    }, SLOW_LOAD_HINT_MS);
+    loadSlowHintShown = false;
+    loadSlowLoadTimerId = setTimeout(function () {
+      loadSlowLoadTimerId = null;
+      if (!loadOverlay || !loadLabelEl) return;
+      if (loadOverlay.classList.contains('cover-model-load--hidden') || loadOverlay.classList.contains('cover-model-load--error')) return;
+      loadSlowHintShown = true;
+      loadLabelEl.textContent = '当前模型加载过慢，请检查您的网络环境';
+    }, 10000);
   }
 
   function hideLoadOverlay() {
-    if (!loadOverlay) return;
     clearSlowLoadHintTimer();
+    loadSlowHintShown = false;
+    if (!loadOverlay) return;
     loadOverlay.setAttribute('aria-busy', 'false');
     loadOverlay.classList.add('cover-model-load--hidden');
     loadOverlay.classList.remove('cover-model-load--indeterminate');
   }
 
   function setLoadError(message) {
-    if (!loadOverlay || !loadLabelEl) return;
     clearSlowLoadHintTimer();
+    loadSlowHintShown = false;
+    if (!loadOverlay || !loadLabelEl) return;
     loadOverlay.classList.remove('cover-model-load--indeterminate', 'cover-model-load--hidden');
     loadOverlay.setAttribute('aria-busy', 'false');
     loadOverlay.classList.add('cover-model-load--error');
@@ -1665,9 +1658,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     scene.background = null;
   }
 
-  loadPhaseLabel = '正在加载预览模型…';
-  slowLoadHintShown = false;
-  refreshCoverLoadLabel();
+  if (loadLabelEl) loadLabelEl.textContent = '正在加载预览模型…';
   scheduleSlowLoadHint();
 
   fbxLoader.load(
@@ -1676,8 +1667,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       applyLoadedModel(object);
       setRingProgress(40);
       if (loadPctEl) loadPctEl.textContent = '40%';
-      loadPhaseLabel = '正在加载精细模型…';
-      refreshCoverLoadLabel();
+      if (loadLabelEl && !loadSlowHintShown) loadLabelEl.textContent = '正在加载精细模型…';
       if (loadOverlay) loadOverlay.classList.remove('cover-model-load--indeterminate');
 
       fbxLoader.load(
@@ -1698,8 +1688,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       applyLoadProgress(ev, 0, 0.4);
     },
     function () {
-      loadPhaseLabel = '正在加载精细模型…';
-      refreshCoverLoadLabel();
+      if (loadLabelEl && !loadSlowHintShown) loadLabelEl.textContent = '正在加载精细模型…';
       if (loadOverlay) loadOverlay.classList.remove('cover-model-load--indeterminate');
       setRingProgress(0);
       if (loadPctEl) loadPctEl.textContent = '';
