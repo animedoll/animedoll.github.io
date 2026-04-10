@@ -993,7 +993,7 @@ body::after {
 }
 .cover-hero-canvas-host:active .cover-hero-canvas { cursor: grabbing; }
 
-/* 封面 3D 模型加载态：全层仅均匀压暗，避免椭圆/矩形渐变边界；圆形高光在 .cover-model-load-ring-wrap::before */
+/* 封面 3D 模型加载态：全层不铺底，避免出现方形半透明框；仅圆环区域用 ::before 圆形衬底 */
 .cover-model-load {
   position: absolute;
   inset: 0;
@@ -1004,7 +1004,7 @@ body::after {
   padding: clamp(12px, 4vmin, 20px);
   box-sizing: border-box;
   pointer-events: auto;
-  background: rgba(4, 10, 18, 0.52);
+  background: transparent;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   transition: opacity 0.45s ease, visibility 0.45s ease;
@@ -1082,6 +1082,7 @@ body::after {
   line-height: 1.45;
   letter-spacing: 0.02em;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+  white-space: pre-line;
 }
 .cover-model-load-ring-wrap .cover-model-load-pct {
   position: absolute;
@@ -1118,9 +1119,6 @@ body::after {
 }
 .cover-model-load.cover-model-load--error .cover-model-load-svg {
   filter: drop-shadow(0 0 8px var(--ak-w45));
-}
-html[data-theme="verdant"] .cover-model-load {
-  background: rgba(252, 251, 248, 0.14);
 }
 html[data-theme="verdant"] .cover-model-load-ring-wrap::before {
   background: radial-gradient(
