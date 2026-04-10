@@ -1,7 +1,6 @@
 # AnimeDoll
 
 > **AnimeDoll** is an AI-embedded anime-style smart plush charm (~10 cm) for bags and ita-bags—portable companionship with voice, vision, and cloud AI on the roadmap.  
-> **AnimeDoll** 是一款嵌入 AI 的二次元智能公仔挂件（约 10 cm），面向痛包与日常背负场景，强调便携与情绪陪伴。
 
 **Live deck:** [animedoll.github.io](https://animedoll.github.io/) (GitHub Pages)
 
@@ -17,6 +16,8 @@
 This repository is the **public presentation** for the AnimeDoll product concept. The default entry is `index.html`: slides, accessibility-minded controls (`aria-*`), and inline scripts for navigation and 3D. An experimental **Arknights-style** template lives in `arknights_template.html` and is not the main site entry.
 
 **Who it’s for:** reviewers, collaborators, and anyone who wants a self-contained browser deck plus a single place for slide copy and asset layout.
+
+**IP notice (demo assets):** The plush character shown in the deck (3D preview and visuals) is **fan-made / doujin-style work for presentation only**—not an official licensed product, and not affiliated with or endorsed by the original IP rights holders. To reduce copyright risk when creating or sharing similar fan works, follow the rights holder’s published fan-creation guidelines (for *Genshin Impact*–related reference, see [miHoYo’s notice on ys.mihoyo.com](https://ys.mihoyo.com/main/news/detail/116685)).
 
 **Authors:** Maintained via this GitHub organization/repo; open an issue to reach maintainers.
 
