@@ -1,0 +1,89 @@
+/**
+ * AnimeDoll — Theme: Cyber Teal（赛博青橙）
+ * 深底、电青主强调、橙点缀。适用于 html[data-theme="cyber"] 或未设置 data-theme。
+ */
+
+html[data-theme="cyber"],
+html:not([data-theme]) {
+  --ak-bg-deep: #061218;
+  --ak-teal-dark: #0a2430;
+  --ak-cyan: #05a7dc;
+  --ak-cyan-glow: rgba(5, 167, 220, 0.35);
+  --ak-cyan-dim: #016d8d;
+  --ak-orange: #ff5e19;
+  --ak-orange-deep: #cc4a12;
+  --ak-panel: #fdfdfb;
+  --ak-panel-gray: #ebeceb;
+  --ak-dark: #424242;
+  --ak-black: #161919;
+  --ak-text: #323232;
+  --ak-text-muted: #6a6a6a;
+  --ak-text-light: #e8eef2;
+  --ak-line: rgba(255, 255, 255, 0.85);
+  --ak-link: #0084ff;
+
+  --ak-bg-radial-a: rgba(1, 109, 141, 0.45);
+  --ak-bg-radial-b: rgba(5, 167, 220, 0.12);
+  --ak-bg-linear-top: #0a1c28;
+  --ak-bg-linear-bottom: #050c10;
+  --ak-grid-line: rgba(255, 255, 255, 0.06);
+  --ak-grid-opacity: 0.07;
+
+  --ak-a06: rgba(5, 167, 220, 0.06);
+  --ak-a08: rgba(5, 167, 220, 0.08);
+  --ak-a10: rgba(5, 167, 220, 0.1);
+  --ak-a12: rgba(5, 167, 220, 0.12);
+  --ak-a15: rgba(5, 167, 220, 0.15);
+  --ak-a18: rgba(5, 167, 220, 0.18);
+  --ak-a22: rgba(5, 167, 220, 0.22);
+  --ak-a25: rgba(5, 167, 220, 0.25);
+  --ak-a35: rgba(5, 167, 220, 0.35);
+  --ak-a40: rgba(5, 167, 220, 0.4);
+  --ak-a45: rgba(5, 167, 220, 0.45);
+
+  --ak-w06: rgba(255, 94, 25, 0.06);
+  --ak-w15: rgba(255, 94, 25, 0.15);
+  --ak-w35: rgba(255, 94, 25, 0.35);
+  --ak-w40: rgba(255, 94, 25, 0.4);
+  --ak-w45: rgba(255, 94, 25, 0.45);
+  --ak-w50: rgba(255, 94, 25, 0.5);
+
+  --ak-shadow-tilt-active: 0 0 40px rgba(5, 167, 220, 0.12);
+  --ak-shadow-voice-hover: 0 16px 30px rgba(0, 0, 0, 0.28), 0 0 14px rgba(5, 167, 220, 0.18);
+  --ak-edge-mid: #454545;
+  --ak-cloud-lit: rgba(1, 109, 141, 0.2);
+
+  --ak-chart-fill-end: #93c5fd;
+
+  --ak-scrollbar-track-from: rgba(6, 18, 24, 0.55);
+  --ak-scrollbar-track-to: rgba(10, 36, 48, 0.85);
+  --ak-scrollbar-fallback: rgba(10, 36, 48, 0.75);
+
+  --ak-scene-night-a: #0a1c28;
+  --ak-scene-night-b: #161919;
+
+  --dust-warm-shadow: rgba(255, 140, 60, 0.5);
+  --dust-warm-fill: rgba(255, 160, 80, 0.7);
+  --dust-cool-shadow: rgba(5, 167, 220, 0.5);
+  --dust-cool-fill: rgba(120, 210, 240, 0.6);
+
+  /* 总结页 .ak-tile-dark：深底强调磁贴 */
+  --ak-tile-bg: linear-gradient(165deg, var(--ak-dark) 0%, var(--ak-black) 100%);
+  --ak-tile-fg: var(--ak-text-light);
+  --ak-tile-border: rgba(255, 255, 255, 0.1);
+  --ak-tile-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  --ak-tile-title: #ffffff;
+  --ak-tile-sub: rgba(255, 255, 255, 0.55);
+  --ak-tile-phase-bg: rgba(255, 255, 255, 0.07);
+  --ak-tile-phase-border: rgba(255, 255, 255, 0.12);
+  --ak-tile-phase-h3: #ffffff;
+  --ak-tile-phase-p: rgba(255, 255, 255, 0.72);
+  --ak-tile-arrow: var(--ak-cyan);
+  --ak-tile-arrow-opacity: 0.55;
+  --ak-tile-quote: #ffffff;
+  --ak-tile-tag: rgba(255, 255, 255, 0.55);
+  --ak-tile-pill-bg: var(--ak-a15);
+  --ak-tile-pill-border: var(--ak-a45);
+  --ak-tile-pill-fg: #ffffff;
+  --ak-tile-badge-opacity: 0.95;
+}

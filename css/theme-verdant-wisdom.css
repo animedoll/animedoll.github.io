@@ -1,0 +1,92 @@
+/**
+ * AnimeDoll — Theme: Verdant Wisdom（森意白金 · 莱茵实验室向）
+ * 参考 QingXia-Ela/Rhine-Lab-Theme-Index-Page：body 135° 冷灰渐变（#e7e3dd → #eee → #dad8d4）、
+ * 银灰描边意象、黑/青绿功能色；主强调为科研青绿，辅色为克制珊瑚橙。
+ * 适用于 html[data-theme="verdant"]。
+ */
+
+html[data-theme="verdant"] {
+  --ak-bg-deep: #e9e6e2;
+  --ak-teal-dark: #d8d8d6;
+  --ak-cyan: #1b940d;
+  --ak-cyan-glow: rgba(13, 116, 106, 0.11);
+  --ak-cyan-dim: #0f7616;
+  --ak-orange: #fd6d14;
+  --ak-orange-deep: #d15c26;
+  --ak-panel: #fdfdfd;
+  --ak-panel-gray: #f0f0ef;
+  --ak-dark: #2a2a2a;
+  --ak-black: #141414;
+  --ak-text: #141414;
+  --ak-text-muted: #5a5a5a;
+  --ak-text-light: #f5f5f5;
+  --ak-line: rgba(20, 20, 20, 0.88);
+  --ak-link: #1b940d;
+
+  /* 页底：冷灰实验室感 + 极淡高光（非绿色光晕） */
+  --ak-bg-radial-a: rgba(255, 255, 255, 0.5);
+  --ak-bg-radial-b: rgba(192, 192, 187, 0.14);
+  --ak-bg-linear-top: #eceae6;
+  --ak-bg-linear-bottom: #d9d7d3;
+  --ak-grid-line: rgba(0, 0, 0, 0.034);
+  --ak-grid-opacity: 0.032;
+
+  /* 半透明强调：青绿色相，偏冷、实验室感 */
+  --ak-a06: rgba(13, 148, 136, 0.06);
+  --ak-a08: rgba(13, 148, 136, 0.08);
+  --ak-a10: rgba(13, 148, 136, 0.1);
+  --ak-a12: rgba(13, 148, 136, 0.12);
+  --ak-a15: rgba(13, 148, 136, 0.14);
+  --ak-a18: rgba(13, 148, 136, 0.17);
+  --ak-a22: rgba(13, 148, 136, 0.2);
+  --ak-a25: rgba(13, 148, 136, 0.23);
+  --ak-a35: rgba(13, 148, 136, 0.3);
+  --ak-a40: rgba(13, 148, 136, 0.36);
+  --ak-a45: rgba(13, 148, 136, 0.4);
+
+  --ak-w06: rgba(209, 78, 58, 0.07);
+  --ak-w15: rgba(209, 78, 58, 0.15);
+  --ak-w35: rgba(209, 78, 58, 0.32);
+  --ak-w40: rgba(209, 78, 58, 0.38);
+  --ak-w45: rgba(209, 78, 58, 0.42);
+  --ak-w50: rgba(209, 78, 58, 0.48);
+
+  --ak-shadow-tilt-active: 0 8px 28px rgba(0, 0, 0, 0.07);
+  --ak-shadow-voice-hover: 0 14px 32px rgba(0, 0, 0, 0.09), 0 2px 10px rgba(0, 0, 0, 0.04);
+  --ak-edge-mid: #b8b8b4;
+  --ak-cloud-lit: rgba(13, 148, 136, 0.14);
+
+  --ak-chart-fill-end: #5eead4;
+
+  --ak-scrollbar-track-from: rgba(236, 236, 234, 0.96);
+  --ak-scrollbar-track-to: rgba(220, 220, 218, 0.98);
+  --ak-scrollbar-fallback: rgba(220, 220, 218, 0.9);
+
+  --ak-scene-night-a: #e4e4e2;
+  --ak-scene-night-b: #d6d6d4;
+
+  --dust-warm-shadow: rgba(209, 78, 58, 0.28);
+  --dust-warm-fill: rgba(235, 160, 140, 0.42);
+  --dust-cool-shadow: rgba(13, 148, 136, 0.22);
+  --dust-cool-fill: rgba(150, 210, 200, 0.38);
+
+  /* 总结页 .ak-tile-dark：浅色莱茵式面板（与全站浅底一致） */
+  --ak-tile-bg: linear-gradient(165deg, #ffffff 0%, var(--ak-panel-gray) 100%);
+  --ak-tile-fg: var(--ak-text);
+  --ak-tile-border: rgba(0, 0, 0, 0.08);
+  --ak-tile-shadow: 0 14px 42px rgba(0, 0, 0, 0.07);
+  --ak-tile-title: var(--ak-text);
+  --ak-tile-sub: var(--ak-text-muted);
+  --ak-tile-phase-bg: rgba(0, 0, 0, 0.035);
+  --ak-tile-phase-border: rgba(0, 0, 0, 0.08);
+  --ak-tile-phase-h3: var(--ak-text);
+  --ak-tile-phase-p: var(--ak-text-muted);
+  --ak-tile-arrow: var(--ak-cyan);
+  --ak-tile-arrow-opacity: 0.6;
+  --ak-tile-quote: var(--ak-text);
+  --ak-tile-tag: var(--ak-text-muted);
+  --ak-tile-pill-bg: var(--ak-a12);
+  --ak-tile-pill-border: var(--ak-a35);
+  --ak-tile-pill-fg: var(--ak-text);
+  --ak-tile-badge-opacity: 1;
+}
