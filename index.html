@@ -68,9 +68,37 @@
   <!-- 1 封面 -->
   <div class="slide cover-slide active" data-index="0">
     <div class="slide-inner cover-slide-inner">
-      <div class="cover-badge anim-item">PRODUCT PROPOSAL 2026</div>
-      <div class="cover-hero-wrap" role="img" aria-label="AnimeDoll 3D 模型预览，可拖动旋转">
+      <div class="cover-hero-canvas-host" role="img" aria-label="AnimeDoll 3D 模型预览，可拖动旋转">
         <canvas id="coverHero3d" class="cover-hero-canvas" width="560" height="560"></canvas>
+      </div>
+      <div class="cover-badge anim-item">PRODUCT PROPOSAL 2026</div>
+      <div class="cover-hero-wrap">
+        <div class="cover-model-load" id="coverModelLoad" role="status" aria-live="polite" aria-busy="true">
+          <div class="cover-model-load-inner">
+            <div class="cover-model-load-ring-wrap" aria-hidden="true">
+              <svg class="cover-model-load-svg" viewBox="0 0 72 72" width="72" height="72" focusable="false">
+                <circle class="cover-model-load-track" cx="36" cy="36" r="28" fill="none" stroke-width="5" />
+                <g transform="translate(36,36)">
+                  <g class="cover-model-load-rotor">
+                    <circle
+                      id="coverModelLoadRing"
+                      class="cover-model-load-arc"
+                      cx="0"
+                      cy="0"
+                      r="28"
+                      fill="none"
+                      stroke-width="5"
+                      stroke-linecap="round"
+                      transform="rotate(-90)"
+                    />
+                  </g>
+                </g>
+              </svg>
+              <span class="cover-model-load-pct" id="coverModelLoadPct" aria-hidden="true"></span>
+            </div>
+            <p class="cover-model-load-label" id="coverModelLoadLabel">正在加载 3D 模型…</p>
+          </div>
+        </div>
       </div>
       <h1 class="cover-title-ak">AnimeDoll</h1>
       <p class="cover-subtitle">你的跨次元 AI 专属陪伴</p>
@@ -291,7 +319,7 @@
       </aside>
       <div class="ak-main ak-main--scroll">
         <div class="ak-card">
-          <div class="ak-card-inner">
+          <div class="ak-card-inner slide-inner--user-research">
             <h2 class="ak-title anim-item">用户调研 · <span class="sub">双画像与洞察</span></h2>
             <div class="content-grid">
               <div class="persona-card anim-item">
@@ -321,9 +349,22 @@
                 </div>
               </div>
             </div>
+            <div class="insight-photo-strip anim-item">
+              <figure class="insight-photo-card">
+                <div class="insight-photo-media">
+                  <img src="images/effect_picture_anime_expo.jpg" alt="漫展线下场景中的 AnimeDoll 使用氛围" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                </div>
+                <figcaption>漫展线下场景 · 高情绪密度互动</figcaption>
+              </figure>
+              <figure class="insight-photo-card">
+                <div class="insight-photo-media">
+                  <img src="images/effect_picture_on_hand.jpg" alt="手持 AnimeDoll 的近景互动画面" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                </div>
+                <figcaption>可触达的陪伴感 · 日常近景特写</figcaption>
+              </figure>
+            </div>
             <p class="ad-muted anim-item" style="margin-top:14px">问卷样本（n=500）：<span class="ad-strong-cyan">78%</span> 痛包用户希望挂件具备互动能力，<span class="ad-strong-orange">62%</span> 愿为“会说话的挂件”支付溢价。</p>
             <div class="quote-block anim-item"><p>“每次去漫展，都希望我的推（喜欢的角色）能看到现场有多热闹。”</p></div>
-            <div class="quote-block anim-item"><p>“一个人坐地铁挺无聊的，如果包上的挂件能跟我吐槽两句就好了。”</p></div>
             <div class="quote-block anim-item"><p>“不需要多智能，只要偶尔冒一句话，让我觉得它‘活着’就够了。”</p></div>
           </div>
         </div>
@@ -515,28 +556,48 @@
       </aside>
       <div class="ak-main ak-main--scroll">
         <div class="ak-card ak-card--dark">
-          <div class="ak-card-inner">
+          <div class="ak-card-inner slide-inner--storyboard">
             <h2 class="ak-title anim-item">体验流程 · <span class="sub">Storyboard</span></h2>
-            <div class="story-timeline">
-              <div class="story-item">
-                <div class="story-time">🌅 清晨 · 出门</div>
-                <h4>唤醒仪式</h4>
-                <p>小A把 AnimeDoll 挂在包上出门，捏了一下公仔的爪子（唤醒）。公仔发声：<strong style="color:var(--ak-orange)">“今天也要元气满满哦，主人！”</strong></p>
+            <div class="storyboard-grid">
+              <div class="storyboard-card anim-item">
+                <div class="storyboard-media">
+                  <img src="images/comic_1_go_out.jpg" alt="清晨出门场景漫画：主人整理包带并唤醒 AnimeDoll" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                </div>
+                <div class="storyboard-body">
+                  <div class="story-time">🌅 清晨 · 出门</div>
+                  <h4>唤醒仪式</h4>
+                  <p>主人整理鞋带和包带，轻捏公仔唤醒，开启元气的一天。</p>
+                </div>
               </div>
-              <div class="story-item">
-                <div class="story-time">🎪 下午 · 漫展现场</div>
-                <h4>主动识别互动</h4>
-                <p>公仔胸前的隐藏摄像头拍到了一位高质量Coser，公仔主动提示：<strong style="color:var(--ak-cyan-dim)">“哇，11点钟方向捕捉到一只野生初音未来！”</strong></p>
+              <div class="storyboard-card anim-item">
+                <div class="storyboard-media">
+                  <img src="images/comic_2_anime_expo.jpg" alt="漫展现场漫画：痛包上的 AnimeDoll 在热闹人群中互动" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                </div>
+                <div class="storyboard-body">
+                  <div class="story-time">🎪 下午 · 漫展现场</div>
+                  <h4>主动识别互动</h4>
+                  <p>隐藏摄像头捕捉到现场高光瞬间，公仔主动吐槽，氛围感拉满。</p>
+                </div>
               </div>
-              <div class="story-item">
-                <div class="story-time">🌙 晚上 · 回家</div>
-                <h4>记忆手帐生成</h4>
-                <p>打开App，发现公仔自动生成了《漫展漫游手帐》，里面有公仔视角的抓拍和配文，小A一键分享到社交平台。</p>
+              <div class="storyboard-card anim-item">
+                <div class="storyboard-media">
+                  <img src="images/comic_3_night_at_home.jpg" alt="晚上回家场景漫画：AnimeDoll 与手机在暖色家居环境中" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                </div>
+                <div class="storyboard-body">
+                  <div class="story-time">🌙 晚上 · 回家</div>
+                  <h4>记忆手帐生成</h4>
+                  <p>在家打开 App，即刻看到公仔视角手帐与配文，轻松分享今天的故事。</p>
+                </div>
               </div>
-              <div class="story-item">
-                <div class="story-time">🤝 周末 · 同好偶遇</div>
-                <h4>双端识别破冰</h4>
-                <p>在咖啡店偶遇另一位 AnimeDoll 用户，两只公仔识别彼此后主动打招呼，帮助主人快速建立连接。</p>
+              <div class="storyboard-card anim-item">
+                <div class="storyboard-media">
+                  <img src="images/comic_4_cafe_meet.jpg" alt="咖啡店偶遇场景漫画：两只 AnimeDoll 在桌面相遇" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                </div>
+                <div class="storyboard-body">
+                  <div class="story-time">🤝 周末 · 咖啡店偶遇</div>
+                  <h4>双端识别破冰</h4>
+                  <p>两位用户偶遇时，公仔先一步打招呼，快速打开同好社交话题。</p>
+                </div>
               </div>
             </div>
           </div>
@@ -716,11 +777,15 @@
             </div>
             <div class="scene-cards">
               <div class="scene-card day anim-item">
-                <div class="scene-visual">🎒</div>
+                <div class="scene-visual">
+                  <img src="images/effect_picture_on_ita_bag_daytime.jpg" alt="日间痛包融合场景中的 AnimeDoll 挂件" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                </div>
                 <div class="scene-card-body"><h4>日间 · 痛包融合</h4><p>AnimeDoll 挂在一个装满吧唧（徽章）的痛包上，完美融入二次元穿搭，成为最亮眼的焦点。</p></div>
               </div>
               <div class="scene-card night anim-item">
-                <div class="scene-visual" style="position:relative">🧸<div class="breathing-glow" style="top:40%;left:55%;"></div></div>
+                <div class="scene-visual">
+                  <img src="images/effect_picture_on_ita_bag_night.jpg" alt="夜间氛围下带呼吸灯效果的 AnimeDoll 场景" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                </div>
                 <div class="scene-card-body"><h4>夜间 · 呼吸灯光</h4><p>公仔的眼睛或标志性部位发出微弱的呼吸灯光，在暗处营造赛博朋克氛围。</p></div>
               </div>
             </div>
@@ -959,7 +1024,7 @@
 
   wrapper.addEventListener('touchstart', function (e) {
     if (e.touches.length !== 1) return;
-    touchStartedOnHero = !!(e.target && e.target.closest && e.target.closest('.cover-hero-wrap'));
+    touchStartedOnHero = !!(e.target && e.target.closest && e.target.closest('.cover-hero-canvas-host, .cover-hero-wrap'));
     if (touchStartedOnHero) return;
     touchStartX = e.touches[0].screenX;
     touchStartY = e.touches[0].screenY;
@@ -999,13 +1064,13 @@
   var mouseDown = false;
   var mouseStartX = 0;
   wrapper.addEventListener('mousedown', function (e) {
-    if (e.target && e.target.closest && e.target.closest('.cover-hero-wrap')) return;
+    if (e.target && e.target.closest && e.target.closest('.cover-hero-canvas-host, .cover-hero-wrap')) return;
     mouseDown = true;
     mouseStartX = e.clientX;
   });
   wrapper.addEventListener('mouseup', function (e) {
     if (!mouseDown) return;
-    if (e.target && e.target.closest && e.target.closest('.cover-hero-wrap')) {
+    if (e.target && e.target.closest && e.target.closest('.cover-hero-canvas-host, .cover-hero-wrap')) {
       mouseDown = false;
       return;
     }
@@ -1301,9 +1366,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 (function () {
   const canvas = document.getElementById('coverHero3d');
-  const wrap = document.querySelector('.cover-hero-wrap');
   const coverSlide = document.querySelector('.cover-slide');
-  if (!canvas || !wrap || !coverSlide) return;
+  const canvasHost = coverSlide && coverSlide.querySelector('.cover-hero-canvas-host');
+  const wrap = coverSlide && coverSlide.querySelector('.cover-hero-wrap');
+  const slideInner = coverSlide && coverSlide.querySelector('.cover-slide-inner');
+  if (!canvas || !wrap || !canvasHost || !slideInner || !coverSlide) return;
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -1373,6 +1440,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     applyCoverThemeLights(t);
   });
 
+  const COVER_INITIAL_ZOOM = 1.2;
+  const COVER_MAX_ZOOM_IN = 1.7;
+  const COVER_MIN_ZOOM_SCALE = 0.8;
+
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.dampingFactor = 0.06;
@@ -1407,6 +1478,57 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   const MODEL_URL_LOW = MODEL_BASE + 'model_lowpoly.fbx';
   const MODEL_URL_HIGH = MODEL_BASE + 'model.fbx';
 
+  const loadOverlay = document.getElementById('coverModelLoad');
+  const loadRing = document.getElementById('coverModelLoadRing');
+  const loadPctEl = document.getElementById('coverModelLoadPct');
+  const loadLabelEl = document.getElementById('coverModelLoadLabel');
+  var RING_LEN = 0;
+  if (loadRing) {
+    RING_LEN = 2 * Math.PI * 28;
+    loadRing.style.strokeDasharray = String(RING_LEN);
+    loadRing.style.strokeDashoffset = String(RING_LEN);
+  }
+
+  function setRingProgress(pct) {
+    if (!loadRing || RING_LEN <= 0) return;
+    var p = Math.max(0, Math.min(100, pct));
+    loadRing.style.strokeDasharray = String(RING_LEN);
+    loadRing.style.strokeDashoffset = String(RING_LEN * (1 - p / 100));
+  }
+
+  function hideLoadOverlay() {
+    if (!loadOverlay) return;
+    loadOverlay.setAttribute('aria-busy', 'false');
+    loadOverlay.classList.add('cover-model-load--hidden');
+    loadOverlay.classList.remove('cover-model-load--indeterminate');
+  }
+
+  function setLoadError(message) {
+    if (!loadOverlay || !loadLabelEl) return;
+    loadOverlay.classList.remove('cover-model-load--indeterminate', 'cover-model-load--hidden');
+    loadOverlay.setAttribute('aria-busy', 'false');
+    loadOverlay.classList.add('cover-model-load--error');
+    loadLabelEl.textContent = message;
+    if (loadPctEl) loadPctEl.textContent = '';
+    setRingProgress(0);
+  }
+
+  /* ev: XHR progress event; base/span map file progress into overall 0–100% */
+  function applyLoadProgress(ev, base, span) {
+    if (!loadOverlay || !loadRing || !loadPctEl) return;
+    if (loadOverlay.classList.contains('cover-model-load--error')) return;
+    if (ev.lengthComputable && ev.total > 0) {
+      var t = base + (ev.loaded / ev.total) * span;
+      var pct = Math.min(100, Math.round(t * 100));
+      setRingProgress(pct);
+      loadPctEl.textContent = pct + '%';
+      loadOverlay.classList.remove('cover-model-load--indeterminate');
+    } else {
+      loadOverlay.classList.add('cover-model-load--indeterminate');
+      loadPctEl.textContent = '…';
+    }
+  }
+
   function disposeLoadedModel(root) {
     if (!root) return;
     root.traverse(function (child) {
@@ -1427,8 +1549,22 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   }
 
   let modelRoot = null;
+  let baseCamOffset = null;
   const fbxLoader = new FBXLoader();
   fbxLoader.setResourcePath(MODEL_BASE);
+
+  function syncCoverHeroCanvasHostLayout() {
+    var ih = slideInner.clientHeight;
+    if (ih < 2) return;
+    var innerRect = slideInner.getBoundingClientRect();
+    var wrapRect = wrap.getBoundingClientRect();
+    var cy = (wrapRect.top + wrapRect.bottom) / 2 - innerRect.top;
+    var H = 2 * (ih - cy);
+    var minH = Math.max(wrap.clientHeight * 2.35, 520);
+    H = Math.max(H, minH);
+    canvasHost.style.top = ih - H + 'px';
+    canvasHost.style.height = H + 'px';
+  }
 
   function applyLoadedModel(object) {
     if (modelRoot) {
@@ -1461,10 +1597,34 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     var sphere = box2.getBoundingSphere(new THREE.Sphere());
     var vFov = camera.fov * (Math.PI / 180);
     var dist = Math.max(0.25, (sphere.radius / Math.sin(vFov / 2)) * 1.06);
-    camera.position.set(dist * 0.48, dist * 0.36, dist * 0.58);
+    camera.position.set(dist * 0.48, dist * 0.20, dist * 0.58);
     controls.target.copy(sphere.center);
-    camera.near = Math.max(0.001, dist * 0.001);
-    camera.far = Math.max(200, dist * 40);
+    baseCamOffset = camera.position.clone().sub(controls.target);
+
+    syncCoverHeroCanvasHostLayout();
+
+    var lw = wrap.clientWidth;
+    var cw = canvasHost.clientWidth;
+    var ch = canvasHost.clientHeight;
+    var framing = 1;
+    if (lw >= 2 && cw >= 2 && ch >= 2) {
+      framing = Math.max(cw / lw, ch / lw);
+      if (framing < 1.001) framing = 1;
+    }
+    if (framing > 1) {
+      camera.position.copy(controls.target).add(baseCamOffset.clone().multiplyScalar(framing));
+    }
+
+    var toCam = camera.position.clone().sub(controls.target);
+    toCam.multiplyScalar(1 / COVER_INITIAL_ZOOM);
+    camera.position.copy(controls.target).add(toCam);
+
+    var dInit = camera.position.distanceTo(controls.target);
+    controls.minDistance = Math.max(0.06, dInit / COVER_MAX_ZOOM_IN);
+    controls.maxDistance = dInit / COVER_MIN_ZOOM_SCALE;
+
+    camera.near = Math.max(0.001, dInit * 0.001);
+    camera.far = Math.max(200, dInit * 40);
     camera.updateProjectionMatrix();
     controls.update();
   }
@@ -1473,30 +1633,61 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     scene.background = null;
   }
 
+  if (loadLabelEl) loadLabelEl.textContent = '正在加载预览模型…';
+
   fbxLoader.load(
     MODEL_URL_LOW,
     function (object) {
       applyLoadedModel(object);
+      setRingProgress(40);
+      if (loadPctEl) loadPctEl.textContent = '40%';
+      if (loadLabelEl) loadLabelEl.textContent = '正在加载精细模型…';
+      if (loadOverlay) loadOverlay.classList.remove('cover-model-load--indeterminate');
+
       fbxLoader.load(
         MODEL_URL_HIGH,
         function (high) {
           applyLoadedModel(high);
+          hideLoadOverlay();
         },
-        undefined,
+        function (ev) {
+          applyLoadProgress(ev, 0.4, 0.6);
+        },
         function () {
-          /* 高模失败时保留低模 */
+          hideLoadOverlay();
         }
       );
     },
-    undefined,
+    function (ev) {
+      applyLoadProgress(ev, 0, 0.4);
+    },
     function () {
-      fbxLoader.load(MODEL_URL_HIGH, applyLoadedModel, undefined, onLoadFatal);
+      if (loadLabelEl) loadLabelEl.textContent = '正在加载精细模型…';
+      if (loadOverlay) loadOverlay.classList.remove('cover-model-load--indeterminate');
+      setRingProgress(0);
+      if (loadPctEl) loadPctEl.textContent = '';
+
+      fbxLoader.load(
+        MODEL_URL_HIGH,
+        function (high) {
+          applyLoadedModel(high);
+          hideLoadOverlay();
+        },
+        function (ev) {
+          applyLoadProgress(ev, 0, 1);
+        },
+        function () {
+          setLoadError('3D 模型加载失败，请检查网络后刷新页面。');
+          onLoadFatal();
+        }
+      );
     }
   );
 
   function resize() {
-    const w = wrap.clientWidth;
-    const h = wrap.clientHeight;
+    syncCoverHeroCanvasHostLayout();
+    var w = canvasHost.clientWidth;
+    var h = canvasHost.clientHeight;
     if (w < 2 || h < 2) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
@@ -1504,6 +1695,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   }
   resize();
   const ro = new ResizeObserver(resize);
+  ro.observe(slideInner);
+  ro.observe(canvasHost);
   ro.observe(wrap);
 
   let running = false;
@@ -1523,6 +1716,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
   const mo = new MutationObserver(function () {
     setRunning(true);
+    syncCoverHeroCanvasHostLayout();
+    resize();
   });
   mo.observe(coverSlide, { attributes: true, attributeFilter: ['class'] });
   setRunning(true);

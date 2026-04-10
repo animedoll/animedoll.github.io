@@ -1,7 +1,7 @@
 /**
  * AnimeDoll — Theme: Verdant Wisdom（森意白金 · 莱茵实验室向）
  * 参考 QingXia-Ela/Rhine-Lab-Theme-Index-Page：body 135° 冷灰渐变（#e7e3dd → #eee → #dad8d4）、
- * 银灰描边意象、黑/青绿功能色；主强调为科研青绿，辅色为克制珊瑚橙。
+ * 银灰描边意象、黑/青绿功能色；主强调为科研青绿，辅色为金色（条形为轻渐变+柔光，文字可带淡高光）。
  * 适用于 html[data-theme="verdant"]。
  */
 
@@ -11,8 +11,8 @@ html[data-theme="verdant"] {
   --ak-cyan: #1b940d;
   --ak-cyan-glow: rgba(13, 116, 106, 0.11);
   --ak-cyan-dim: #0f7616;
-  --ak-orange: #fd6d14;
-  --ak-orange-deep: #d15c26;
+  --ak-orange: #c9a227;
+  --ak-orange-deep: #5c4810;
   --ak-panel: #fdfdfd;
   --ak-panel-gray: #f0f0ef;
   --ak-dark: #2a2a2a;
@@ -44,12 +44,15 @@ html[data-theme="verdant"] {
   --ak-a40: rgba(13, 148, 136, 0.36);
   --ak-a45: rgba(13, 148, 136, 0.4);
 
-  --ak-w06: rgba(209, 78, 58, 0.07);
-  --ak-w15: rgba(209, 78, 58, 0.15);
-  --ak-w35: rgba(209, 78, 58, 0.32);
-  --ak-w40: rgba(209, 78, 58, 0.38);
-  --ak-w45: rgba(209, 78, 58, 0.42);
-  --ak-w50: rgba(209, 78, 58, 0.48);
+  --ak-w06: rgba(201, 162, 39, 0.08);
+  --ak-w15: rgba(201, 162, 39, 0.16);
+  --ak-w35: rgba(201, 162, 39, 0.34);
+  --ak-w40: rgba(201, 162, 39, 0.4);
+  --ak-w45: rgba(201, 162, 39, 0.44);
+  --ak-w50: rgba(201, 162, 39, 0.5);
+
+  /* 金色文字淡高光（与条形控件区分：条用双色渐变，字用轻 text-shadow） */
+  --ak-gold-highlight: rgba(255, 252, 236, 0.72);
 
   --ak-shadow-tilt-active: 0 8px 28px rgba(0, 0, 0, 0.07);
   --ak-shadow-voice-hover: 0 14px 32px rgba(0, 0, 0, 0.09), 0 2px 10px rgba(0, 0, 0, 0.04);
@@ -65,8 +68,8 @@ html[data-theme="verdant"] {
   --ak-scene-night-a: #e4e4e2;
   --ak-scene-night-b: #d6d6d4;
 
-  --dust-warm-shadow: rgba(209, 78, 58, 0.28);
-  --dust-warm-fill: rgba(235, 160, 140, 0.42);
+  --dust-warm-shadow: rgba(92, 72, 16, 0.34);
+  --dust-warm-fill: rgba(240, 220, 150, 0.42);
   --dust-cool-shadow: rgba(13, 148, 136, 0.22);
   --dust-cool-fill: rgba(150, 210, 200, 0.38);
 
