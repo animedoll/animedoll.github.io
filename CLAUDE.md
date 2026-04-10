@@ -2,89 +2,98 @@
 
 ## 项目是什么
 
-**AnimeDoll** 是一款「嵌入 AI 的二次元智能公仔挂件」的产品策划：约 10cm、可挂在痛包/背包上，强调便携与情绪陪伴；设想能力包括云端大模型 + 本地语音合成、微型摄像头视觉等（端云协同，具体以策划案与演示页为准）。
+**AnimeDoll** 是一款「嵌入 AI 的二次元智能公仔挂件」的产品策划：约 10cm、可挂在痛包/背包上，强调便携与情绪陪伴；设想能力包括云端大模型、语音交互、微型摄像头视觉等（端云协同，具体以策划与演示页为准）。
 
-本仓库**当前实现**以**类 PPT 的网页演示**为主：单页 `index.html`，左右滑动/键盘/导航点翻页，二次元赛博风格 UI；另有**标准库**启动的本地静态文件服务，便于在浏览器中正确加载资源与调试。
+本仓库**当前实现**是面向 **GitHub Pages** 的**静态站点**：根目录 `index.html` 为全屏类 PPT 演示（约 19 页），含方向键/空格翻页、导航点、全屏、双主题切换；封面页用 **Three.js** 加载 `model/` 下的 FBX 做可拖拽旋转预览。无后端、无构建步骤。
 
 ---
 
-## 仓库结构
+## 仓库结构（以实际目录为准）
 
 | 路径 | 说明 |
 |------|------|
-| `presentation/index.html` | 演示页主文件：全页幻灯片、样式与交互脚本 |
-| `presentation/presentation_server.py` | 本地 HTTP 服务（`http.server`），默认 `127.0.0.1:3750` |
-| `presentation/presentation_slides.md` | 幻灯片结构与逐页文案策划（与 HTML 内容应对齐） |
-| `presentation/images/` | 效果图等资源（如白底产品图、地铁场景图） |
-| `CHANGE.md` | 变更/需求备忘（例如最初「做类 PPT 网页」的说明） |
-| `README.md` | 简短项目介绍 |
-| `design/`、`src/img/` | 预留目录；当前无额外源码或设计稿文件时需以实际目录为准 |
+| `index.html` | 演示主文件：幻灯片 DOM、内联交互与封面 3D 脚本 |
+| `arknights_template.html` | 独立的「罗德岛简报」风格 Web 模板（实验/参考用，非站点默认入口） |
+| `css/presentation-layout.css` | 版式、幻灯片框架、导航与通用组件 |
+| `css/theme-cyber-teal.css` | 赛博青橙主题变量与样式 |
+| `css/theme-verdant-wisdom.css` | 森意白金主题变量与样式 |
+| `docs/presentation_slides.md` | 幻灯片信息架构与逐页策划文案（改页面前宜与此对齐） |
+| `images/` | 配图、Logo、场景与漫画分镜等；含 `images_prompt.md`、`effect_picture.md` 等说明 |
+| `model/model.fbx`、`model/model_lowpoly.fbx` | 封面 3D：先低模再切高模，路径在 `index.html` 内 `MODEL_BASE` |
+| `README.md` | 仓库简述 |
 
-无 `requirements.txt`：演示服务仅依赖 **Python 3 标准库**。
+依赖通过 **import map** 从 CDN（如 jsDelivr）加载 **three@0.170**，无需 `package.json`。仓库内**没有**专用 Python 启动脚本；本地调试用任意静态 HTTP 服务即可（避免部分环境下 `file://` 与模块加载差异）。
 
 ---
 
 ## 如何本地查看演示
 
-1. **推荐（避免 `file://` 路径差异）**  
-   在 IDE 中运行 `presentation/presentation_server.py`，浏览器打开终端输出的地址（默认 **http://127.0.0.1:3750/**）。  
-   改端口：编辑 `presentation_server.py` 顶部的 `PORT` 常量。
+1. **部署后**：将仓库作为 GitHub Pages 源时，站点入口一般为仓库默认页对应的 `index.html`。
+2. **本机**：在仓库根目录用静态服务器托管（例如 IDE 的 Live Server、或任意等价工具），浏览器打开服务根路径。
+3. **直接双击 `index.html`**：多数情况下可用；若 ES 模块或资源路径异常，仍改用 HTTP 访问。
 
-2. **直接打开 HTML**  
-   也可双击或用浏览器打开 `presentation/index.html`；若遇字体或资源加载问题，仍建议使用上述本地服务。
-
-停止服务：终端内 **Ctrl+C** 或结束调试进程。
+封面 3D 需拉取 FBX 与 Three 相关模块，请保持网络可达 CDN。
 
 ---
 
 ## 修改代码时的约定
 
-- **改幻灯片内容与样式**：主要编辑 `presentation/index.html`。保持与 `presentation_slides.md` 中的章节结构一致，避免策划与页面脱节。
-- **改端口或服务行为**：只改 `presentation_server.py`；不要引入非必要的第三方依赖。
-- **新增图片**：放入 `presentation/images/` 并在 HTML 中用相对路径引用（现有页面已使用 `images/...`）。
-- **产品叙事与术语**：面向二次元/痛包/谷子场景；英文 UI 文案与中文策划并行时注意语气统一。
+- **改幻灯片文案与结构**：主要编辑 `index.html` 中 `.slides-wrapper` 内的各 `.slide`；页数、进度条等与脚本联动处一并检查（如 `aria-valuemax`、`totalSlides` 等）。
+- **改视觉主题**：在 `css/theme-*.css` 与 `presentation-layout.css` 中保持一致；`data-theme` 取 `verdant`（森意）或 `cyber`（赛博），主题偏好可存 `localStorage` 键 `animeDollTheme`。
+- **改策划大纲或逐页说明**：先更新 `docs/presentation_slides.md`，再同步 `index.html`，避免策划与页面脱节。
+- **新增平面素材**：放入 `images/`，在 HTML 中用相对路径引用（如 `images/...`）。
+- **更换或新增 3D**：替换或扩展 `model/` 下文件，并修改 `index.html` 中 `MODEL_BASE` / `MODEL_URL_*` 与加载逻辑。
+- **产品叙事**：面向二次元、痛包、谷子与情绪消费场景；中英混排时注意语气统一。
 
 ---
 
 ## Html Presentation 结构（策划大纲）
 
-以下为幻灯片信息架构，实现时以 `index.html` 中的实际分页为准。
+以下为 `docs/presentation_slides.md` 中的信息架构；实现以 `index.html` 实际分页为准。
 
-```
+```text
 AnimeDoll_Presentation/
 ├── 1. 封面 (Cover)
 ├── 2. 目录 (Table of Contents)
 ├── 3. 需求分析 (Requirement Analysis)
-│   ├── 3.1 前期调研 (背景引入、5W1H分析、行业调研、SWOT分析)
-│   ├── 3.2 用户调研 (目标画像、问卷与访谈洞察)
-│   ├── 3.3 需求分析 (痛点转化为需求)
-│   └── 3.4 机会点总结 (核心切入点)
+│   ├── 3.1 前期调研 (背景引入、5W1H、市场数据)
+│   ├── 3.2 行业调研与 SWOT
+│   ├── 3.3 竞品分析 (四象限：情感温度 × AI 能力)
+│   ├── 3.4 用户调研 (画像、问卷与访谈)
+│   ├── 3.5 需求分析 (痛点转需求)
+│   └── 3.6 机会点总结
 ├── 4. 概念设计 (Concept Design)
-│   ├── 4.1 概念转化与产品定义 (从“静止周边”到“专属陪伴”)
-│   ├── 4.2 商业模式画布 (Business Model Canvas)
-│   ├── 4.3 核心功能定义 (视觉+语音互动)
-│   ├── 4.4 系统图与技术路线 (端云结合架构)
-│   └── 4.5 体验流程与故事版 (漫展/通勤场景展现)
+│   ├── 4.1 概念转化与产品定义
+│   ├── 4.2 商业模式画布 (BMC)
+│   ├── 4.3 核心功能定义 (看·说·记 等)
+│   ├── 4.4 系统图与技术路线
+│   └── 4.5 体验流程与故事版
 ├── 5. 方案展示 (Solution Display)
-│   ├── 5.1 外观与CMF设计 (10cm迷你尺寸、材质与隐藏式镜头)
-│   ├── 5.2 内部结构与硬件布局 (微型主板、电池、声学结构)
-│   ├── 5.3 交互界面展示 (配套App的UI/UX设计：记忆手帐、人设配置)
-│   └── 5.4 渲染图与使用场景呈现 (挂载于背包/痛包的视觉效果)
-└── 6. 总结与展望 (Conclusion & Future)
-    ├── 6.1 产品路标规划 (1.0通用版 -> 2.0官方IP合作版)
-    └── 6.2 愿景致辞 (结束语)
+│   ├── 5.1 外观与 CMF
+│   ├── 5.2 三视图与隐藏摄像头
+│   ├── 5.3 内部结构与硬件布局
+│   ├── 5.4 交互界面 (Companion App)
+│   └── 5.5 渲染图与使用场景
+├── 6. 社区与数据飞轮 (Community & Data Flywheel)
+│   ├── 6.1 UGC 生态
+│   ├── 6.2 数据飞轮
+│   └── 6.3 社区运营
+└── 7. 总结与展望 (Conclusion & Future)
+    ├── 7.1 产品路标
+    └── 7.2 愿景致辞
 ```
 
 ---
 
 ## 摘要（产品一句话）
 
-这是一款嵌入 AI 模块的二次元智能公仔挂件，使用场景为挂在背包、单肩包上，尺寸迷你（约 10cm）；设想内置语音对话（API + 本地语音合成）与视觉模块（微型摄像头），强调便携与「跨次元陪伴」。
+这是一款嵌入 AI 的二次元智能公仔挂件，挂在背包或痛包上使用（约 10cm）；设想语音对话与视觉模块、端云协同，强调便携与「跨次元陪伴」。
 
 ---
 
 ## 给 AI 助手的提示
 
-- 用户可能用 **conda** 环境；若需运行 Python，以用户环境为准，本仓库不强制 `pip install`。
-- 本仓库**不是**嵌入式固件或手机 App 工程；硬件/App 内容以策划与演示文案为准。
-- 大改幻灯片前先扫一眼 `presentation_slides.md` 的对应小节，再改 `index.html`，减少结构漂移。
+- 用户环境可能使用 **conda**；本仓库不依赖本地 Python 脚本，无需为此引入 `requirements.txt`。
+- 本仓库**不是**嵌入式固件或手机 App 工程；硬件与 App 以策划与演示文案为准。
+- 大改幻灯片前先对照 `docs/presentation_slides.md` 对应小节，再改 `index.html`，减少结构漂移。
+- 涉及无障碍时，保留或补强 `aria-*`、`aria-live` 等与翻页、加载状态相关的属性。
