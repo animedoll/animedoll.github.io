@@ -72,6 +72,8 @@
     if (!audio || !toggle || !volInput || !dock) return;
 
     var VOL_KEY = 'animeDollBgmVolume';
+    /** 用户在本会话中主动点了暂停后，不再自动恢复播放 */
+    var userPausedBgm = false;
 
     function clamp01(n) {
       if (n < 0) return 0;
@@ -111,23 +113,54 @@
       dock.classList.toggle('bgm-dock--playing', playing);
     }
 
+    function tryAutoplayBgm() {
+      if (userPausedBgm || audio.volume <= 0) return;
+      return audio.play().catch(function () {});
+    }
+
+    function removeGestureUnlock() {
+      document.removeEventListener('pointerdown', gestureUnlock, true);
+      document.removeEventListener('keydown', gestureUnlock, true);
+    }
+
+    function gestureUnlock() {
+      if (!userPausedBgm && audio.volume > 0 && audio.paused) {
+        tryAutoplayBgm();
+      }
+    }
+
     syncPlayingUi();
     audio.addEventListener('play', syncPlayingUi);
     audio.addEventListener('pause', syncPlayingUi);
     audio.addEventListener('ended', syncPlayingUi);
 
+    audio.addEventListener('playing', function onPlaying() {
+      removeGestureUnlock();
+    }, { once: true });
+
+    tryAutoplayBgm();
+    audio.addEventListener('canplay', function onCanPlay() {
+      audio.removeEventListener('canplay', onCanPlay);
+      tryAutoplayBgm();
+    });
+
+    document.addEventListener('pointerdown', gestureUnlock, true);
+    document.addEventListener('keydown', gestureUnlock, true);
+
     toggle.addEventListener('click', function () {
       playUiClick();
       if (audio.paused) {
+        userPausedBgm = false;
         audio.play().catch(function () {});
       } else {
+        userPausedBgm = true;
         audio.pause();
       }
     });
 
     volInput.addEventListener('input', function () {
       applyVolume(parseFloat(volInput.value) || 0);
-      if (audio.volume > 0 && audio.paused) {
+      if (audio.volume > 0 && audio.paused && !userPausedBgm) {
         audio.play().catch(function () {});
       }
     });
