@@ -60,8 +60,26 @@
   <span id="totalSlides">19</span>
 </div>
 
-<button type="button" class="fs-btn" id="fsBtn" title="全屏演示">FULLSCREEN</button>
-<button type="button" class="theme-btn" id="themeToggle" aria-label="当前为森意白金主题，点击切换为赛博青橙">森意</button>
+<div class="hud-ctl-row">
+  <button type="button" class="fs-btn" id="fsBtn" title="全屏演示">FULLSCREEN</button>
+  <button type="button" class="theme-btn" id="themeToggle" aria-label="当前为森意白金主题，点击切换为赛博青橙">森意</button>
+  <div class="bgm-dock" id="bgmDock" role="region" aria-label="背景音乐">
+    <audio id="bgMusic" preload="metadata" playsinline loop>
+      <source src="music/animedoll.mp3" type="audio/mpeg" />
+    </audio>
+    <button type="button" class="bgm-toggle" id="bgmToggle" aria-pressed="false" aria-label="播放背景音乐" title="播放 / 暂停背景音乐">
+      <span class="bgm-music-spin" aria-hidden="true">
+        <svg class="bgm-music-svg" viewBox="0 0 24 24" width="18" height="18" focusable="false">
+          <path fill="currentColor" d="M12 5v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V9h3V5h-5z"/>
+        </svg>
+      </span>
+    </button>
+    <div class="bgm-vol-pop">
+      <label class="bgm-sr-only" for="bgmVolume">背景音乐音量</label>
+      <input type="range" id="bgmVolume" class="bgm-volume" min="0" max="1" step="0.05" value="0.35" aria-label="背景音乐音量" />
+    </div>
+  </div>
+</div>
 
 <div class="slides-wrapper" id="slidesWrapper">
 
@@ -879,8 +897,25 @@
   tick();
   setInterval(tick, 1000);
 
+  var sfxClick = new Audio('music/click.wav');
+  var sfxPageFlip = new Audio('music/pageflip.wav');
+  sfxClick.preload = 'auto';
+  sfxPageFlip.preload = 'auto';
+  var SFX_VOL = 0.55;
+  function playUiClick() {
+    sfxClick.volume = SFX_VOL;
+    sfxClick.currentTime = 0;
+    sfxClick.play().catch(function () {});
+  }
+  function playPageFlipSfx() {
+    sfxPageFlip.volume = SFX_VOL;
+    sfxPageFlip.currentTime = 0;
+    sfxPageFlip.play().catch(function () {});
+  }
+
   const fsBtn = document.getElementById('fsBtn');
   fsBtn.addEventListener('click', function () {
+    playUiClick();
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(function () {});
     } else {
@@ -912,10 +947,86 @@
   var themeToggle = document.getElementById('themeToggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', function () {
+      playUiClick();
       setTheme(getTheme() === 'cyber' ? 'verdant' : 'cyber');
     });
   }
   updateThemeBtn();
+
+  (function initBgm() {
+    var audio = document.getElementById('bgMusic');
+    var toggle = document.getElementById('bgmToggle');
+    var volInput = document.getElementById('bgmVolume');
+    var dock = document.getElementById('bgmDock');
+    if (!audio || !toggle || !volInput || !dock) return;
+
+    var VOL_KEY = 'animeDollBgmVolume';
+
+    function clamp01(n) {
+      if (n < 0) return 0;
+      if (n > 1) return 1;
+      return n;
+    }
+
+    function applyVolume(v) {
+      v = clamp01(v);
+      audio.volume = v;
+      volInput.value = String(v);
+      var pct = Math.round(v * 100);
+      volInput.setAttribute('aria-valuetext', pct + '%');
+      try {
+        localStorage.setItem(VOL_KEY, String(v));
+      } catch (err) {}
+    }
+
+    try {
+      var stored = localStorage.getItem(VOL_KEY);
+      if (stored != null && stored !== '') {
+        var parsed = parseFloat(stored);
+        if (!isNaN(parsed)) applyVolume(parsed);
+        else applyVolume(0.35);
+      } else {
+        applyVolume(0.35);
+      }
+    } catch (err) {
+      applyVolume(0.35);
+    }
+
+    function syncPlayingUi() {
+      var playing = !audio.paused;
+      toggle.setAttribute('aria-pressed', playing ? 'true' : 'false');
+      toggle.setAttribute('aria-label', playing ? '暂停背景音乐' : '播放背景音乐');
+      toggle.title = playing ? '暂停背景音乐' : '播放背景音乐';
+      dock.classList.toggle('bgm-dock--playing', playing);
+    }
+
+    syncPlayingUi();
+    audio.addEventListener('play', syncPlayingUi);
+    audio.addEventListener('pause', syncPlayingUi);
+    audio.addEventListener('ended', syncPlayingUi);
+
+    toggle.addEventListener('click', function () {
+      playUiClick();
+      if (audio.paused) {
+        audio.play().catch(function () {});
+      } else {
+        audio.pause();
+      }
+    });
+
+    volInput.addEventListener('input', function () {
+      applyVolume(parseFloat(volInput.value) || 0);
+      if (audio.volume > 0 && audio.paused) {
+        audio.play().catch(function () {});
+      }
+    });
+
+    try {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        dock.classList.add('bgm-dock--reduced-motion');
+      }
+    } catch (e) {}
+  })();
 
   const slides = document.querySelectorAll('.slide');
   const totalSlides = slides.length;
@@ -954,6 +1065,7 @@
 
   function goToSlide(index) {
     if (isTransitioning || index === currentIndex || index < 0 || index >= totalSlides) return;
+    playPageFlipSfx();
     isTransitioning = true;
     var direction = index > currentIndex ? 1 : -1;
     var prevEl = slides[currentIndex];
