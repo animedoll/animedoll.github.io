@@ -8,8 +8,8 @@
   tick();
   setInterval(tick, 1000);
 
-  var sfxClick = new Audio('music/click.wav');
-  var sfxPageFlip = new Audio('music/pageflip.wav');
+  var sfxClick = new Audio('src/music/click.wav');
+  var sfxPageFlip = new Audio('src/music/pageflip.wav');
   sfxClick.preload = 'auto';
   sfxPageFlip.preload = 'auto';
   var SFX_VOL = 0.55;
@@ -279,12 +279,16 @@
   var touchStartY = 0;
   var touchAxis = null;
   var touchStartedOnHero = false;
+  var touchStartedOnStoryboard = false;
+  /** 与体验流程分镜视频点击互斥：勿把横向滑动当成翻页 */
+  var STORYBOARD_HIT = '.storyboard-media[data-storyboard-video]';
   var wrapper = document.getElementById('slidesWrapper');
 
   wrapper.addEventListener('touchstart', function (e) {
     if (e.touches.length !== 1) return;
     touchStartedOnHero = !!(e.target && e.target.closest && e.target.closest('.cover-hero-canvas-host, .cover-hero-wrap'));
-    if (touchStartedOnHero) return;
+    touchStartedOnStoryboard = !!(e.target && e.target.closest && e.target.closest(STORYBOARD_HIT));
+    if (touchStartedOnHero || touchStartedOnStoryboard) return;
     touchStartX = e.touches[0].screenX;
     touchStartY = e.touches[0].screenY;
     touchAxis = null;
@@ -292,7 +296,7 @@
 
   wrapper.addEventListener('touchmove', function (e) {
     if (e.touches.length !== 1) return;
-    if (touchStartedOnHero) return;
+    if (touchStartedOnHero || touchStartedOnStoryboard) return;
     var mx = e.touches[0].screenX - touchStartX;
     var my = e.touches[0].screenY - touchStartY;
     if (!touchAxis && (Math.abs(mx) > 12 || Math.abs(my) > 12)) {
@@ -303,6 +307,11 @@
   wrapper.addEventListener('touchend', function (e) {
     if (touchStartedOnHero) {
       touchStartedOnHero = false;
+      touchAxis = null;
+      return;
+    }
+    if (touchStartedOnStoryboard) {
+      touchStartedOnStoryboard = false;
       touchAxis = null;
       return;
     }
@@ -324,12 +333,17 @@
   var mouseStartX = 0;
   wrapper.addEventListener('mousedown', function (e) {
     if (e.target && e.target.closest && e.target.closest('.cover-hero-canvas-host, .cover-hero-wrap')) return;
+    if (e.target && e.target.closest && e.target.closest(STORYBOARD_HIT)) return;
     mouseDown = true;
     mouseStartX = e.clientX;
   });
   wrapper.addEventListener('mouseup', function (e) {
     if (!mouseDown) return;
     if (e.target && e.target.closest && e.target.closest('.cover-hero-canvas-host, .cover-hero-wrap')) {
+      mouseDown = false;
+      return;
+    }
+    if (e.target && e.target.closest && e.target.closest(STORYBOARD_HIT)) {
       mouseDown = false;
       return;
     }
@@ -342,7 +356,127 @@
   });
   wrapper.addEventListener('mouseleave', function () { mouseDown = false; });
 
+  /** 与 CSS 中 r=16 的圆周长一致，用于环形缓冲进度 */
+  var STORYBOARD_RING_LEN = 2 * Math.PI * 16;
+
+  function teardownStoryboardVideo(mediaEl) {
+    if (!mediaEl) return;
+    var v = mediaEl.querySelector('video.storyboard-inline-video');
+    if (v) {
+      v.pause();
+      if (v._storyboardProgress) {
+        v.removeEventListener('progress', v._storyboardProgress);
+        v.removeEventListener('loadedmetadata', v._storyboardProgress);
+      }
+      if (v._storyboardPlaying) {
+        v.removeEventListener('playing', v._storyboardPlaying);
+      }
+      try {
+        v.removeAttribute('src');
+        while (v.firstChild) v.removeChild(v.firstChild);
+        v.load();
+      } catch (err) {}
+      v.remove();
+    }
+    mediaEl.classList.remove('is-storyboard-loading', 'is-storyboard-playing', 'is-storyboard-load-wait-meta');
+    mediaEl.removeAttribute('aria-busy');
+    var bar = mediaEl.querySelector('.storyboard-load-bar');
+    if (bar) bar.style.strokeDashoffset = '';
+  }
+
+  (function initStoryboardVideos() {
+    var medias = document.querySelectorAll('.storyboard-media[data-storyboard-video]');
+    medias.forEach(function (mediaEl) {
+      function updateBufferRing(videoEl) {
+        var bar = mediaEl.querySelector('.storyboard-load-bar');
+        if (!bar || !videoEl) return;
+        var dur = videoEl.duration;
+        if (!dur || !isFinite(dur)) {
+          mediaEl.classList.add('is-storyboard-load-wait-meta');
+          bar.style.strokeDashoffset = String(STORYBOARD_RING_LEN);
+          return;
+        }
+        mediaEl.classList.remove('is-storyboard-load-wait-meta');
+        var end = 0;
+        try {
+          if (videoEl.buffered.length) end = videoEl.buffered.end(videoEl.buffered.length - 1);
+        } catch (err) {}
+        var pct = Math.min(1, Math.max(0, end / dur));
+        bar.style.strokeDashoffset = String(STORYBOARD_RING_LEN * (1 - pct));
+      }
+
+      function start() {
+        if (mediaEl.classList.contains('is-missing')) return;
+        if (mediaEl.querySelector('video.storyboard-inline-video')) return;
+        if (mediaEl.classList.contains('is-storyboard-loading')) return;
+        var src = mediaEl.getAttribute('data-storyboard-video');
+        if (!src) return;
+
+        mediaEl.classList.add('is-storyboard-loading');
+        mediaEl.classList.add('is-storyboard-load-wait-meta');
+        mediaEl.setAttribute('aria-busy', 'true');
+
+        var v = document.createElement('video');
+        v.className = 'storyboard-inline-video';
+        v.setAttribute('playsinline', '');
+        v.setAttribute('webkit-playsinline', '');
+        v.playsInline = true;
+        v.controls = false;
+        v.preload = 'auto';
+        v.src = src;
+
+        function finish() {
+          teardownStoryboardVideo(mediaEl);
+        }
+
+        v._storyboardProgress = function () {
+          updateBufferRing(v);
+        };
+        v.addEventListener('progress', v._storyboardProgress);
+        v.addEventListener('loadedmetadata', v._storyboardProgress);
+
+        v._storyboardPlaying = function () {
+          mediaEl.classList.remove('is-storyboard-loading');
+          mediaEl.removeAttribute('aria-busy');
+          mediaEl.classList.add('is-storyboard-playing');
+        };
+        v.addEventListener('playing', v._storyboardPlaying, { once: true });
+
+        v.addEventListener('ended', finish);
+        v.addEventListener('error', finish);
+
+        mediaEl.appendChild(v);
+        updateBufferRing(v);
+
+        var playAttempt = v.play();
+        if (playAttempt && typeof playAttempt.catch === 'function') {
+          playAttempt.catch(function () {
+            v.muted = true;
+            return v.play();
+          }).catch(function () {
+            finish();
+          });
+        }
+      }
+
+      mediaEl.addEventListener('click', function (e) {
+        e.stopPropagation();
+        playUiClick();
+        start();
+      });
+      mediaEl.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        e.stopPropagation();
+        playUiClick();
+        start();
+      });
+    });
+  })();
+
   function onSlideActivate(slideEl) {
+    document.querySelectorAll('.slide:not(.active) .storyboard-media[data-storyboard-video]').forEach(teardownStoryboardVideo);
+
     // Data bar animation
     var bars = slideEl.querySelectorAll('.data-bar-fill');
     if (bars.length) {

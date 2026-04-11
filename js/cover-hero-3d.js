@@ -136,7 +136,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
     if (!mqReduce.matches) controls.autoRotate = true;
   });
 
-  const MODEL_BASE = 'model/';
+  const MODEL_BASE = 'src/model/';
   const MODEL_URL_LOW = MODEL_BASE + 'model_lowpoly.fbx';
   const MODEL_URL_HIGH = MODEL_BASE + 'model.fbx';
 

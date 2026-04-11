@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AnimeDoll — 你的跨次元 AI 专属陪伴</title>
-<link rel="icon" href="images/logo.ico" type="image/x-icon">
-<link rel="icon" href="images/logo.png" type="image/png">
-<link rel="apple-touch-icon" href="images/logo.png">
+<link rel="icon" href="src/images/logo.ico" type="image/x-icon">
+<link rel="icon" href="src/images/logo.png" type="image/png">
+<link rel="apple-touch-icon" href="src/images/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
@@ -56,7 +56,7 @@
   <button type="button" class="theme-btn" id="themeToggle" aria-label="当前为森意白金主题，点击切换为赛博青橙">森意</button>
   <div class="bgm-dock" id="bgmDock" role="region" aria-label="背景音乐">
     <audio id="bgMusic" preload="auto" playsinline loop autoplay>
-      <source src="music/animedoll.mp3" type="audio/mpeg" />
+      <source src="src/music/animedoll.mp3" type="audio/mpeg" />
     </audio>
     <button type="button" class="bgm-toggle" id="bgmToggle" aria-pressed="false" aria-label="播放背景音乐" title="播放 / 暂停背景音乐">
       <span class="bgm-music-spin" aria-hidden="true">
@@ -363,13 +363,13 @@
             <div class="insight-photo-strip anim-item">
               <figure class="insight-photo-card">
                 <div class="insight-photo-media">
-                  <img src="images/effect_picture_anime_expo.jpg" alt="漫展线下场景中的 AnimeDoll 使用氛围" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                  <img src="src/images/effect_picture_anime_expo.jpg" alt="漫展线下场景中的 AnimeDoll 使用氛围" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
                 </div>
                 <figcaption>漫展线下场景 · 高情绪密度互动</figcaption>
               </figure>
               <figure class="insight-photo-card">
                 <div class="insight-photo-media">
-                  <img src="images/effect_picture_on_hand.jpg" alt="手持 AnimeDoll 的近景互动画面" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                  <img src="src/images/effect_picture_on_hand.jpg" alt="手持 AnimeDoll 的近景互动画面" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
                 </div>
                 <figcaption>可触达的陪伴感 · 日常近景特写</figcaption>
               </figure>
@@ -400,7 +400,7 @@
             <div class="pain-flow anim-item"><span class="pain-from">视觉盲区</span><span class="pain-arrow">→</span><span class="pain-to">共同见证：第一视角摄像头 + 环境识别</span></div>
             <div class="pain-flow anim-item"><span class="pain-from">孤独社交</span><span class="pain-arrow">→</span><span class="pain-to">社交破冰：公仔成为自然对话入口</span></div>
             <div class="opportunity-box anim-item">
-              <div class="opportunity-icon-wrap" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-sparkles"/></svg></div>
+              <div class="opportunity-icon-wrap" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-sparkles"/></svg></div>
               <h3>“不仅是装饰，更是有记忆的旅行搭子”</h3>
               <p>AnimeDoll 的核心不在于“生产力工具”，而在于“情绪陪伴器”。（2025 年情绪消费品类 GMV 增速 40%+）</p>
             </div>
@@ -459,15 +459,15 @@
           <div class="ak-card-inner">
             <h2 class="ak-title anim-item">商业模式 · <span class="sub">Business Model Canvas</span></h2>
             <div class="bmc-grid">
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-light-bulb"/></svg><span>价值主张</span></h4><p>提供打破次元壁的实体情感陪伴，让每个角色都有自己的声音与记忆。</p></div>
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-users"/></svg><span>客户细分</span></h4><ul><li>二次元圈层用户</li><li>潮玩盲盒玩家</li><li>孤独经济消费者</li></ul></div>
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-megaphone"/></svg><span>关键渠道</span></h4><ul><li>B站/小红书种草</li><li>漫展线下快闪</li><li>潮玩电商平台</li></ul></div>
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-currency"/></svg><span>收入来源</span></h4><ul><li>硬件销售（公仔本体）</li><li>角色性格包 & 音色库订阅</li><li>可替换服装 & 配件周边</li></ul></div>
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-cpu"/></svg><span>关键资源</span></h4><ul><li>AI多模态大模型</li><li>嵌入式硬件团队</li><li>IP内容运营</li></ul></div>
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-link"/></svg><span>关键伙伴</span></h4><ul><li>动漫IP方（授权合作）</li><li>云服务商（算力支撑）</li><li>声优/配音团队</li></ul></div>
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-bolt"/></svg><span>关键活动</span></h4><ul><li>硬件研发与量产迭代</li><li>角色模型微调与测试</li><li>IP 谈判与授权运营</li></ul></div>
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-chart-bar"/></svg><span>成本结构</span></h4><ul><li>硬件 BOM（约 ¥80-120/台）</li><li>云端 API 与推理成本</li><li>IP 版税与市场投放</li></ul></div>
-              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-heart"/></svg><span>客户关系</span></h4><ul><li>社区驱动运营</li><li>UGC 内容反哺产品</li><li>固件 OTA 持续更新</li></ul></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-light-bulb"/></svg><span>价值主张</span></h4><p>提供打破次元壁的实体情感陪伴，让每个角色都有自己的声音与记忆。</p></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-users"/></svg><span>客户细分</span></h4><ul><li>二次元圈层用户</li><li>潮玩盲盒玩家</li><li>孤独经济消费者</li></ul></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-megaphone"/></svg><span>关键渠道</span></h4><ul><li>B站/小红书种草</li><li>漫展线下快闪</li><li>潮玩电商平台</li></ul></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-currency"/></svg><span>收入来源</span></h4><ul><li>硬件销售（公仔本体）</li><li>角色性格包 & 音色库订阅</li><li>可替换服装 & 配件周边</li></ul></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-cpu"/></svg><span>关键资源</span></h4><ul><li>AI多模态大模型</li><li>嵌入式硬件团队</li><li>IP内容运营</li></ul></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-link"/></svg><span>关键伙伴</span></h4><ul><li>动漫IP方（授权合作）</li><li>云服务商（算力支撑）</li><li>声优/配音团队</li></ul></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-bolt"/></svg><span>关键活动</span></h4><ul><li>硬件研发与量产迭代</li><li>角色模型微调与测试</li><li>IP 谈判与授权运营</li></ul></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-chart-bar"/></svg><span>成本结构</span></h4><ul><li>硬件 BOM（约 ¥80-120/台）</li><li>云端 API 与推理成本</li><li>IP 版税与市场投放</li></ul></div>
+              <div class="bmc-cell anim-item"><h4><svg class="ak-icon" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-heart"/></svg><span>客户关系</span></h4><ul><li>社区驱动运营</li><li>UGC 内容反哺产品</li><li>固件 OTA 持续更新</li></ul></div>
             </div>
             <div class="bmc-economics anim-item">
               <div class="bmc-economics-head">收入 / 成本结构（示意）</div>
@@ -510,9 +510,9 @@
           <div class="ak-card-inner">
             <h2 class="ak-title anim-item">核心功能 · <span class="sub">三大模块</span></h2>
             <div class="content-grid triple">
-              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-eye"/></svg></span><h3>看 · 视觉感知</h3><p>定时抓拍或触发式识别眼前事物——识别到另一只AnimeDoll、漫展海报、Coser……</p></div>
-              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-chat"/></svg></span><h3>说 · 性格语音</h3><p>内置微型扬声器，支持不同声线TTS（傲娇、呆萌、御姐等），可主动搭话。</p></div>
-              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-book"/></svg></span><h3>记 · 数字记忆</h3><p>在App中生成“公仔视角的日记/手帐”，记录今天和主人去了哪里、看了什么。</p></div>
+              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-eye"/></svg></span><h3>看 · 视觉感知</h3><p>定时抓拍或触发式识别眼前事物——识别到另一只AnimeDoll、漫展海报、Coser……</p></div>
+              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-chat"/></svg></span><h3>说 · 性格语音</h3><p>内置微型扬声器，支持不同声线TTS（傲娇、呆萌、御姐等），可主动搭话。</p></div>
+              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-book"/></svg></span><h3>记 · 数字记忆</h3><p>在App中生成“公仔视角的日记/手帐”，记录今天和主人去了哪里、看了什么。</p></div>
             </div>
           </div>
         </div>
@@ -534,19 +534,19 @@
             <h2 class="ak-title anim-item">系统架构 · <span class="sub">端云结合</span></h2>
             <div class="arch-flow anim-item">
               <div class="arch-node device">
-                <span class="arch-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-cube"/></svg></span>
+                <span class="arch-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-cube"/></svg></span>
                 <h4>挂件端 Device</h4>
                 <p>低功耗MCU + 微型摄像头 + 麦克风阵列 + 微型喇叭 + 小容量锂电池<br><br>只负责<strong style="color:var(--ak-orange)">采集与播放</strong></p>
               </div>
-              <div class="arch-arrow" aria-hidden="true"><svg class="arch-arrow-svg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-arrow-right"/></svg></div>
+              <div class="arch-arrow" aria-hidden="true"><svg class="arch-arrow-svg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-arrow-right"/></svg></div>
               <div class="arch-node app">
-                <span class="arch-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-phone"/></svg></span>
+                <span class="arch-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-phone"/></svg></span>
                 <h4>手机端 App</h4>
                 <p>算力中枢：处理蓝牙数据流、压缩图片、发起网络请求<br><br>承担<strong style="color:var(--ak-cyan-dim)">桥接与调度</strong></p>
               </div>
-              <div class="arch-arrow" aria-hidden="true"><svg class="arch-arrow-svg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-arrow-right"/></svg></div>
+              <div class="arch-arrow" aria-hidden="true"><svg class="arch-arrow-svg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-arrow-right"/></svg></div>
               <div class="arch-node cloud">
-                <span class="arch-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-cloud"/></svg></span>
+                <span class="arch-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-cloud"/></svg></span>
                 <h4>云端 Cloud</h4>
                 <p>LLM多模态大模型（图像理解+文本生成）+ AI声学模型（声音克隆/合成）<br><br>提供<strong style="color:var(--ak-cyan)">智能与灵魂</strong></p>
               </div>
@@ -571,41 +571,68 @@
             <h2 class="ak-title anim-item">体验流程 · <span class="sub">Storyboard</span></h2>
             <div class="storyboard-grid">
               <div class="storyboard-card anim-item">
-                <div class="storyboard-media">
-                  <img src="images/comic_1_go_out.jpg" alt="清晨出门场景漫画：主人整理包带并唤醒 AnimeDoll" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                <div class="storyboard-media" data-storyboard-video="src/video/comic_1_go_out.mp4" role="button" tabindex="0" aria-label="点击播放出门场景动画">
+                  <img src="src/images/comic_1_go_out.jpg" alt="清晨出门场景漫画：主人整理包带并唤醒 AnimeDoll" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                  <span class="storyboard-media-ui" aria-hidden="true">
+                    <span class="storyboard-play-badge"><svg class="storyboard-play-icon" focusable="false" aria-hidden="true"><use href="src/images/ak-presentation-sprite.svg#ak-i-play-solid"/></svg></span>
+                    <span class="storyboard-load-layer">
+                      <svg class="storyboard-load-svg" viewBox="0 0 40 40" focusable="false" aria-hidden="true">
+                        <circle class="storyboard-load-track" cx="20" cy="20" r="16" fill="none"/>
+                        <circle class="storyboard-load-bar" cx="20" cy="20" r="16" fill="none"/>
+                      </svg>
+                    </span>
+                  </span>
                 </div>
                 <div class="storyboard-body">
-                  <div class="story-time"><svg class="ak-icon ak-icon--xs" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-sun"/></svg><span>清晨 · 出门</span></div>
+                  <div class="story-time"><svg class="ak-icon ak-icon--xs" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-sun"/></svg><span>清晨 · 出门</span></div>
                   <h4>唤醒仪式</h4>
                   <p>主人整理鞋带和包带，轻捏公仔唤醒，开启元气的一天。</p>
                 </div>
               </div>
               <div class="storyboard-card anim-item">
-                <div class="storyboard-media">
-                  <img src="images/comic_2_anime_expo.jpg" alt="漫展现场漫画：痛包上的 AnimeDoll 在热闹人群中互动" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                <div class="storyboard-media" data-storyboard-video="src/video/comic_2_anime_expo.mp4" role="button" tabindex="0" aria-label="点击播放漫展场景动画">
+                  <img src="src/images/comic_2_anime_expo.jpg" alt="漫展现场漫画：痛包上的 AnimeDoll 在热闹人群中互动" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                  <span class="storyboard-media-ui" aria-hidden="true">
+                    <span class="storyboard-play-badge"><svg class="storyboard-play-icon" focusable="false" aria-hidden="true"><use href="src/images/ak-presentation-sprite.svg#ak-i-play-solid"/></svg></span>
+                    <span class="storyboard-load-layer">
+                      <svg class="storyboard-load-svg" viewBox="0 0 40 40" focusable="false" aria-hidden="true">
+                        <circle class="storyboard-load-track" cx="20" cy="20" r="16" fill="none"/>
+                        <circle class="storyboard-load-bar" cx="20" cy="20" r="16" fill="none"/>
+                      </svg>
+                    </span>
+                  </span>
                 </div>
                 <div class="storyboard-body">
-                  <div class="story-time"><svg class="ak-icon ak-icon--xs" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-map-pin"/></svg><span>下午 · 漫展现场</span></div>
+                  <div class="story-time"><svg class="ak-icon ak-icon--xs" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-map-pin"/></svg><span>下午 · 漫展现场</span></div>
                   <h4>主动识别互动</h4>
                   <p>隐藏摄像头捕捉到现场高光瞬间，公仔主动吐槽，氛围感拉满。</p>
                 </div>
               </div>
               <div class="storyboard-card anim-item">
-                <div class="storyboard-media">
-                  <img src="images/comic_3_night_at_home.jpg" alt="晚上回家场景漫画：AnimeDoll 与手机在暖色家居环境中" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                <div class="storyboard-media" data-storyboard-video="src/video/comic_3_night_at_home.mp4" role="button" tabindex="0" aria-label="点击播放回家场景动画">
+                  <img src="src/images/comic_3_night_at_home.jpg" alt="晚上回家场景漫画：AnimeDoll 与手机在暖色家居环境中" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                  <span class="storyboard-media-ui" aria-hidden="true">
+                    <span class="storyboard-play-badge"><svg class="storyboard-play-icon" focusable="false" aria-hidden="true"><use href="src/images/ak-presentation-sprite.svg#ak-i-play-solid"/></svg></span>
+                    <span class="storyboard-load-layer">
+                      <svg class="storyboard-load-svg" viewBox="0 0 40 40" focusable="false" aria-hidden="true">
+                        <circle class="storyboard-load-track" cx="20" cy="20" r="16" fill="none"/>
+                        <circle class="storyboard-load-bar" cx="20" cy="20" r="16" fill="none"/>
+                      </svg>
+                    </span>
+                  </span>
                 </div>
                 <div class="storyboard-body">
-                  <div class="story-time"><svg class="ak-icon ak-icon--xs" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-moon"/></svg><span>晚上 · 回家</span></div>
+                  <div class="story-time"><svg class="ak-icon ak-icon--xs" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-moon"/></svg><span>晚上 · 回家</span></div>
                   <h4>记忆手帐生成</h4>
                   <p>在家打开 App，即刻看到公仔视角手帐与配文，轻松分享今天的故事。</p>
                 </div>
               </div>
               <div class="storyboard-card anim-item">
                 <div class="storyboard-media">
-                  <img src="images/comic_4_cafe_meet.jpg" alt="咖啡店偶遇场景漫画：两只 AnimeDoll 在桌面相遇" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                  <img src="src/images/comic_4_cafe_meet.jpg" alt="咖啡店偶遇场景漫画：两只 AnimeDoll 在桌面相遇" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
                 </div>
                 <div class="storyboard-body">
-                  <div class="story-time"><svg class="ak-icon ak-icon--xs" aria-hidden="true" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-users"/></svg><span>周末 · 咖啡店偶遇</span></div>
+                  <div class="story-time"><svg class="ak-icon ak-icon--xs" aria-hidden="true" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-users"/></svg><span>周末 · 咖啡店偶遇</span></div>
                   <h4>双端识别破冰</h4>
                   <p>两位用户偶遇时，公仔先一步打招呼，快速打开同好社交话题。</p>
                 </div>
@@ -631,13 +658,13 @@
             <h2 class="ak-title anim-item">外观设计 · <span class="sub">白底 &amp; 材质</span></h2>
             <div class="cmf-white-split anim-item">
               <div class="cmf-img-frame">
-                <img src="images/effect_picture_white_bg.png" alt="AnimeDoll 白底产品效果图" decoding="async" onerror="this.onerror=null;this.src='effect_picture_white_bg.png'">
+                <img src="src/images/effect_picture_white_bg.png" alt="AnimeDoll 白底产品效果图" decoding="async" onerror="this.onerror=null;this.src='src/images/effect_picture_white_bg.png'">
                 <span class="cmf-img-label">白底产品效果图</span>
               </div>
               <div>
                 <div class="cmf-stats-row">
-                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-squares"/></svg></span><div class="stat-value" style="color:var(--ak-cyan-dim)">毛绒</div><div class="stat-label">亲肤材质</div></div>
-                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-cube"/></svg></span><div class="stat-value" style="color:var(--ak-cyan)">ABS</div><div class="stat-label">轻质骨架</div></div>
+                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-squares"/></svg></span><div class="stat-value" style="color:var(--ak-cyan-dim)">毛绒</div><div class="stat-label">亲肤材质</div></div>
+                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-cube"/></svg></span><div class="stat-value" style="color:var(--ak-cyan)">ABS</div><div class="stat-label">轻质骨架</div></div>
                 </div>
                 <div class="ad-card-dark anim-item">
                   <h3>材质选择</h3>
@@ -669,13 +696,13 @@
             <h2 class="ak-title anim-item">外观设计 · <span class="sub">三视图 &amp; 摄像</span></h2>
             <div class="cmf-white-split anim-item">
               <div class="cmf-img-frame">
-                <img src="images/effect_picture_3_view.png" alt="AnimeDoll 产品三视图" decoding="async" />
+                <img src="src/images/effect_picture_3_view.png" alt="AnimeDoll 产品三视图" decoding="async" />
                 <span class="cmf-img-label">三视图 · 正视 / 侧视 / 背视</span>
               </div>
               <div>
                 <div class="cmf-stats-row">
-                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-arrows-out"/></svg></span><div class="stat-value" style="color:var(--ak-orange)">10<span style="font-size:12px">cm</span></div><div class="stat-label">极限尺寸</div></div>
-                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-scale"/></svg></span><div class="stat-value" style="color:var(--ak-cyan-dim)">&lt;50<span style="font-size:12px">g</span></div><div class="stat-label">轻盈重量</div></div>
+                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-arrows-out"/></svg></span><div class="stat-value" style="color:var(--ak-orange)">10<span style="font-size:12px">cm</span></div><div class="stat-label">极限尺寸</div></div>
+                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-scale"/></svg></span><div class="stat-value" style="color:var(--ak-cyan-dim)">&lt;50<span style="font-size:12px">g</span></div><div class="stat-label">轻盈重量</div></div>
                 </div>
                 <div class="ad-card-dark anim-item">
                   <h3>隐藏摄像头设计</h3>
@@ -708,18 +735,18 @@
             <h2 class="ak-title anim-item">内部结构 · <span class="sub">硬件爆炸图</span></h2>
             <div class="cmf-white-split anim-item">
               <div class="cmf-img-frame">
-                <img src="images/effect_picture_explode.png" alt="AnimeDoll 硬件爆炸图" decoding="async" loading="eager" onerror="this.onerror=null;this.src='images/effect_picture_explode.jpg'">
+                <img src="src/images/effect_picture_explode.png" alt="AnimeDoll 硬件爆炸图" decoding="async" loading="eager" onerror="this.onerror=null;this.src='src/images/effect_picture_explode.jpg'">
                 <span class="cmf-img-label">爆炸图 · 头 / 胸腹 / 背部模组</span>
               </div>
               <div>
                 <div class="cmf-stats-row">
-                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-battery"/></svg></span><div class="stat-value" style="color:var(--ak-cyan-dim)">4-6h</div><div class="stat-label">活跃续航</div></div>
-                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-link"/></svg></span><div class="stat-value" style="color:var(--ak-cyan)">10m</div><div class="stat-label">BLE 距离</div></div>
+                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-battery"/></svg></span><div class="stat-value" style="color:var(--ak-cyan-dim)">4-6h</div><div class="stat-label">活跃续航</div></div>
+                  <div class="cmf-stat"><span class="stat-icon-wrap" aria-hidden="true"><svg class="ak-icon" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-link"/></svg></span><div class="stat-value" style="color:var(--ak-cyan)">10m</div><div class="stat-label">BLE 距离</div></div>
                 </div>
                 <div class="hw-layout">
-                  <div class="hw-part anim-item"><div class="hw-part-icon" aria-hidden="true"><svg class="ak-icon ak-icon--md" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-speaker"/></svg></div><div><h4>头部模组</h4><p>微型定向扬声器（声音向下传播，减少对路人打扰）与收音麦克风</p></div></div>
-                  <div class="hw-part anim-item"><div class="hw-part-icon" aria-hidden="true"><svg class="ak-icon ak-icon--md" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-camera"/></svg></div><div><h4>胸部 / 腹部模组</h4><p>柔性 PCB 主板、蓝牙天线与 OV 系列摄像头模组</p></div></div>
-                  <div class="hw-part anim-item"><div class="hw-part-icon" aria-hidden="true"><svg class="ak-icon ak-icon--md" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-battery"/></svg></div><div><h4>背部模组</h4><p>Type-C 充电口（隐藏在衣服下）及 300mAh 锂电池，支持 IPX4 级生活防溅</p></div></div>
+                  <div class="hw-part anim-item"><div class="hw-part-icon" aria-hidden="true"><svg class="ak-icon ak-icon--md" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-speaker"/></svg></div><div><h4>头部模组</h4><p>微型定向扬声器（声音向下传播，减少对路人打扰）与收音麦克风</p></div></div>
+                  <div class="hw-part anim-item"><div class="hw-part-icon" aria-hidden="true"><svg class="ak-icon ak-icon--md" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-camera"/></svg></div><div><h4>胸部 / 腹部模组</h4><p>柔性 PCB 主板、蓝牙天线与 OV 系列摄像头模组</p></div></div>
+                  <div class="hw-part anim-item"><div class="hw-part-icon" aria-hidden="true"><svg class="ak-icon ak-icon--md" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-battery"/></svg></div><div><h4>背部模组</h4><p>Type-C 充电口（隐藏在衣服下）及 300mAh 锂电池，支持 IPX4 级生活防溅</p></div></div>
                 </div>
               </div>
             </div>
@@ -747,19 +774,19 @@
                 <div class="app-screen-header"><span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span></div>
                 <h4>灵魂注入室</h4>
                 <p>设定公仔的称呼、性格Prompt（如：你是一个毒舌但傲娇的魔法少女）、音色选择。</p>
-                <div class="app-screen-visual" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-sparkles"/></svg></div>
+                <div class="app-screen-visual" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-sparkles"/></svg></div>
               </div>
               <div class="app-screen anim-item">
                 <div class="app-screen-header"><span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span></div>
                 <h4>时空相册</h4>
                 <p>公仔第一视角的照片流及AI生成的内心OS，自动生成手帐。</p>
-                <div class="app-screen-visual" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-photo"/></svg></div>
+                <div class="app-screen-visual" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-photo"/></svg></div>
               </div>
               <div class="app-screen anim-item">
                 <div class="app-screen-header"><span class="app-screen-dot"></span><span class="app-screen-dot"></span><span class="app-screen-dot"></span></div>
                 <h4>能量站</h4>
                 <p>查看电量、蓝牙连接状态、固件升级。设备健康一目了然。</p>
-                <div class="app-screen-visual" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-bolt"/></svg></div>
+                <div class="app-screen-visual" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-bolt"/></svg></div>
               </div>
             </div>
           </div>
@@ -782,20 +809,20 @@
             <h2 class="ak-title anim-item">使用场景 · <span class="sub">渲染呈现</span></h2>
             <div class="scene-hero anim-item">
               <div class="scene-hero-img-wrap">
-                <img src="images/effect_picture_on_subway.png" alt="地铁通勤场景中的 AnimeDoll 挂件" decoding="async" onerror="this.onerror=null;this.src='images/effect_picture_on_subway.jpg'">
+                <img src="src/images/effect_picture_on_subway.png" alt="地铁通勤场景中的 AnimeDoll 挂件" decoding="async" onerror="this.onerror=null;this.src='src/images/effect_picture_on_subway.jpg'">
               </div>
               <p class="scene-hero-label">通勤随行 · 地铁场景</p>
             </div>
             <div class="scene-cards">
               <div class="scene-card day anim-item">
                 <div class="scene-visual">
-                  <img src="images/effect_picture_on_ita_bag_daytime.jpg" alt="日间痛包融合场景中的 AnimeDoll 挂件" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                  <img src="src/images/effect_picture_on_ita_bag_daytime.jpg" alt="日间痛包融合场景中的 AnimeDoll 挂件" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
                 </div>
                 <div class="scene-card-body"><h4>日间 · 痛包融合</h4><p>AnimeDoll 挂在一个装满吧唧（徽章）的痛包上，完美融入二次元穿搭，成为最亮眼的焦点。</p></div>
               </div>
               <div class="scene-card night anim-item">
                 <div class="scene-visual">
-                  <img src="images/effect_picture_on_ita_bag_night.jpg" alt="夜间氛围下带呼吸灯效果的 AnimeDoll 场景" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
+                  <img src="src/images/effect_picture_on_ita_bag_night.jpg" alt="夜间氛围下带呼吸灯效果的 AnimeDoll 场景" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('is-missing')">
                 </div>
                 <div class="scene-card-body"><h4>夜间 · 呼吸灯光</h4><p>公仔的眼睛或标志性部位发出微弱的呼吸灯光，在暗处营造赛博朋克氛围。</p></div>
               </div>
@@ -826,9 +853,9 @@
               <div class="flywheel-node">陪伴体验提升</div>
             </div>
             <div class="content-grid triple" style="margin-top:14px">
-              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-globe"/></svg></span><h3>UGC 日记广场</h3><p>用户分享“公仔第一视角”的旅行手帐，形成持续传播的内容社区。</p></div>
-              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-calendar"/></svg></span><h3>线下同好聚会</h3><p>AnimeDoll meetup 让同好在现实场景快速破冰，强化品牌归属感。</p></div>
-              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="images/ak-presentation-sprite.svg#ak-i-beaker"/></svg></span><h3>创作者计划</h3><p>开放“灵魂包”创作机制，鼓励用户共创人格模板并形成生态闭环。</p></div>
+              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-globe"/></svg></span><h3>UGC 日记广场</h3><p>用户分享“公仔第一视角”的旅行手帐，形成持续传播的内容社区。</p></div>
+              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-calendar"/></svg></span><h3>线下同好聚会</h3><p>AnimeDoll meetup 让同好在现实场景快速破冰，强化品牌归属感。</p></div>
+              <div class="mini-card feature-card anim-item"><span class="ak-feature-icon" aria-hidden="true"><svg class="ak-icon ak-icon--lg" focusable="false"><use href="src/images/ak-presentation-sprite.svg#ak-i-beaker"/></svg></span><h3>创作者计划</h3><p>开放“灵魂包”创作机制，鼓励用户共创人格模板并形成生态闭环。</p></div>
             </div>
           </div>
         </div>
